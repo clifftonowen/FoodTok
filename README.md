@@ -10,6 +10,21 @@ To maintain Separation of Concerns, please place all new files in their designat
 * `ui/` - Android Activities and Fragments (`MainActivity`).
 * `adapters/` - RecyclerView adapters (`FeedAdapter`).
 
+```text
+com.example.foodtok
+├── adapters/
+│   └── FeedAdapter.java
+├── models/
+│   ├── Ingredient.java
+│   ├── Recipe.java
+│   └── User.java
+├── services/
+│   ├── InteractionManager.java
+│   ├── RecommendationService.java
+│   └── Service.java
+└── ui/
+    └── MainActivity.java
+```
 ## Git Workflow
 * **DO NOT commit directly to the `main` branch.**
 * Create a new branch for every feature you work on.
