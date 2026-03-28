@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/foodtok_cream"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <!-- Back arrow -->
+        <ImageView
+            android:id="@+id/btnBack"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="8dp"
+            android:contentDescription="Back to Home"
+            android:padding="4dp"
+            android:src="@android:drawable/ic_menu_revert" />
+
+        <EditText
+            android:id="@+id/etSearch"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bg_input_field"
+            android:drawableStart="@android:drawable/ic_menu_search"
+            android:drawablePadding="8dp"
+            android:hint="Search recipes or ingredients"
+            android:inputType="text"
+            android:textColor="@color/foodtok_text_primary"
+            android:textColorHint="@color/foodtok_text_secondary"
+            android:textSize="13sp" />
+
+        <TextView
+            android:id="@+id/tvToggleAction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log in"
+            android:textColor="@color/foodtok_green"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:paintFlags="underline" />
+
+    </LinearLayout>
+
+    <!-- Search bar -->
+
+
+    <!-- Placeholder for search results -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="100dp"
+        android:text="Search for recipes,\ningredients, or creators"
+        android:textAlignment="center"
+        android:textColor="@color/foodtok_text_secondary"
+        android:textSize="16sp" />
+
+</LinearLayout>
