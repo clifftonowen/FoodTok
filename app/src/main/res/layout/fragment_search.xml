@@ -46,7 +46,7 @@
             android:textColor="@color/foodtok_green"
             android:textSize="14sp"
             android:textStyle="bold"
-            android:paintFlags="underline" />
+             />
 
     </LinearLayout>
 
