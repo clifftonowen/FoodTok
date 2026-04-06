@@ -3,45 +3,50 @@ package com.example.foodtok.adapters;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodtok.R;
 import com.example.foodtok.models.Recipe;
 
 import java.util.List;
 
-public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RecipeViewHolder> {
+/**
+ * Adapter for the outer vertical ViewPager2.
+ * Each page is a horizontal ViewPager2 containing 3 sub-pages:
+ *   [0] Ingredients  |  [1] Video (center, default)  |  [2] Chat
+ */
+public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHolder> {
 
     private final List<Recipe> recipes;
+    private ViewPager2 parentVerticalPager;
 
     public FeedAdapter(List<Recipe> recipes) {
         this.recipes = recipes;
     }
 
+    /**
+     * Call this from HomeFragment so we can disable vertical scrolling
+     * when the user is on a non-video page.
+     */
+    public void setParentVerticalPager(ViewPager2 pager) {
+        this.parentVerticalPager = pager;
+    }
+
     @NonNull
     @Override
-    public RecipeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public FeedPageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_recipe, parent, false);
-        return new RecipeViewHolder(view);
+                .inflate(R.layout.item_feed_page, parent, false);
+        return new FeedPageViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecipeViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull FeedPageViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
-
-        holder.recipeTitleText.setText(recipe.getTitle());
-
-        if (recipe.getTags() != null && !recipe.getTags().isEmpty()) {
-            holder.recipeTagsText.setText(String.join("  ", recipe.getTags()));
-        }
-
-        // Allergen warning is hidden by default; show when needed in future
-        holder.allergenWarningText.setVisibility(View.GONE);
+        holder.bind(recipe, parentVerticalPager);
     }
 
     @Override
@@ -49,24 +54,33 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.RecipeViewHold
         return recipes.size();
     }
 
+    static class FeedPageViewHolder extends RecyclerView.ViewHolder {
 
-    //RecipeViewHolder inherits from the recyclerview.viewholder
-    static class RecipeViewHolder extends RecyclerView.ViewHolder {
-        TextView recipeTitleText;
-        TextView recipeTagsText;
-        TextView allergenWarningText;
-        ImageView likeButton;
-        ImageView commentButton;
-        ImageView saveButton;
+        private final ViewPager2 horizontalPager;
 
-        RecipeViewHolder(@NonNull View itemView) {
+        FeedPageViewHolder(@NonNull View itemView) {
             super(itemView);
-            recipeTitleText = itemView.findViewById(R.id.recipeTitleText);
-            recipeTagsText = itemView.findViewById(R.id.recipeTagsText);
-            allergenWarningText = itemView.findViewById(R.id.allergenWarningText);
-            likeButton = itemView.findViewById(R.id.likeButton);
-            commentButton = itemView.findViewById(R.id.commentButton);
-            saveButton = itemView.findViewById(R.id.saveButton);
+            horizontalPager = itemView.findViewById(R.id.recipeHorizontalPager);
+        }
+
+        void bind(Recipe recipe, ViewPager2 parentVerticalPager) {
+            RecipePageAdapter pageAdapter = new RecipePageAdapter(recipe);
+            horizontalPager.setAdapter(pageAdapter);
+
+            //  Always reset to video page (center) when binding.
+            // Prevents recycled views from showing the previous recipe's page.
+            horizontalPager.setCurrentItem(1, false);
+
+            // Control vertical scrolling based on which horizontal page is active.
+            // Only allow vertical swiping when on the video page (page 1).
+            horizontalPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+                @Override
+                public void onPageSelected(int position) {
+                    if (parentVerticalPager != null) {
+                        parentVerticalPager.setUserInputEnabled(position == 1);
+                    }
+                }
+            });
         }
     }
 }

@@ -16,3 +16,4 @@ local.properties
 
 # Claude Code guidance file — not part of the project source
 CLAUDE.md
+AGENTS.md

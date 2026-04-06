@@ -7,8 +7,6 @@
     android:background="@android:color/black">
 
     <!-- Video/image placeholder background -->
-
-    <!-- Bottom-left: title, tags, allergen warning -->
     <ImageView
         android:id="@+id/recipeBackground"
         android:layout_width="0dp"
@@ -17,11 +15,10 @@
         android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Bottom-left: username, author, allergen warning, title, tags -->
     <LinearLayout
         android:id="@+id/bottomLeftInfo"
         android:layout_width="0dp"
@@ -31,8 +28,18 @@
         android:layout_marginBottom="32dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toStartOf="@id/bottomRightActions">
+        app:layout_constraintEnd_toStartOf="@id/bottomRightActions"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Username from User.name -->
+        <TextView
+            android:id="@+id/usernameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="2dp"
+            android:textColor="#BBBBBB"
+            android:textSize="13sp" />
+
         <TextView
             android:id="@+id/authorNameText"
             android:layout_width="wrap_content"
@@ -75,8 +82,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="12dp"
         android:layout_marginBottom="32dp"
-        android:orientation="vertical"
         android:gravity="center_horizontal"
+        android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -93,23 +100,23 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginBottom="16dp"
-            android:src="@drawable/ic_like"
-            android:contentDescription="Like" />
+            android:contentDescription="Like"
+            android:src="@drawable/ic_like" />
 
         <ImageView
             android:id="@+id/commentButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:layout_marginBottom="16dp"
-            android:src="@drawable/ic_comment"
-            android:contentDescription="Comment" />
+            android:contentDescription="Comment"
+            android:src="@drawable/ic_comment" />
 
         <ImageView
             android:id="@+id/saveButton"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:src="@drawable/ic_save"
-            android:contentDescription="Save" />
+            android:contentDescription="Save"
+            android:src="@drawable/ic_save" />
 
     </LinearLayout>
 

@@ -4,10 +4,11 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
+    <!-- Horizontal ViewPager2: page 0 = ingredients, page 1 = video (center), page 2 = chat -->
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/feedViewPager"
+        android:id="@+id/recipeHorizontalPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical" />
+        android:orientation="horizontal" />
 
 </FrameLayout>
