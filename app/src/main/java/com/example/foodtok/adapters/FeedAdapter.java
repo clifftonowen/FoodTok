@@ -23,8 +23,11 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHo
     private final List<Recipe> recipes;
     private ViewPager2 parentVerticalPager;
 
-    public FeedAdapter(List<Recipe> recipes) {
+    private final OnRecipeInteractionListener listener;
+
+    public FeedAdapter(List<Recipe> recipes, OnRecipeInteractionListener listener) {
         this.recipes = recipes;
+        this.listener = listener;
     }
 
     /**
@@ -46,7 +49,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHo
     @Override
     public void onBindViewHolder(@NonNull FeedPageViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
-        holder.bind(recipe, parentVerticalPager);
+        holder.bind(recipe, parentVerticalPager, listener);
     }
 
     @Override
@@ -63,8 +66,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHo
             horizontalPager = itemView.findViewById(R.id.recipeHorizontalPager);
         }
 
-        void bind(Recipe recipe, ViewPager2 parentVerticalPager) {
-            RecipePageAdapter pageAdapter = new RecipePageAdapter(recipe);
+        void bind(Recipe recipe, ViewPager2 parentVerticalPager, OnRecipeInteractionListener listener) {
+            RecipePageAdapter pageAdapter = new RecipePageAdapter(recipe, listener);
             horizontalPager.setAdapter(pageAdapter);
 
             //  Always reset to video page (center) when binding.

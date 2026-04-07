@@ -1,9 +1,12 @@
 package com.example.foodtok.ui;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,8 +15,11 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodtok.R;
 import com.example.foodtok.adapters.FeedAdapter;
+import com.example.foodtok.adapters.OnRecipeInteractionListener;
 import com.example.foodtok.models.Ingredient;
 import com.example.foodtok.models.Recipe;
+import com.example.foodtok.services.InteractionCallback;
+import com.example.foodtok.services.InteractionServiceProvider;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -22,6 +28,7 @@ import java.util.List;
 public class HomeFragment extends Fragment {
 
     private ViewPager2 feedViewPager;
+    private FeedAdapter adapter;
 
     @Nullable
     @Override
@@ -37,9 +44,66 @@ public class HomeFragment extends Fragment {
         List<Recipe> recipes = initializeMockData();
 
         feedViewPager = view.findViewById(R.id.feedViewPager);
-        FeedAdapter adapter = new FeedAdapter(recipes);
-        adapter.setParentVerticalPager(feedViewPager); 
+
+        adapter = new FeedAdapter(recipes, new OnRecipeInteractionListener() {
+            @Override
+            public void onLikeClicked(Recipe recipe) {
+                InteractionServiceProvider.getInteractionService()
+                        .likeRecipe(recipe.getId(), new InteractionCallback() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onSuccess() {
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                                // If the service says "Please log in first", go to LoginActivity
+                                if (message.equals("Please log in first")) {
+                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                    startActivity(intent);
+                                }
+                                showToast(message);
+                            }
+                        });
+            }
+
+            @Override
+            public void onCommentClicked(Recipe recipe) {
+                showToast("Comment clicked for " + recipe.getTitle());
+            }
+
+            @Override
+            public void onSaveClicked(Recipe recipe) {
+                InteractionServiceProvider.getInteractionService()
+                        .saveRecipe(recipe.getId(), new InteractionCallback() {
+                            @SuppressLint("NotifyDataSetChanged")
+                            @Override
+                            public void onSuccess() {
+                                adapter.notifyDataSetChanged();
+                            }
+
+                            @Override
+                            public void onError(String message) {
+                                if(message.equals("Please log in first")){
+                                    Intent intent = new Intent(getActivity(), LoginActivity.class);
+                                    startActivity(intent);
+                                }else{
+                                    showToast(message);
+                                }
+                            }
+                        });
+            }
+        });
+
+        adapter.setParentVerticalPager(feedViewPager);
         feedViewPager.setAdapter(adapter);
+    }
+
+    private void showToast(String message) {
+        if (getContext() != null) {
+            Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
+        }
     }
 
     private List<Recipe> initializeMockData() {

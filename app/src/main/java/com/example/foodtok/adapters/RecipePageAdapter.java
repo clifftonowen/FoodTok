@@ -1,5 +1,6 @@
 package com.example.foodtok.adapters;
 
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodtok.R;
 import com.example.foodtok.models.Recipe;
+import com.example.foodtok.services.InteractionServiceProvider;
+import com.example.foodtok.ui.LoginActivity;
 
 /**
  * Adapter for the inner horizontal ViewPager2 inside each feed item.
@@ -28,8 +31,13 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     private final Recipe recipe;
 
-    public RecipePageAdapter(Recipe recipe) {
+    private final OnRecipeInteractionListener listener;
+
+
+    public RecipePageAdapter(Recipe recipe, OnRecipeInteractionListener listener) {
         this.recipe = recipe;
+        this.listener = listener;
+
     }
 
     @Override
@@ -113,10 +121,46 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.recipeTagsText.setText(String.join("  ", recipe.getTags()));
         }
 
+        boolean isLiked = InteractionServiceProvider.getInteractionService().isRecipeLiked(recipe.getId());
+
+        boolean isSaved = InteractionServiceProvider.getInteractionService().isRecipeSaved(recipe.getId());
+
+        if (isLiked) {
+            holder.likeButton.setColorFilter(android.graphics.Color.RED);
+        } else {
+            holder.likeButton.clearColorFilter();
+
+        }
+
+        if (isSaved) {
+            holder.saveButton.setColorFilter(android.graphics.Color.YELLOW);
+        } else {
+            holder.saveButton.clearColorFilter();
+
+        }
+
         // Allergen warning — hidden by default, shown when AllergenService is wired
         holder.allergenWarningText.setVisibility(View.GONE);
 
         // TODO: wire like/comment/save buttons via OnRecipeInteractionListener
+        holder.likeButton.setOnClickListener(v -> {
+            if(listener != null){
+                listener.onLikeClicked(recipe);
+            }
+
+        });
+
+        holder.commentButton.setOnClickListener(v -> {
+            if(listener != null){
+                listener.onCommentClicked(recipe);
+            }
+        });
+
+        holder.saveButton.setOnClickListener(v -> {
+            if(listener != null){
+                listener.onSaveClicked(recipe);
+            }
+        });
     }
 
     // ── Chat page ───────────────────────────────────────────────────────
