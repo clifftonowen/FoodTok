@@ -61,7 +61,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHo
     @Override
     public void onBindViewHolder(@NonNull FeedPageViewHolder holder, int position) {
         Recipe recipe = recipes.get(position);
-        // FIX: Pass arguments in the correct order to match the bind method below
+
         holder.bind(recipe, position, parentVerticalPager, interactionListener, horizontalPageListener);
     }
 
@@ -71,7 +71,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHo
     }
 
     static class FeedPageViewHolder extends RecyclerView.ViewHolder {
-        // FIX: Removed duplicate declarations here
+
         final ViewPager2 horizontalPager;
         private ViewPager2.OnPageChangeCallback pageChangeCallback;
 
@@ -80,7 +80,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHo
             horizontalPager = itemView.findViewById(R.id.recipeHorizontalPager);
         }
 
-        // FIX: Signature now correctly includes both types of listeners
+
         void bind(Recipe recipe,
                   int adapterPosition,
                   ViewPager2 parentVerticalPager,

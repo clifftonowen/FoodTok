@@ -1,0 +1,215 @@
+Index: app/src/main/AndroidManifest.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<manifest xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\">\n\n    <application\n        android:allowBackup=\"true\"\n        android:dataExtractionRules=\"@xml/data_extraction_rules\"\n        android:fullBackupContent=\"@xml/backup_rules\"\n        android:icon=\"@mipmap/ic_launcher\"\n        android:label=\"@string/app_name\"\n        android:roundIcon=\"@mipmap/ic_launcher_round\"\n        android:supportsRtl=\"true\"\n        android:theme=\"@style/Theme.FoodTok\">\n        <activity\n            android:name=\".ui.MainActivity\"\n            android:exported=\"true\">\n            <intent-filter>\n                <action android:name=\"android.intent.action.MAIN\" />\n\n                <category android:name=\"android.intent.category.LAUNCHER\" />\n            </intent-filter>\n        </activity>\n    </application>\n\n</manifest>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/AndroidManifest.xml b/app/src/main/AndroidManifest.xml
+--- a/app/src/main/AndroidManifest.xml	(revision 6d2b0da309af0349fbe6e209297a949af75d44ec)
++++ b/app/src/main/AndroidManifest.xml	(date 1775545839801)
+@@ -20,6 +20,12 @@
+                 <category android:name="android.intent.category.LAUNCHER" />
+             </intent-filter>
+         </activity>
++        <activity
++            android:name=".ui.LoginActivity"
++            android:exported="false" />
++        <activity
++            android:name=".ui.SignupActivity"
++            android:exported="false" />
+     </application>
+ 
+ </manifest>
+\ No newline at end of file
+Index: app/src/main/java/com/example/foodtok/services/InteractionCallback.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.foodtok.services;\n\npublic interface InteractionCallback {\n    void onSuccess();\n    void OnError(String message);\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/foodtok/services/InteractionCallback.java b/app/src/main/java/com/example/foodtok/services/InteractionCallback.java
+--- a/app/src/main/java/com/example/foodtok/services/InteractionCallback.java	(revision 6d2b0da309af0349fbe6e209297a949af75d44ec)
++++ b/app/src/main/java/com/example/foodtok/services/InteractionCallback.java	(date 1775545839803)
+@@ -2,5 +2,5 @@
+ 
+ public interface InteractionCallback {
+     void onSuccess();
+-    void OnError(String message);
++    void onError(String message);
+ }
+Index: app/src/main/java/com/example/foodtok/services/InteractionManager.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.foodtok.services;\n\npublic class InteractionManager {\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/foodtok/services/InteractionManager.java b/app/src/main/java/com/example/foodtok/services/InteractionManager.java
+--- a/app/src/main/java/com/example/foodtok/services/InteractionManager.java	(revision 6d2b0da309af0349fbe6e209297a949af75d44ec)
++++ b/app/src/main/java/com/example/foodtok/services/InteractionManager.java	(date 1775545839803)
+@@ -1,4 +1,0 @@
+-package com.example.foodtok.services;
+-
+-public class InteractionManager {
+-}
+Index: app/src/main/java/com/example/foodtok/services/InteractionServiceProvider.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/foodtok/services/InteractionServiceProvider.java b/app/src/main/java/com/example/foodtok/services/InteractionServiceProvider.java
+new file mode 100644
+--- /dev/null	(date 1775545839803)
++++ b/app/src/main/java/com/example/foodtok/services/InteractionServiceProvider.java	(date 1775545839803)
+@@ -0,0 +1,20 @@
++package com.example.foodtok.services;
++
++public class InteractionServiceProvider {
++    private static IInteractionService interactionService;
++    private InteractionServiceProvider(){
++
++    }
++
++    public static IInteractionService getInteractionService(){
++        if(interactionService == null){
++            interactionService = new MockInteractionService();
++        }
++        return interactionService;
++    }
++
++    public static void setInteractionService(IInteractionService service){
++        interactionService = service;
++    }
++
++}
+Index: app/src/main/java/com/example/foodtok/services/MockInteractionService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/foodtok/services/MockInteractionService.java b/app/src/main/java/com/example/foodtok/services/MockInteractionService.java
+new file mode 100644
+--- /dev/null	(date 1775545839803)
++++ b/app/src/main/java/com/example/foodtok/services/MockInteractionService.java	(date 1775545839803)
+@@ -0,0 +1,73 @@
++package com.example.foodtok.services;
++
++import com.example.foodtok.auth.AuthManager;
++import com.example.foodtok.services.IInteractionService;
++import com.example.foodtok.services.InteractionCallback;
++
++import java.util.HashSet;
++import java.util.Set;
++
++public class MockInteractionService implements IInteractionService {
++
++    private final Set<String> likedRecipeIds = new HashSet<>();
++    private final Set<String> savedRecipeIds = new HashSet<>();
++
++
++    @Override
++    public void likeRecipe(String recipeId, InteractionCallback callback) {
++        if (!AuthManager.getInstance().isLoggedIn()) {
++            callback.onError("Please log in first");
++            return;
++        }
++
++        if(likedRecipeIds.contains(recipeId)){
++            likedRecipeIds.remove(recipeId);
++        }else{
++            likedRecipeIds.add(recipeId);
++        }
++
++        callback.onSuccess();
++    }
++
++    @Override
++    public void saveRecipe(String recipeId, InteractionCallback callback) {
++        if (!AuthManager.getInstance().isLoggedIn()) {
++            callback.onError("Please log in first");
++            return;
++        }
++
++        if (savedRecipeIds.contains(recipeId)) {
++
++            savedRecipeIds.remove(recipeId);
++        }else{
++            savedRecipeIds.add(recipeId);
++        }
++
++        callback.onSuccess();
++    }
++
++    @Override
++    public void addComment(String recipeId, String text, InteractionCallback callback) {
++        if (!AuthManager.getInstance().isLoggedIn()) {
++            callback.onError("Please log in first");
++            return;
++        }
++
++        if (text == null || text.trim().isEmpty()) {
++            callback.onError("Comment cannot be empty");
++            return;
++        }
++
++        callback.onSuccess();
++    }
++
++    @Override
++    public boolean isRecipeLiked(String recipeId) {
++        return likedRecipeIds.contains(recipeId);
++    }
++
++    @Override
++    public boolean isRecipeSaved(String recipeId) {
++        return savedRecipeIds.contains(recipeId);
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/example/foodtok/services/IInteractionService.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.foodtok.services;\n\npublic interface IInteractionService {\n    void likeButton(String recipeId, InteractionCallback callback );\n    void saveRecipe(String recipeId, InteractionCallback callback);\n\n    void addComment(String recipeId, String text, InteractionCallback callback);\n\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/foodtok/services/IInteractionService.java b/app/src/main/java/com/example/foodtok/services/IInteractionService.java
+--- a/app/src/main/java/com/example/foodtok/services/IInteractionService.java	(revision 6d2b0da309af0349fbe6e209297a949af75d44ec)
++++ b/app/src/main/java/com/example/foodtok/services/IInteractionService.java	(date 1775545839802)
+@@ -1,10 +1,13 @@
+ package com.example.foodtok.services;
+ 
+ public interface IInteractionService {
+-    void likeButton(String recipeId, InteractionCallback callback );
++    void likeRecipe(String recipeId, InteractionCallback callback );
+     void saveRecipe(String recipeId, InteractionCallback callback);
+ 
+     void addComment(String recipeId, String text, InteractionCallback callback);
+ 
++    boolean isRecipeLiked(String recipeId);
++    boolean isRecipeSaved(String recipeId);
++
+ 
+ }
+Index: app/src/main/java/com/example/foodtok/adapters/OnRecipeInteractionListener.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/foodtok/adapters/OnRecipeInteractionListener.java b/app/src/main/java/com/example/foodtok/adapters/OnRecipeInteractionListener.java
+new file mode 100644
+--- /dev/null	(date 1775545839802)
++++ b/app/src/main/java/com/example/foodtok/adapters/OnRecipeInteractionListener.java	(date 1775545839802)
+@@ -0,0 +1,9 @@
++package com.example.foodtok.adapters;
++
++import com.example.foodtok.models.Recipe;
++
++public interface OnRecipeInteractionListener {
++    void onLikeClicked(Recipe recipe);
++    void onCommentClicked(Recipe recipe);
++    void onSaveClicked(Recipe recipe);
++}
+\ No newline at end of file

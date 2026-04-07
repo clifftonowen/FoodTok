@@ -10,4 +10,47 @@
         android:layout_height="match_parent"
         android:orientation="vertical" />
 
+    <!-- Top navigation scrim + overlay: Ingredients | For You | Chat -->
+    <LinearLayout
+        android:id="@+id/topNavBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/scrim_top_nav"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal"
+        android:paddingTop="52dp"
+        android:paddingBottom="12dp">
+
+        <TextView
+            android:id="@+id/navIngredients"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"
+            android:text="Ingredients"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/navForYou"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"
+            android:text="For You"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/navChat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="14dp"
+            android:paddingVertical="6dp"
+            android:text="Chat"
+            android:textColor="@android:color/white"
+            android:textSize="15sp" />
+
+    </LinearLayout>
+
 </FrameLayout>
