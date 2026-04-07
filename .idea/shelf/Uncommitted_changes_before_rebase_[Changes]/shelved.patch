@@ -1,0 +1,61 @@
+Index: app/src/main/java/com/example/foodtok/adapters/FeedAdapter.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.foodtok.adapters;\n\nimport android.view.LayoutInflater;\nimport android.view.View;\nimport android.view.ViewGroup;\n\nimport androidx.annotation.NonNull;\nimport androidx.recyclerview.widget.RecyclerView;\nimport androidx.viewpager2.widget.ViewPager2;\n\nimport com.example.foodtok.R;\nimport com.example.foodtok.models.Recipe;\n\nimport java.util.List;\n\n/**\n * Adapter for the outer vertical ViewPager2.\n * Each page is a horizontal ViewPager2 containing 3 sub-pages:\n *   [0] Ingredients  |  [1] Video (center, default)  |  [2] Chat\n */\npublic class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHolder> {\n\n    private final List<Recipe> recipes;\n    private ViewPager2 parentVerticalPager;\n\n    private final OnRecipeInteractionListener listener;\n\n    public FeedAdapter(List<Recipe> recipes, OnRecipeInteractionListener listener) {\n        this.recipes = recipes;\n        this.listener = listener;\n    }\n\n    /**\n     * Call this from HomeFragment so we can disable vertical scrolling\n     * when the user is on a non-video page.\n     */\n    public void setParentVerticalPager(ViewPager2 pager) {\n        this.parentVerticalPager = pager;\n    }\n\n    @NonNull\n    @Override\n    public FeedPageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {\n        View view = LayoutInflater.from(parent.getContext())\n                .inflate(R.layout.item_feed_page, parent, false);\n        return new FeedPageViewHolder(view);\n    }\n\n    @Override\n    public void onBindViewHolder(@NonNull FeedPageViewHolder holder, int position) {\n        Recipe recipe = recipes.get(position);\n        holder.bind(recipe, parentVerticalPager, listener);\n    }\n\n    @Override\n    public int getItemCount() {\n        return recipes.size();\n    }\n\n    static class FeedPageViewHolder extends RecyclerView.ViewHolder {\n\n        private final ViewPager2 horizontalPager;\n\n        FeedPageViewHolder(@NonNull View itemView) {\n            super(itemView);\n            horizontalPager = itemView.findViewById(R.id.recipeHorizontalPager);\n        }\n\n        void bind(Recipe recipe, ViewPager2 parentVerticalPager, OnRecipeInteractionListener listener) {\n            RecipePageAdapter pageAdapter = new RecipePageAdapter(recipe, listener);\n            horizontalPager.setAdapter(pageAdapter);\n\n            //  Always reset to video page (center) when binding.\n            // Prevents recycled views from showing the previous recipe's page.\n            horizontalPager.setCurrentItem(1, false);\n\n            // Control vertical scrolling based on which horizontal page is active.\n            // Only allow vertical swiping when on the video page (page 1).\n            horizontalPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {\n                @Override\n                public void onPageSelected(int position) {\n                    if (parentVerticalPager != null) {\n                        parentVerticalPager.setUserInputEnabled(position == 1);\n                    }\n                }\n            });\n        }\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/foodtok/adapters/FeedAdapter.java b/app/src/main/java/com/example/foodtok/adapters/FeedAdapter.java
+--- a/app/src/main/java/com/example/foodtok/adapters/FeedAdapter.java	(revision 408964add21bd1f818655e5065423b8a8f954dca)
++++ b/app/src/main/java/com/example/foodtok/adapters/FeedAdapter.java	(date 1775544022189)
+@@ -20,11 +20,23 @@
+  */
+ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHolder> {
+ 
++    /**
++     * Callback fired whenever the active horizontal sub-page changes.
++     * The adapterPosition lets the receiver ignore events from recycled off-screen items.
++     */
++
++    public interface OnHorizontalPageChangedListener {
++        void onPageChanged(int adapterPosition, int horizontalPage);
++    }
++
++
+     private final List<Recipe> recipes;
+     private ViewPager2 parentVerticalPager;
+ 
+     private final OnRecipeInteractionListener listener;
+ 
++    private OnHorizontalPageChangedListener horizontalPageListener;
++
+     public FeedAdapter(List<Recipe> recipes, OnRecipeInteractionListener listener) {
+         this.recipes = recipes;
+         this.listener = listener;
+@@ -38,6 +50,26 @@
+         this.parentVerticalPager = pager;
+     }
+ 
++    /** Call this from HomeFragment to receive horizontal page change events. */
++    public void setOnHorizontalPageChangedListener(OnHorizontalPageChangedListener listener) {
++        this.horizontalPageListener = listener;
++    }
++
++    /**
++     * Navigates the currently visible recipe's horizontal pager to the given page.
++     * Safe to call from click handlers in HomeFragment.
++     */
++    public void navigateCurrentPageTo(int page) {
++        if (parentVerticalPager == null) return;
++        RecyclerView rv = (RecyclerView) parentVerticalPager.getChildAt(0);
++        if (rv == null) return;
++        int currentPos = parentVerticalPager.getCurrentItem();
++        FeedPageViewHolder vh = (FeedPageViewHolder) rv.findViewHolderForAdapterPosition(currentPos);
++        if (vh != null) {
++            vh.horizontalPager.setCurrentItem(page, true);
++        }
++    }
++
+     @NonNull
+     @Override
+     public FeedPageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
