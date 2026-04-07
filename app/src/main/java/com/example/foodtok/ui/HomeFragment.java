@@ -111,6 +111,9 @@ public class HomeFragment extends Fragment {
                 )
         );
         ramen.setAuthorName("Chef Kenji");
+        ramen.setPrepTimeMinutes(10);
+        ramen.setCookTimeMinutes(20);
+        ramen.setEstimatedCalories(450);
 
         Recipe toast = new Recipe(
                 "2",
@@ -125,6 +128,9 @@ public class HomeFragment extends Fragment {
                 )
         );
         toast.setAuthorName("Brunch Queen");
+        toast.setPrepTimeMinutes(5);
+        toast.setCookTimeMinutes(3);
+        toast.setEstimatedCalories(292);
 
         Recipe cake = new Recipe(
                 "3",
@@ -140,6 +146,9 @@ public class HomeFragment extends Fragment {
                 )
         );
         cake.setAuthorName("Pastry Pro");
+        cake.setPrepTimeMinutes(15);
+        cake.setCookTimeMinutes(12);
+        cake.setEstimatedCalories(510);
 
         recipes.add(ramen);
         recipes.add(toast);
