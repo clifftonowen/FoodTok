@@ -202,10 +202,10 @@ public class HomeFragment extends Fragment {
                 "https://example.com/ramen.mp4",
                 Arrays.asList("#ramen", "#spicy", "#japanese"),
                 Arrays.asList(
-                        new Ingredient("noodles", 138, false),
-                        new Ingredient("broth", 15, false),
-                        new Ingredient("chili oil", 40, false),
-                        new Ingredient("egg", 78, true)
+                        new Ingredient("noodles", 138),
+                        new Ingredient("broth", 15),
+                        new Ingredient("chili oil", 40),
+                        new Ingredient("egg", 78)
                 )
         );
         ramen.setAuthorName("Chef Kenji");
@@ -219,10 +219,10 @@ public class HomeFragment extends Fragment {
                 "https://example.com/avocado.mp4",
                 Arrays.asList("#breakfast", "#healthy", "#avocado"),
                 Arrays.asList(
-                        new Ingredient("sourdough", 120, true),
-                        new Ingredient("avocado", 160, false),
-                        new Ingredient("lemon", 12, false),
-                        new Ingredient("salt", 0, false)
+                        new Ingredient("sourdough", 120),
+                        new Ingredient("avocado", 160),
+                        new Ingredient("lemon", 12),
+                        new Ingredient("salt", 0)
                 )
         );
         toast.setAuthorName("Brunch Queen");
@@ -230,18 +230,17 @@ public class HomeFragment extends Fragment {
         toast.setCookTimeMinutes(3);
         toast.setEstimatedCalories(292);
 
-
         Recipe cake = new Recipe(
                 "3",
                 "Chocolate Lava Cake",
                 "https://example.com/lavacake.mp4",
                 Arrays.asList("#dessert", "#chocolate", "#baking"),
                 Arrays.asList(
-                        new Ingredient("dark chocolate", 170, false),
-                        new Ingredient("butter", 102, true),
-                        new Ingredient("eggs", 78, true),
-                        new Ingredient("flour", 110, true),
-                        new Ingredient("sugar", 50, false)
+                        new Ingredient("dark chocolate", 170),
+                        new Ingredient("butter", 102),
+                        new Ingredient("eggs", 78),
+                        new Ingredient("flour", 110),
+                        new Ingredient("sugar", 50)
                 )
         );
         cake.setAuthorName("Pastry Pro");

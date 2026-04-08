@@ -24,15 +24,16 @@ import com.example.foodtok.services.EnrichmentCallback;
 import com.example.foodtok.services.EnrichmentServiceProvider;
 import com.example.foodtok.services.InteractionServiceProvider;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Adapter for the inner horizontal ViewPager2 inside each feed item.
  * Manages 3 pages per recipe:
  *   Page 0 — Ingredients list
  *   Page 1 — Video overlay (center, default page)
- *   Page 2 — AI chat stub
+ *   Page 2 — AI chatbot
  */
 public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
@@ -124,17 +125,20 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.caloriesText.setText("Calories: —");
         }
 
-        // Allergen banner — show if any ingredient is flagged
-        List<String> allergens = new ArrayList<>();
-        for (Ingredient ingredient : recipe.getIngredients()) {
-            if (ingredient.isAllergen()) {
-                String name = ingredient.getName();
-                allergens.add(name.substring(0, 1).toUpperCase() + name.substring(1));
+        // Personalized allergen banner — driven by the user's blacklist, not
+        // by a per-ingredient flag. If the user has no blacklist (or isn't
+        // signed in), this banner stays hidden and we fall back to the
+        // Gemini-generated "common allergen" banner once enrichment runs.
+        Set<String> userBlacklist = getUserBlacklist();
+        List<String> personalMatches = recipe.findBlacklistedIngredients(userBlacklist);
+        if (!personalMatches.isEmpty()) {
+            StringBuilder pretty = new StringBuilder();
+            for (int i = 0; i < personalMatches.size(); i++) {
+                String name = personalMatches.get(i);
+                pretty.append(name.substring(0, 1).toUpperCase()).append(name.substring(1));
+                if (i < personalMatches.size() - 1) pretty.append(", ");
             }
-        }
-
-        if (!allergens.isEmpty()) {
-            holder.allergenBanner.setText("Allergen Alert: Contains " + String.join(", ", allergens) + ".");
+            holder.allergenBanner.setText("⚠ Contains ingredients from your allergen list: " + pretty + ".");
             holder.allergenBanner.setVisibility(View.VISIBLE);
         } else {
             holder.allergenBanner.setVisibility(View.GONE);
@@ -168,7 +172,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         RecipeEnrichment cached = EnrichmentServiceProvider.getEnrichmentService()
                 .getCachedEnrichment(recipe.getId());
         if (cached != null) {
-            applyEnrichment(holder, cached);
+            applyEnrichment(holder, cached, personalMatches.isEmpty());
             holder.generateAiButton.setVisibility(View.GONE);
         } else {
             holder.generateAiButton.setVisibility(View.VISIBLE);
@@ -183,7 +187,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         @Override
                         public void onEnriched(RecipeEnrichment enrichment) {
                             holder.generateAiButton.post(() -> {
-                                applyEnrichment(holder, enrichment);
+                                applyEnrichment(holder, enrichment, personalMatches.isEmpty());
                                 holder.generateAiButton.setVisibility(View.GONE);
                             });
                         }
@@ -200,11 +204,27 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         });
     }
 
-    private void applyEnrichment(IngredientsViewHolder holder, RecipeEnrichment enrichment) {
-        if (enrichment.hasAllergenWarnings()) {
+    /**
+     * Returns the current user's allergen blacklist as a lowercase set.
+     * TODO: wire to UserServiceProvider.getCurrentUser().getBlacklistedIngredients()
+     * once the user profile flow is in place. Returning an empty set is safe —
+     * it just means no personalized warning, and Gemini enrichment fills in
+     * the general common-allergen banner instead.
+     */
+    private Set<String> getUserBlacklist() {
+        return Collections.emptySet();
+    }
+
+    private void applyEnrichment(IngredientsViewHolder holder,
+                                 RecipeEnrichment enrichment,
+                                 boolean noPersonalMatches) {
+        // Only let the AI-detected common allergens populate the banner if
+        // the personalized blacklist didn't already claim it — the user's
+        // own list always takes precedence.
+        if (noPersonalMatches && enrichment.hasAllergenWarnings()) {
             holder.allergenBanner.setText("AI Alert: "
                     + String.join(", ", enrichment.getDetectedAllergens())
-                    + " detected as allergens.");
+                    + " commonly trigger allergies.");
             holder.allergenBanner.setVisibility(View.VISIBLE);
         }
 
@@ -249,7 +269,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             holder.recipeTagsText.setText("");
         }
 
-        // Added from your logic: reflect current like/save state
+        // Reflect current like/save state
         boolean isLiked = InteractionServiceProvider
                 .getInteractionService()
                 .isRecipeLiked(recipe.getId());
@@ -273,7 +293,6 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         // Allergen warning — hidden by default, shown when AllergenService is wired
         holder.allergenWarningText.setVisibility(View.GONE);
 
-        // Added from your logic: button interactions
         holder.likeButton.setOnClickListener(v -> {
             if (listener != null) {
                 listener.onLikeClicked(recipe);

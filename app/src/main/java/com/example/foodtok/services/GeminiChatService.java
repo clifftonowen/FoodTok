@@ -148,9 +148,7 @@ public class GeminiChatService implements IChatService {
             for (Ingredient ing : ingredients) {
                 sb.append("- ").append(ing.getName());
                 sb.append(" (").append((int) ing.getCalories()).append(" kcal)");
-                if (ing.isAllergen()) {
-                    sb.append(" [ALLERGEN]");
-                }
+                sb.append(" [ALLERGEN]");
                 sb.append("\n");
             }
             sb.append("\n");
