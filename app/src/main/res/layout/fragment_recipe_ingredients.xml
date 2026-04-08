@@ -142,8 +142,22 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:lineSpacingExtra="8dp"
-            android:textColor="@color/foodtok_text_primary"
+            android:textColor="@color/foodtok_text_secondary"
             android:textSize="14sp" />
+
+        <!-- Generate AI Insights Button -->
+        <Button
+            android:id="@+id/generateAiButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/bg_button_secondary"
+            android:text="✦ Generate AI Insights"
+            android:textColor="@color/foodtok_text_on_dark"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:padding="12dp"
+            android:visibility="visible" />
 
         <!-- Calories  -->
         <TextView

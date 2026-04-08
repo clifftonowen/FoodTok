@@ -1,5 +1,7 @@
 import java.util.Properties
 
+import java.io.FileInputStream
+
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -8,11 +10,14 @@ val localProps = Properties()
 val localPropsFile = rootProject.file("local.properties")
 if (localPropsFile.exists()) {
     localProps.load(localPropsFile.inputStream())
+    localProps.load(FileInputStream(localPropsFile))
 }
 
 android {
     namespace = "com.example.foodtok"
-    compileSdk = 36
+    compileSdk {
+        version = release(36)
+    }
 
     defaultConfig {
         applicationId = "com.example.foodtok"
@@ -23,12 +28,16 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
+        buildConfigField("String", "GEMINI_API_KEY",
+            "\"${localProps.getProperty("GEMINI_API_KEY", "")}\"")
         buildConfigField("String", "SUPABASE_URL", "\"${localProps.getProperty("SUPABASE_URL", "")}\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localProps.getProperty("SUPABASE_ANON_KEY", "")}\"")
     }
 
     buildFeatures {
         buildConfig = true
+
+
     }
 
     buildTypes {
@@ -40,7 +49,6 @@ android {
             )
         }
     }
-
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11

@@ -18,11 +18,15 @@ import com.example.foodtok.R;
 
 public class CreateFragment extends Fragment {
 
-    // ActivityResultLauncher is the modern replacement for onActivityResult (not deprecated)
     private final ActivityResultLauncher<Intent> cameraLauncher =
             registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-                // TODO: receive recorded video Uri from result.getData(),
-                //       then navigate to the caption/post screen (Step 2)
+                // Check if the user successfully recorded a video and didn't cancel
+                if (result.getResultCode() == android.app.Activity.RESULT_OK && result.getData() != null) {
+                    Uri recordedVideoUri = result.getData().getData();
+                    if (recordedVideoUri != null) {
+                        onMediaSelected(recordedVideoUri);
+                    }
+                }
             });
 
     private final ActivityResultLauncher<String> galleryLauncher =
@@ -62,7 +66,19 @@ public class CreateFragment extends Fragment {
     }
 
     private void onMediaSelected(Uri mediaUri) {
-        // Entry point for Step 2: pass mediaUri to the caption/post screen
-        // TODO: navigate to PostCaptionFragment.newInstance(mediaUri)
+        // 1. Instantiate the destination fragment
+        UploadRecipeFragment uploadFragment = new UploadRecipeFragment();
+
+        // 2. Package the URI into a Bundle
+        Bundle args = new Bundle();
+        args.putString("video_uri", mediaUri.toString());
+        uploadFragment.setArguments(args);
+
+        // 3. Execute the fragment transaction
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragmentContainer, uploadFragment)
+                .addToBackStack(null) // Allows the user to press 'Back' to select a different video
+                .commit();
     }
 }

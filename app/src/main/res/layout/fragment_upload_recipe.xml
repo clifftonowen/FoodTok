@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="#FFFBEF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="New Recipe"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="#2E5D3B"
+            android:paddingBottom="4dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Only title is required — AI will fill in the rest"
+            android:textSize="12sp"
+            android:textColor="#777777"
+            android:paddingBottom="12dp" />
+
+        <!-- Video thumbnail preview -->
+        <ImageView
+            android:id="@+id/videoThumbnail"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:background="#E0E0E0"
+            android:contentDescription="Video preview" />
+
+        <!-- Title / Caption (REQUIRED) -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Title *"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="4dp" />
+
+        <EditText
+            android:id="@+id/titleInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="e.g. Creamy Garlic Shrimp Pasta"
+            android:inputType="textCapSentences"
+            android:maxLines="2" />
+
+        <!-- Tags -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tags (optional)"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/tagNameInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="e.g. pasta"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <Button
+                android:id="@+id/addTagButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Dynamic tag rows go here -->
+        <LinearLayout
+            android:id="@+id/tagList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp" />
+
+        <!-- Ingredients -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Ingredients (optional)"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="4dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <EditText
+                android:id="@+id/ingredientNameInput"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="e.g. shrimp"
+                android:inputType="text"
+                android:maxLines="1" />
+
+            <Button
+                android:id="@+id/addIngredientButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Add"
+                android:layout_marginStart="8dp" />
+        </LinearLayout>
+
+        <!-- Dynamic ingredient rows go here -->
+        <LinearLayout
+            android:id="@+id/ingredientList"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingTop="8dp" />
+
+        <!-- Times row with NumberPickers -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="16dp"
+            android:gravity="center_horizontal">
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Prep time (min)"
+                    android:textStyle="bold"
+                    android:paddingBottom="4dp" />
+
+                <NumberPicker
+                    android:id="@+id/prepTimePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Cook time (min)"
+                    android:textStyle="bold"
+                    android:paddingBottom="4dp" />
+
+                <NumberPicker
+                    android:id="@+id/cookTimePicker"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- Calories -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Calories per serving (optional)"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="4dp" />
+
+        <EditText
+            android:id="@+id/caloriesInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Leave blank to let AI estimate"
+            android:inputType="numberDecimal" />
+
+        <!-- Instructions -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Instructions (optional)"
+            android:textStyle="bold"
+            android:paddingTop="16dp"
+            android:paddingBottom="4dp" />
+
+        <EditText
+            android:id="@+id/instructionsInput"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Leave blank to let AI generate from your video"
+            android:inputType="textMultiLine|textCapSentences"
+            android:minLines="4"
+            android:gravity="top" />
+
+        <!-- Post button -->
+        <Button
+            android:id="@+id/postButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Post Recipe"
+            android:textStyle="bold"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:backgroundTint="#2E5D3B"
+            android:textColor="#FFFFFF" />
+
+    </LinearLayout>
+</ScrollView>

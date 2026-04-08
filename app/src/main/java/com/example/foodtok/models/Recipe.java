@@ -27,6 +27,15 @@ public class Recipe {
         this.ingredients = ingredients != null ? new ArrayList<>(ingredients) : new ArrayList<>();
     }
 
+    /**
+     * Minimal constructor for incremental construction (e.g., upload form).
+     * Caller is expected to populate fields via setters and add* methods
+     * before persisting the recipe.
+     */
+    public Recipe(String id, String videoUrl) {
+        this(id, "", videoUrl, new ArrayList<>(), new ArrayList<>());
+    }
+
     // --- Behavior methods (Tell, Don't Ask) ---
 
     /**
@@ -43,7 +52,8 @@ public class Recipe {
 
     /**
      * Checks if this recipe contains any ingredient in the user's blacklist.
-     * Used by AllergenService before scoring for the feed.
+     * Used for personalized allergen warnings — the blacklist is managed on
+     * the User profile, not on individual ingredients.
      */
     public boolean containsAllergen(Set<String> blacklistedIngredients) {
         for (Ingredient ingredient : ingredients) {
@@ -52,6 +62,20 @@ public class Recipe {
             }
         }
         return false;
+    }
+
+    /**
+     * Returns the subset of this recipe's ingredients that match the user's
+     * blacklist. Used to build a personalized "Contains X, Y" warning message.
+     */
+    public List<String> findBlacklistedIngredients(Set<String> blacklistedIngredients) {
+        List<String> matches = new ArrayList<>();
+        for (Ingredient ingredient : ingredients) {
+            if (blacklistedIngredients.contains(ingredient.getName().toLowerCase())) {
+                matches.add(ingredient.getName());
+            }
+        }
+        return matches;
     }
 
     /**
@@ -81,26 +105,37 @@ public class Recipe {
         return count;
     }
 
+    /**
+     * Adds a single tag. Used by the upload form to build tags incrementally.
+     * Duplicates and blank tags are silently ignored.
+     */
+    public void addTag(String tag) {
+        if (tag == null) return;
+        String trimmed = tag.trim();
+        if (trimmed.isEmpty() || tags.contains(trimmed)) return;
+        tags.add(trimmed);
+    }
+
+    /**
+     * Adds a single ingredient. Used by the upload form to build the
+     * ingredient list one row at a time.
+     */
+    public void addIngredient(Ingredient ingredient) {
+        if (ingredient == null) return;
+        ingredients.add(ingredient);
+    }
+
     // --- Getters (no setters for id, tags, ingredients — use constructor or dedicated methods) ---
 
     public String getId() { return id; }
-
     public String getTitle() { return title; }
-
     public String getDescription() { return description; }
-
     public String getVideoUrl() { return videoUrl; }
-
     public String getThumbnailUrl() { return thumbnailUrl; }
-
     public String getAuthorId() { return authorId; }
-
     public String getAuthorName() { return authorName; }
-
     public int getPrepTimeMinutes() { return prepTimeMinutes; }
-
     public int getCookTimeMinutes() { return cookTimeMinutes; }
-
     public double getEstimatedCalories() { return estimatedCalories; }
 
     /**
@@ -115,18 +150,12 @@ public class Recipe {
     }
 
     // --- Setters ---
-
+    public void setTitle(String title) { this.title = title; }
     public void setDescription(String description) { this.description = description; }
-
     public void setThumbnailUrl(String thumbnailUrl) { this.thumbnailUrl = thumbnailUrl; }
-
     public void setAuthorId(String authorId) { this.authorId = authorId; }
-
     public void setAuthorName(String authorName) { this.authorName = authorName; }
-
     public void setPrepTimeMinutes(int prepTimeMinutes) { this.prepTimeMinutes = prepTimeMinutes; }
-
     public void setCookTimeMinutes(int cookTimeMinutes) { this.cookTimeMinutes = cookTimeMinutes; }
-
     public void setEstimatedCalories(double estimatedCalories) { this.estimatedCalories = estimatedCalories; }
 }
