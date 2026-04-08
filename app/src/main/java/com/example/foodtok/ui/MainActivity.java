@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.foodtok.R;
+import com.example.foodtok.auth.AuthManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class MainActivity extends AppCompatActivity {
@@ -39,7 +40,11 @@ public class MainActivity extends AppCompatActivity {
                 // Later: check AuthManager.isLoggedIn()
                 // If logged in → ProfileUserFragment
                 // If guest → ProfileGuestFragment
-                selectedFragment = new ProfileGuestFragment();
+                if (AuthManager.getInstance().isLoggedIn()){
+                    selectedFragment = new ProfileUserFragment();
+                } else{
+                    selectedFragment = new ProfileGuestFragment();
+                }
             }
 
             if (selectedFragment != null) {

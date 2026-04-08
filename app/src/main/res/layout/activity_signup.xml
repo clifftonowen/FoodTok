@@ -60,7 +60,7 @@
             android:textColor="@color/foodtok_text_primary"
             android:textColorHint="@color/foodtok_text_secondary"
             android:textSize="15sp"
-            android:visibility="gone" />
+            />
 
         <!-- Email field -->
         <EditText

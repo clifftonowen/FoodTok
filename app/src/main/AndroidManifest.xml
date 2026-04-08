@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <application
+        android:name=".FoodTokApplication"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -27,6 +28,7 @@
             android:name=".ui.SignupActivity"
             android:exported="false" />
     </application>
+
     <uses-permission android:name="android.permission.INTERNET" />
 
 

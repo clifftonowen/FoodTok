@@ -9,37 +9,37 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+
 import com.example.foodtok.R;
+import com.example.foodtok.auth.AuthCallback;
+import com.example.foodtok.auth.AuthServiceProvider;
+import com.example.foodtok.models.User;
 
 public class LoginActivity extends AppCompatActivity {
 
     private EditText etEmail, etPassword;
     private TextView tvError;
+    private Button btnLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        // Find views — like document.getElementById()
         etEmail = findViewById(R.id.etEmail);
         etPassword = findViewById(R.id.etPassword);
         tvError = findViewById(R.id.tvError);
-        Button btnLogin = findViewById(R.id.btnLogin);
+        btnLogin = findViewById(R.id.btnLogin);
         ImageView btnClose = findViewById(R.id.btnClose);
         TextView tvGoToSignUp = findViewById(R.id.tvGoToSignUp);
 
-        // Close button — returns to previous screen
         btnClose.setOnClickListener(v -> finish());
-
-        // Login button
         btnLogin.setOnClickListener(v -> attemptLogin());
 
-        // "Don't have an account? Sign up" — opens SignupActivity
         tvGoToSignUp.setOnClickListener(v -> {
             Intent intent = new Intent(LoginActivity.this, SignupActivity.class);
             startActivity(intent);
-            finish(); // close login so user doesn't stack up screens
+            finish();
         });
     }
 
@@ -47,7 +47,6 @@ public class LoginActivity extends AppCompatActivity {
         String email = etEmail.getText().toString().trim();
         String password = etPassword.getText().toString().trim();
 
-        // Basic validation
         if (TextUtils.isEmpty(email)) {
             showError("Please enter your email");
             return;
@@ -58,18 +57,38 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        // TODO: Connect to Spring Boot / Supabase auth later
-        // For now, mock login — any email/password works
-        mockLogin(email, password);
-    }
-
-    private void mockLogin(String email, String password) {
-        // Simulate successful login
-        // Later this will call your Spring Boot API via Retrofit
+        // Disable button while loading (prevent double-tap)
+        btnLogin.setEnabled(false);
         hideError();
 
-        // Return to previous screen (the feed)
-        finish();
+        // This calls SupabaseAuthService (or MockAuthService)
+        // LoginActivity doesn't know which — loose coupling
+        AuthServiceProvider.getAuthService().login(email, password,
+                new AuthCallback() {
+                    @Override
+                    public void onSuccess(User user) {
+                        // Runs on background thread, switch to UI thread
+                        runOnUiThread(() -> {
+                            // Go to main screen
+                            Intent intent = new Intent(LoginActivity.this,
+                                    MainActivity.class);
+                            // Clear back stack so user can't "back" to login
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                    | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        });
+                    }
+
+                    @Override
+                    public void onError(String message) {
+                        // Also runs on background thread
+                        runOnUiThread(() -> {
+                            showError(message);
+                            btnLogin.setEnabled(true);
+                        });
+                    }
+                });
     }
 
     private void showError(String message) {

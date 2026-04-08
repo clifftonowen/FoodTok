@@ -10,7 +10,7 @@ public final class AuthServiceProvider {
 
     public static IAuthService getAuthService() {
         if (authService == null) {
-            authService = new MockAuthService();
+            authService = new SupabaseAuthService();
         }
         return authService;
     }

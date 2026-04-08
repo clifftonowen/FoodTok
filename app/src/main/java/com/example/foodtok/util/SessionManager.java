@@ -8,6 +8,7 @@ public class SessionManager {
     private static final String PREF_NAME = "foodtok_session";
     private static final String KEY_ACCESS_TOKEN = "access_token";
     private static final String KEY_REFRESH_TOKEN = "refresh_token";
+    private static final String KEY_USERNAME = "username";
     private static final String KEY_USER_ID = "user_id";
 
     private static SessionManager instance;
@@ -36,11 +37,12 @@ public class SessionManager {
     }
 
     // Save tokens after successful login/signup
-    public void saveSession(String accessToken, String refreshToken, String userId) {
+    public void saveSession(String accessToken, String refreshToken, String userId, String userName) {
         prefs.edit()
                 .putString(KEY_ACCESS_TOKEN, accessToken)
                 .putString(KEY_REFRESH_TOKEN, refreshToken)
                 .putString(KEY_USER_ID, userId)
+                .putString(KEY_USERNAME,userName)
                 .apply();  // apply() is async, commit() is sync
     }
 
@@ -51,6 +53,11 @@ public class SessionManager {
     public String getRefreshToken() {
         return prefs.getString(KEY_REFRESH_TOKEN, null);
     }
+
+    public String getUsername() {
+        return prefs.getString(KEY_USERNAME, null);
+    }
+
 
     public String getUserId() {
         return prefs.getString(KEY_USER_ID, null);
