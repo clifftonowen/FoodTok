@@ -18,6 +18,7 @@ import com.example.foodtok.models.ChatMessage;
 import com.example.foodtok.models.Ingredient;
 import com.example.foodtok.models.Recipe;
 import com.example.foodtok.models.RecipeEnrichment;
+import com.example.foodtok.services.BooleanCallback;
 import com.example.foodtok.services.ChatCallback;
 import com.example.foodtok.services.ChatServiceProvider;
 import com.example.foodtok.services.EnrichmentCallback;
@@ -272,26 +273,49 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       holder.recipeTagsText.setText("");
     }
 
-    // Reflect current like/save state
-    boolean isLiked = InteractionServiceProvider
-        .getInteractionService()
-        .isRecipeLiked(recipe.getId());
+    // Reflect current like/save state (async — set default, update on callback)
+    holder.likeButton.clearColorFilter();
+    holder.saveButton.clearColorFilter();
 
-    boolean isSaved = InteractionServiceProvider
-        .getInteractionService()
-        .isRecipeSaved(recipe.getId());
+    InteractionServiceProvider.getInteractionService()
+        .isRecipeLiked(recipe.getId(), new BooleanCallback() {
+          @Override
+          public void onResult(boolean isLiked) {
+            holder.likeButton.post(() -> {
+              if (isLiked) {
+                holder.likeButton.setColorFilter(
+                    android.graphics.Color.RED);
+              } else {
+                holder.likeButton.clearColorFilter();
+              }
+            });
+          }
 
-    if (isLiked) {
-      holder.likeButton.setColorFilter(android.graphics.Color.RED);
-    } else {
-      holder.likeButton.clearColorFilter();
-    }
+          @Override
+          public void onError(String message) {
+            // default (no color) is already set
+          }
+        });
 
-    if (isSaved) {
-      holder.saveButton.setColorFilter(android.graphics.Color.YELLOW);
-    } else {
-      holder.saveButton.clearColorFilter();
-    }
+    InteractionServiceProvider.getInteractionService()
+        .isRecipeSaved(recipe.getId(), new BooleanCallback() {
+          @Override
+          public void onResult(boolean isSaved) {
+            holder.saveButton.post(() -> {
+              if (isSaved) {
+                holder.saveButton.setColorFilter(
+                    android.graphics.Color.YELLOW);
+              } else {
+                holder.saveButton.clearColorFilter();
+              }
+            });
+          }
+
+          @Override
+          public void onError(String message) {
+            // default (no color) is already set
+          }
+        });
 
     // Allergen warning — hidden by default, shown when AllergenService is wired
     Set<String> userBlacklist = getUserBlacklist();
