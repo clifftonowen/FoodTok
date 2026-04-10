@@ -84,7 +84,7 @@ public final class ApiClient {
       restRetrofit = new Retrofit.Builder()
           .baseUrl(Constants.REST_BASE_URL)
           .client(buildClient())
-          .addConverterFactory(GsonConverterFactory.create(GSON))
+          .addConverterFactory(GsonConverterFactory.create())
           .build();
     }
     return restRetrofit;

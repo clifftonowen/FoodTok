@@ -2,7 +2,9 @@ package com.example.foodtok.services;
 
 import com.example.foodtok.models.dto.CommentDto;
 import com.example.foodtok.models.dto.CreateCommentRequest;
+import com.example.foodtok.models.dto.CreateFollowRequest;
 import com.example.foodtok.models.dto.CreateInteractionRequest;
+import com.example.foodtok.models.dto.FollowDto;
 import com.example.foodtok.models.dto.InteractionDto;
 import com.example.foodtok.models.dto.RecipeDto;
 import com.example.foodtok.models.dto.UploadRecipeRequest;
@@ -29,6 +31,13 @@ public interface SupabaseApi {
       @Query("order") String order,
       @Header("Range") String range
   );
+
+    /** Fetches recipes by a specific author. */
+    @GET("recipes")
+    Call<List<RecipeDto>> getRecipesByAuthor(
+            @Query("author_id") String authorIdFilter,
+            @Query("select") String select
+    );
 
   /** Fetches a single recipe by ID filter ({@code id=eq.<uuid>}). */
   @GET("recipes")
@@ -78,4 +87,28 @@ public interface SupabaseApi {
       @Query("recipe_id") String recipeIdFilter,
       @Query("type") String typeFilter
   );
+
+    @GET("follows")
+    Call<List<FollowDto>> getFollowers(
+            @Query("following_id") String followingIdFilter,
+            @Query("select") String select
+    );
+
+
+    @GET("follows")
+    Call<List<FollowDto>> getFollowing(
+            @Query("followers_id") String followerIdFilter,
+            @Query("select") String select
+    );
+
+    @POST("follows")
+    Call<List<FollowDto>> followUser(@Body CreateFollowRequest request);
+
+
+    @DELETE("follows")
+    Call<Void> unfollowUser(
+            @Query("follower_id") String followerIdFilter,
+            @Query("following_id") String followingIdFilter
+    );
+
 }

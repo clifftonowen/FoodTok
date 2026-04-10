@@ -105,7 +105,7 @@
                     android:id="@+id/tvRecipeCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="12"
+                    android:text="0"
                     android:textColor="@color/foodtok_text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -131,7 +131,7 @@
                     android:id="@+id/tvFollowerCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="248"
+                    android:text="0"
                     android:textColor="@color/foodtok_text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -157,7 +157,7 @@
                     android:id="@+id/tvFollowingCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="89"
+                    android:text="0"
                     android:textColor="@color/foodtok_text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
@@ -219,13 +219,11 @@
         android:background="@color/foodtok_divider" />
 
     <!-- Placeholder for recipe grid -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="60dp"
-        android:text="Your recipes will appear here"
-        android:textColor="@color/foodtok_text_secondary"
-        android:textSize="14sp" />
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvProfileRecipes"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="8dp" />
 
 </LinearLayout>

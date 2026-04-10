@@ -17,14 +17,14 @@ public interface SupabaseAuthApi {
   @POST("signup")
   Call<AuthResponse> signUp(@Body SignUpRequest request);
 
-  // POST /auth/v1/token?grant_type=password
-  @POST("token")
-  Call<AuthResponse> login(
-      @Query("grant_type") String grantType,
-      @Body LoginRequest request
-  );
+    // POST /auth/v1/token?grant_type=password
+    @POST("token")
+    Call<AuthResponse> login(
+            @Query("grant_type") String grantType,
+            @Body LoginRequest request
+    );
 
-  // POST /auth/v1/logout
-  @POST("logout")
-  Call<Void> logout(@Header("Authorization") String token);
+    // POST /auth/v1/logout
+    @POST("logout")
+    Call<Void> logout(@Header("Authorization") String token);
 }
