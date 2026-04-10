@@ -13,7 +13,9 @@ import com.example.foodtok.util.Constants;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 import okhttp3.MediaType;
@@ -169,6 +171,43 @@ public class SupabaseRecipeService implements IRecipeService {
             } else {
               callback.onError("Failed to create recipe: "
                   + response.code());
+            }
+          }
+
+          @Override
+          public void onFailure(Call<List<RecipeDto>> call,
+              Throwable t) {
+            callback.onError("Network error: " + t.getMessage());
+          }
+        });
+  }
+
+  @Override
+  public void searchByIngredients(Set<String> ingredientNames,
+      RecipeListCallback callback) {
+    // Fetch all recipes, then rank by ingredient overlap client-side
+    api.getRecipes(RECIPE_SELECT, "created_at.desc", "0-99")
+        .enqueue(new Callback<List<RecipeDto>>() {
+          @Override
+          public void onResponse(Call<List<RecipeDto>> call,
+              Response<List<RecipeDto>> response) {
+            if (response.isSuccessful() && response.body() != null) {
+              List<Recipe> matched = new ArrayList<>();
+              for (RecipeDto dto : response.body()) {
+                Recipe recipe = dto.toDomain();
+                if (recipe.countMatchingIngredients(ingredientNames)
+                    > 0) {
+                  matched.add(recipe);
+                }
+              }
+              // Sort by match count descending
+              Collections.sort(matched, (a, b) ->
+                  Integer.compare(
+                      b.countMatchingIngredients(ingredientNames),
+                      a.countMatchingIngredients(ingredientNames)));
+              callback.onSuccess(matched);
+            } else {
+              callback.onError("Search failed: " + response.code());
             }
           }
 

@@ -3,6 +3,8 @@ package com.example.foodtok.services;
 import android.content.Context;
 import android.net.Uri;
 
+import java.util.Set;
+
 /** Interface contract for fetching and creating recipes. */
 public interface IRecipeService {
 
@@ -40,4 +42,13 @@ public interface IRecipeService {
       String description, String[] tags, int prepTimeMinutes,
       int cookTimeMinutes, double estimatedCalories,
       RecipeCallback callback);
+
+  /**
+   * Searches recipes by selected ingredients, ranked by match count.
+   *
+   * @param ingredientNames lowercase ingredient names to match
+   * @param callback        async result callback returning ranked recipes
+   */
+  void searchByIngredients(Set<String> ingredientNames,
+      RecipeListCallback callback);
 }

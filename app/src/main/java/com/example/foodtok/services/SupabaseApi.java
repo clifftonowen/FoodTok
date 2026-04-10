@@ -3,6 +3,7 @@ package com.example.foodtok.services;
 import com.example.foodtok.models.dto.CommentDto;
 import com.example.foodtok.models.dto.CreateCommentRequest;
 import com.example.foodtok.models.dto.CreateInteractionRequest;
+import com.example.foodtok.models.dto.IngredientDto;
 import com.example.foodtok.models.dto.InteractionDto;
 import com.example.foodtok.models.dto.RecipeDto;
 import com.example.foodtok.models.dto.UpdateProfileRequest;
@@ -65,6 +66,15 @@ public interface SupabaseApi {
   Call<List<UserDto>> updateProfile(
       @Query("id") String idFilter,
       @Body UpdateProfileRequest request
+  );
+
+  // ── Ingredients ──────────────────────────────────────────────────────
+
+  /** Fetches all ingredients for Trie autocomplete. */
+  @GET("ingredients")
+  Call<List<IngredientDto>> getAllIngredients(
+      @Query("select") String select,
+      @Query("order") String order
   );
 
   // ── Interactions ─────────────────────────────────────────────────────
