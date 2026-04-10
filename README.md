@@ -5,25 +5,64 @@
 Food Tok is an infinite scrolling app for cooks to share and discover various recipes from different parts of the world for everyone to make
 ## Architecture & Package Structure
 To maintain Separation of Concerns, please place all new files in their designated packages:
-* `models/` - Plain Java data entities (`User`, `Recipe`, `Ingredient`).
-* `services/` - Stateless business logic and algorithms (`RecommendationService`, `InteractionManager`).
-* `ui/` - Android Activities and Fragments (`MainActivity`).
-* `adapters/` - RecyclerView adapters (`FeedAdapter`).
+* `models/` - Plain Java data entities (`User`, `Recipe`, `Ingredient`) and `dto/` sub-package for API request/response objects.
+* `services/` - Business logic, API clients, and service interfaces with real + mock implementations.
+* `ui/` - Android Activities and Fragments.
+* `adapters/` - RecyclerView adapters.
+* `data/` - Custom data structures (50.004 requirement: Trie, PriorityQueue).
+* `auth/` - Authentication service interface, implementations, and session management.
+* `util/` - Helpers (API client, session manager, constants).
 
 ```text
 com.example.foodtok
 ├── adapters/
-│   └── FeedAdapter.java
+│   ├── FeedAdapter.java
+│   ├── RecipePageAdapter.java
+│   ├── CommentAdapter.java
+│   ├── ChatMessageAdapter.java
+│   ├── IngredientSuggestionAdapter.java
+│   ├── SearchResultAdapter.java
+│   └── OnRecipeInteractionListener.java
+├── auth/
+│   ├── IAuthService.java
+│   ├── SupabaseAuthService.java
+│   ├── MockAuthService.java
+│   ├── AuthServiceProvider.java
+│   ├── AuthManager.java
+│   └── AuthCallback.java
+├── data/
+│   ├── Trie.java
+│   └── TrieNode.java
 ├── models/
 │   ├── Ingredient.java
 │   ├── Recipe.java
-│   └── User.java
+│   ├── User.java
+│   ├── Comment.java
+│   ├── ChatMessage.java
+│   ├── RecipeEnrichment.java
+│   └── dto/ (API request/response DTOs)
 ├── services/
-│   ├── InteractionManager.java
-│   ├── RecommendationService.java
-│   └── Service.java
-└── ui/
-    └── MainActivity.java
+│   ├── SupabaseApi.java
+│   ├── SupabaseAuthApi.java
+│   ├── SupabaseStorageApi.java
+│   ├── SupabaseRecipeService.java
+│   ├── SupabaseCommentService.java
+│   ├── SupabaseInteractionService.java
+│   ├── I*Service.java (interfaces)
+│   ├── Mock*Service.java (mock impls)
+│   └── *ServiceProvider.java (factories)
+├── ui/
+│   ├── MainActivity.java
+│   ├── HomeFragment.java
+│   ├── SearchFragment.java
+│   ├── OnboardingActivity.java
+│   ├── LoginActivity.java
+│   ├── SignupActivity.java
+│   └── ...
+└── util/
+    ├── ApiClient.java
+    ├── SessionManager.java
+    └── Constants.java
 ```
 ## Database Schema (Supabase / PostgreSQL)
 
@@ -41,8 +80,8 @@ The app uses Supabase (PostgreSQL + PostgREST + Auth + Storage). There is no sta
 | **comments** | `id`, `user_id` (FK), `recipe_id` (FK), `content`, `created_at` | |
 | **cookbooks** | `id`, `user_id` (FK → profiles), `name`, `created_at` | |
 | **cookbook_recipes** | `cookbook_id` (FK), `recipe_id` (FK), `added_at` | Composite PK |
-| **followers** | `id`, `follower_id`, `following_id`, `created_at` | Missing FKs to profiles. |
-| **follows** | `id`, `follower_id` (FK → profiles), `following_id` (FK → profiles), `created_at` | Has proper FKs. Team is consolidating followers/follows — do not modify either for now. |
+| **followers** | `id`, `follower_id`, `following_id`, `created_at` | Missing FKs to profiles. Legacy table. |
+| **follows** | `id`, `follower_id` (FK → profiles), `following_id` (FK → profiles), `created_at` | Has proper FKs. API endpoints wired. |
 
 ### Pending Migrations
 
