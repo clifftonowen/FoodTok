@@ -10,6 +10,7 @@ public class MockInteractionService implements IInteractionService {
 
   private final Set<String> likedRecipeIds = new HashSet<>();
   private final Set<String> savedRecipeIds = new HashSet<>();
+  private final Set<String> notInterestedRecipeIds = new HashSet<>();
 
   @Override
   public void likeRecipe(String recipeId, InteractionCallback callback) {
@@ -60,6 +61,23 @@ public class MockInteractionService implements IInteractionService {
   }
 
   @Override
+  public void markNotInterested(String recipeId,
+      InteractionCallback callback) {
+    if (!AuthManager.getInstance().isLoggedIn()) {
+      callback.onError("Please log in first");
+      return;
+    }
+
+    if (notInterestedRecipeIds.contains(recipeId)) {
+      notInterestedRecipeIds.remove(recipeId);
+    } else {
+      notInterestedRecipeIds.add(recipeId);
+    }
+
+    callback.onSuccess();
+  }
+
+  @Override
   public void isRecipeLiked(String recipeId, BooleanCallback callback) {
     callback.onResult(likedRecipeIds.contains(recipeId));
   }
@@ -67,5 +85,11 @@ public class MockInteractionService implements IInteractionService {
   @Override
   public void isRecipeSaved(String recipeId, BooleanCallback callback) {
     callback.onResult(savedRecipeIds.contains(recipeId));
+  }
+
+  @Override
+  public void isRecipeNotInterested(String recipeId,
+      BooleanCallback callback) {
+    callback.onResult(notInterestedRecipeIds.contains(recipeId));
   }
 }

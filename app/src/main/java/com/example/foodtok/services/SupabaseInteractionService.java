@@ -48,6 +48,18 @@ public class SupabaseInteractionService implements IInteractionService {
     checkInteractionExists(recipeId, "save", callback);
   }
 
+  @Override
+  public void markNotInterested(String recipeId,
+      InteractionCallback callback) {
+    toggleInteraction(recipeId, "not_interested", callback);
+  }
+
+  @Override
+  public void isRecipeNotInterested(String recipeId,
+      BooleanCallback callback) {
+    checkInteractionExists(recipeId, "not_interested", callback);
+  }
+
   /**
    * Toggles an interaction: deletes if it exists, creates if it doesn't.
    * Mirrors the toggle behavior of {@link MockInteractionService}.

@@ -193,6 +193,28 @@ public class HomeFragment extends Fragment {
               }
             });
       }
+
+      @Override
+      public void onNotInterestedClicked(Recipe recipe) {
+        InteractionServiceProvider.getInteractionService()
+            .markNotInterested(recipe.getId(), new InteractionCallback() {
+              @SuppressLint("NotifyDataSetChanged")
+              @Override
+              public void onSuccess() {
+                feedAdapter.notifyDataSetChanged();
+              }
+
+              @Override
+              public void onError(String message) {
+                if ("Please log in first".equals(message)) {
+                  Intent intent = new Intent(getActivity(), LoginActivity.class);
+                  startActivity(intent);
+                } else {
+                  showToast(message);
+                }
+              }
+            });
+      }
     });
 
     feedAdapter.setParentVerticalPager(feedViewPager);
