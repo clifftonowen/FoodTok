@@ -81,8 +81,11 @@ public class SignupActivity extends AppCompatActivity {
       @Override
       public void onSuccess(User user) {
         runOnUiThread(() -> {
-          Intent intent = new Intent(SignupActivity.this, MainActivity.class);
-          intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+          Intent intent = new Intent(
+              SignupActivity.this, OnboardingActivity.class);
+          intent.setFlags(
+              Intent.FLAG_ACTIVITY_NEW_TASK
+                  | Intent.FLAG_ACTIVITY_CLEAR_TASK);
           startActivity(intent);
           finish();
         });

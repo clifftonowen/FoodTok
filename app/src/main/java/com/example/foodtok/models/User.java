@@ -11,8 +11,8 @@ public class User {
   private final String id;
   private String username;
   private final String email;
-  private final Map <String, Integer> interestProfile;
-
+  private String avatarUrl;
+  private final Map<String, Integer> interestProfile;
   private final List<String> blacklistedIngredients;
 
   public User(String id, String username, String email){
@@ -85,6 +85,38 @@ public class User {
 
   public int getBlacklistedCount() {
     return blacklistedIngredients.size();
+  }
+
+  /** Returns the avatar URL, or {@code null} if not set. */
+  public String getAvatarUrl() {
+    return avatarUrl;
+  }
+
+  /**
+   * Sets the user's avatar URL.
+   *
+   * @param avatarUrl the URL to the avatar image
+   */
+  public void setAvatarUrl(String avatarUrl) {
+    this.avatarUrl = avatarUrl;
+  }
+
+  /**
+   * Returns a copy of the interest profile map for serialization.
+   *
+   * @return map of tag names to preference scores
+   */
+  public Map<String, Integer> getInterestProfile() {
+    return new HashMap<>(interestProfile);
+  }
+
+  /**
+   * Returns a copy of the blacklisted ingredients list for serialization.
+   *
+   * @return list of blacklisted ingredient names
+   */
+  public List<String> getBlacklistedIngredients() {
+    return new ArrayList<>(blacklistedIngredients);
   }
 
 

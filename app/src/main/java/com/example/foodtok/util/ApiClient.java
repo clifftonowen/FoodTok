@@ -1,12 +1,18 @@
 package com.example.foodtok.util;
 
+import android.util.Log;
+
+import com.example.foodtok.models.dto.AuthResponse;
+import com.example.foodtok.models.dto.RefreshTokenRequest;
 import com.example.foodtok.services.SupabaseApi;
+import com.example.foodtok.services.SupabaseAuthApi;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -22,8 +28,61 @@ public final class ApiClient {
       .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
       .create();
 
+  private static final String TAG = "ApiClient";
+
   private ApiClient() {
     // prevent instantiation
+  }
+
+  /**
+   * Attempts to refresh the Supabase JWT using the stored refresh token.
+   * On success, persists the new tokens and returns the new access token.
+   * Returns {@code null} on failure (caller should redirect to login).
+   */
+  private static synchronized String tryRefreshToken() {
+    String refreshToken =
+        SessionManager.getInstance().getRefreshToken();
+    if (refreshToken == null) {
+      return null;
+    }
+
+    try {
+      Retrofit authRetrofit = new Retrofit.Builder()
+          .baseUrl(Constants.AUTH_BASE_URL)
+          .client(new OkHttpClient.Builder()
+              .addInterceptor(chain -> chain.proceed(
+                  chain.request().newBuilder()
+                      .addHeader("apikey", Constants.SUPABASE_ANON_KEY)
+                      .addHeader("Content-Type", "application/json")
+                      .build()))
+              .build())
+          .addConverterFactory(GsonConverterFactory.create(GSON))
+          .build();
+
+      SupabaseAuthApi authApi =
+          authRetrofit.create(SupabaseAuthApi.class);
+      Response<AuthResponse> response = authApi
+          .refreshToken("refresh_token",
+              new RefreshTokenRequest(refreshToken))
+          .execute();
+
+      if (response.isSuccessful() && response.body() != null) {
+        AuthResponse body = response.body();
+        SessionManager.getInstance().saveSession(
+            body.getAccessToken(),
+            body.getRefreshToken(),
+            SessionManager.getInstance().getUserId(),
+            SessionManager.getInstance().getUsername());
+        Log.d(TAG, "JWT refreshed successfully");
+        return body.getAccessToken();
+      } else {
+        Log.w(TAG, "Token refresh failed: " + response.code());
+        return null;
+      }
+    } catch (Exception e) {
+      Log.w(TAG, "Token refresh error", e);
+      return null;
+    }
   }
 
   // Shared OkHttpClient — attaches headers to EVERY request
@@ -50,6 +109,16 @@ public final class ApiClient {
 
           return chain.proceed(builder.build());
         })
+        .authenticator((route, response) -> {
+          // OkHttp calls this on 401 — try refreshing the JWT
+          String newToken = tryRefreshToken();
+          if (newToken == null) {
+            return null; // give up, let the 401 propagate
+          }
+          return response.request().newBuilder()
+              .header("Authorization", "Bearer " + newToken)
+              .build();
+        })
         .addInterceptor(logging)
         .build();
   }
@@ -73,6 +142,15 @@ public final class ApiClient {
           }
 
           return chain.proceed(builder.build());
+        })
+        .authenticator((route, response) -> {
+          String newToken = tryRefreshToken();
+          if (newToken == null) {
+            return null;
+          }
+          return response.request().newBuilder()
+              .header("Authorization", "Bearer " + newToken)
+              .build();
         })
         .addInterceptor(logging)
         .build();

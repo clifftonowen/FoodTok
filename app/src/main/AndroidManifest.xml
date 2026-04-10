@@ -30,6 +30,9 @@
         <activity
             android:name=".ui.SignupActivity"
             android:exported="false" />
+        <activity
+            android:name=".ui.OnboardingActivity"
+            android:exported="false" />
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />

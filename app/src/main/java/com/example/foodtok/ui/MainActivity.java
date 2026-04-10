@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
       } else if (itemId == R.id.nav_create) {
         selectedFragment = new CreateFragment();
       } else if (itemId == R.id.nav_chat) {
-        selectedFragment = new ChatFragment();
+        selectedFragment = new GridFragment();
       } else if (itemId == R.id.nav_profile) {
         // Later: check AuthManager.isLoggedIn()
         // If logged in → ProfileUserFragment

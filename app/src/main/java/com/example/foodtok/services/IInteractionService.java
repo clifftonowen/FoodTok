@@ -1,6 +1,6 @@
 package com.example.foodtok.services;
 
-/** Interface contract for user-recipe interaction operations (like, save, comment). */
+/** Interface contract for user-recipe interaction operations (like, save, comment, not interested). */
 public interface IInteractionService {
 
   void likeRecipe(String recipeId, InteractionCallback callback);
@@ -9,7 +9,11 @@ public interface IInteractionService {
 
   void addComment(String recipeId, String text, InteractionCallback callback);
 
+  void markNotInterested(String recipeId, InteractionCallback callback);
+
   void isRecipeLiked(String recipeId, BooleanCallback callback);
 
   void isRecipeSaved(String recipeId, BooleanCallback callback);
+
+  void isRecipeNotInterested(String recipeId, BooleanCallback callback);
 }

@@ -4,10 +4,13 @@ import com.example.foodtok.models.dto.CommentDto;
 import com.example.foodtok.models.dto.CreateCommentRequest;
 import com.example.foodtok.models.dto.CreateFollowRequest;
 import com.example.foodtok.models.dto.CreateInteractionRequest;
+import com.example.foodtok.models.dto.IngredientDto;
 import com.example.foodtok.models.dto.FollowDto;
 import com.example.foodtok.models.dto.InteractionDto;
 import com.example.foodtok.models.dto.RecipeDto;
+import com.example.foodtok.models.dto.UpdateProfileRequest;
 import com.example.foodtok.models.dto.UploadRecipeRequest;
+import com.example.foodtok.models.dto.UserDto;
 
 import java.util.List;
 
@@ -16,6 +19,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
@@ -63,6 +67,24 @@ public interface SupabaseApi {
   /** Creates a new comment. */
   @POST("comments")
   Call<List<CommentDto>> createComment(@Body CreateCommentRequest request);
+
+  // ── Profiles ─────────────────────────────────────────────────────────
+
+  /** Updates a user's profile (avatar, preferences, allergens). */
+  @PATCH("profiles")
+  Call<List<UserDto>> updateProfile(
+      @Query("id") String idFilter,
+      @Body UpdateProfileRequest request
+  );
+
+  // ── Ingredients ──────────────────────────────────────────────────────
+
+  /** Fetches all ingredients for Trie autocomplete. */
+  @GET("ingredients")
+  Call<List<IngredientDto>> getAllIngredients(
+      @Query("select") String select,
+      @Query("order") String order
+  );
 
   // ── Interactions ─────────────────────────────────────────────────────
 

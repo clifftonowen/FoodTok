@@ -25,6 +25,31 @@ com.example.foodtok
 └── ui/
     └── MainActivity.java
 ```
+## Database Schema (Supabase / PostgreSQL)
+
+The app uses Supabase (PostgreSQL + PostgREST + Auth + Storage). There is no standalone `users` table — Supabase Auth manages accounts in `auth.users`, and the `profiles` table extends them with app-specific data.
+
+### Actual Tables (as deployed)
+
+| Table | Key Columns | Notes |
+|-------|-------------|-------|
+| **profiles** | `id` (FK → auth.users), `username`, `avatar_url`, `interest_profile` (JSONB), `blacklisted_ingredients` (TEXT[]), `created_at` | No `email`/`display_name` — email is in auth.users. |
+| **recipes** | `id`, `author_id` (FK → profiles), `title`, `description`, `video_url` (nullable), `thumbnail_url`, `tags` (TEXT[]), `prep_time_minutes`, `cook_time_minutes`, `estimated_calories` (DOUBLE PRECISION), `created_at` | |
+| **ingredients** | `id`, `name` (UNIQUE), `calories_per_100g`, `is_common_allergen`, `category` | |
+| **recipe_ingredients** | `recipe_id` (FK), `ingredient_id` (FK), `quantity` (NOT NULL), `is_optional` | Composite PK on (recipe_id, ingredient_id) |
+| **interactions** | `id`, `user_id` (FK), `recipe_id` (FK), `type` (CHECK: 'like','save','not_interested','view'), `created_at` | UNIQUE(user_id, recipe_id, type). |
+| **comments** | `id`, `user_id` (FK), `recipe_id` (FK), `content`, `created_at` | |
+| **cookbooks** | `id`, `user_id` (FK → profiles), `name`, `created_at` | |
+| **cookbook_recipes** | `cookbook_id` (FK), `recipe_id` (FK), `added_at` | Composite PK |
+| **followers** | `id`, `follower_id`, `following_id`, `created_at` | Missing FKs to profiles. |
+| **follows** | `id`, `follower_id` (FK → profiles), `following_id` (FK → profiles), `created_at` | Has proper FKs. Team is consolidating followers/follows — do not modify either for now. |
+
+### Pending Migrations
+
+```sql
+-- No pending migrations — all applied.
+```
+
 ## Git Workflow
 * **DO NOT commit directly to the `main` branch.**
 * Create a new branch for every feature you work on.

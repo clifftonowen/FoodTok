@@ -273,9 +273,10 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       holder.recipeTagsText.setText("");
     }
 
-    // Reflect current like/save state (async — set default, update on callback)
+    // Reflect current like/save/not-interested state (async — set default, update on callback)
     holder.likeButton.clearColorFilter();
     holder.saveButton.clearColorFilter();
+    holder.notInterestedButton.clearColorFilter();
 
     InteractionServiceProvider.getInteractionService()
         .isRecipeLiked(recipe.getId(), new BooleanCallback() {
@@ -307,6 +308,26 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                     android.graphics.Color.YELLOW);
               } else {
                 holder.saveButton.clearColorFilter();
+              }
+            });
+          }
+
+          @Override
+          public void onError(String message) {
+            // default (no color) is already set
+          }
+        });
+
+    InteractionServiceProvider.getInteractionService()
+        .isRecipeNotInterested(recipe.getId(), new BooleanCallback() {
+          @Override
+          public void onResult(boolean isNotInterested) {
+            holder.notInterestedButton.post(() -> {
+              if (isNotInterested) {
+                holder.notInterestedButton.setColorFilter(
+                    android.graphics.Color.GRAY);
+              } else {
+                holder.notInterestedButton.clearColorFilter();
               }
             });
           }
@@ -357,6 +378,12 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     holder.saveButton.setOnClickListener(v -> {
       if (listener != null) {
         listener.onSaveClicked(recipe);
+      }
+    });
+
+    holder.notInterestedButton.setOnClickListener(v -> {
+      if (listener != null) {
+        listener.onNotInterestedClicked(recipe);
       }
     });
   }
@@ -489,6 +516,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     final ImageView likeButton;
     final ImageView commentButton;
     final ImageView saveButton;
+    final ImageView notInterestedButton;
 
     VideoViewHolder(@NonNull View itemView) {
       super(itemView);
@@ -500,6 +528,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       likeButton = itemView.findViewById(R.id.likeButton);
       commentButton = itemView.findViewById(R.id.commentButton);
       saveButton = itemView.findViewById(R.id.saveButton);
+      notInterestedButton = itemView.findViewById(R.id.notInterestedButton);
     }
   }
 

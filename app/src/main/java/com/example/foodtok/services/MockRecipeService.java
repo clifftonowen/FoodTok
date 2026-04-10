@@ -8,7 +8,9 @@ import com.example.foodtok.models.Recipe;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /** In-memory mock implementation of {@link IRecipeService} for offline testing. */
@@ -58,6 +60,22 @@ public class MockRecipeService implements IRecipeService {
     recipe.setAuthorName("Mock User");
     mockRecipes.add(0, recipe);
     callback.onSuccess(recipe);
+  }
+
+  @Override
+  public void searchByIngredients(Set<String> ingredientNames,
+      RecipeListCallback callback) {
+    List<Recipe> matched = new ArrayList<>();
+    for (Recipe r : mockRecipes) {
+      if (r.countMatchingIngredients(ingredientNames) > 0) {
+        matched.add(r);
+      }
+    }
+    Collections.sort(matched, (a, b) ->
+        Integer.compare(
+            b.countMatchingIngredients(ingredientNames),
+            a.countMatchingIngredients(ingredientNames)));
+    callback.onSuccess(matched);
   }
 
   private List<Recipe> buildMockData() {

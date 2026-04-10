@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment;
 
 import com.example.foodtok.R;
 
-/** Global chat tab fragment. Currently a stub awaiting implementation. */
-public class ChatFragment extends Fragment {
+/** Grid layout video feed tab fragment. Currently a stub awaiting implementation. */
+public class GridFragment extends Fragment {
 
   @Nullable
   @Override

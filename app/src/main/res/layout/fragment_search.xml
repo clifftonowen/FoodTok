@@ -6,63 +6,76 @@
     android:orientation="vertical"
     android:padding="16dp">
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="16dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+  <!-- Search bar row -->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="32dp"
+      android:layout_marginBottom="8dp"
+      android:gravity="center_vertical"
+      android:orientation="horizontal">
 
-        <!-- Back arrow -->
-        <ImageView
-            android:id="@+id/btnBack"
-            android:layout_width="36dp"
-            android:layout_height="36dp"
-            android:layout_marginEnd="8dp"
-            android:contentDescription="Back to Home"
-            android:padding="4dp"
-            android:src="@android:drawable/ic_menu_revert" />
+    <EditText
+        android:id="@+id/etSearch"
+        android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
+        android:layout_weight="1"
+        android:background="@drawable/bg_input_field"
+        android:drawableStart="@android:drawable/ic_menu_search"
+        android:drawablePadding="8dp"
+        android:hint="Type an ingredient..."
+        android:inputType="text"
+        android:textColor="@color/foodtok_text_primary"
+        android:textColorHint="@color/foodtok_text_secondary"
+        android:textSize="13sp" />
 
-        <EditText
-            android:id="@+id/etSearch"
-            android:layout_width="0dp"
-            android:layout_height="40dp"
-            android:layout_marginEnd="8dp"
-            android:layout_weight="1"
-            android:background="@drawable/bg_input_field"
-            android:drawableStart="@android:drawable/ic_menu_search"
-            android:drawablePadding="8dp"
-            android:hint="Search recipes or ingredients"
-            android:inputType="text"
-            android:textColor="@color/foodtok_text_primary"
-            android:textColorHint="@color/foodtok_text_secondary"
-            android:textSize="13sp" />
-
-        <TextView
-            android:id="@+id/tvToggleAction"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Search"
-            android:textColor="@color/foodtok_green"
-            android:textSize="14sp"
-            android:textStyle="bold"
-             />
-
-    </LinearLayout>
-
-    <!-- Search bar -->
-
-
-    <!-- Placeholder for search results -->
     <TextView
+        android:id="@+id/tvSearchAction"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="100dp"
-        android:text="Search for recipes,\ningredients, or creators"
-        android:textAlignment="center"
-        android:textColor="@color/foodtok_text_secondary"
-        android:textSize="16sp" />
+        android:text="Search"
+        android:textColor="@color/foodtok_green"
+        android:textSize="14sp"
+        android:textStyle="bold" />
+
+  </LinearLayout>
+
+  <!-- Autocomplete suggestions (overlays content below) -->
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/rvSuggestions"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:background="@android:color/white"
+      android:elevation="4dp"
+      android:maxHeight="200dp"
+      android:visibility="gone" />
+
+  <!-- Selected ingredient chips -->
+  <com.google.android.material.chip.ChipGroup
+      android:id="@+id/chipGroupSelected"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp" />
+
+  <!-- Empty state text -->
+  <TextView
+      android:id="@+id/tvEmptyState"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_gravity="center_horizontal"
+      android:layout_marginTop="80dp"
+      android:text="Search for recipes by ingredient.\nType to see suggestions."
+      android:textAlignment="center"
+      android:textColor="@color/foodtok_text_secondary"
+      android:textSize="14sp" />
+
+  <!-- Search results grid -->
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/rvSearchResults"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:visibility="gone" />
 
 </LinearLayout>
