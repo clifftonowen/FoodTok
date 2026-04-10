@@ -17,7 +17,7 @@ import retrofit2.Response;
 public class SupabaseCommentService implements ICommentService {
 
   private static final String COMMENT_SELECT =
-      "*,users(username,display_name,avatar_url)";
+      "*,profiles(username)";
 
   private final SupabaseApi api;
 

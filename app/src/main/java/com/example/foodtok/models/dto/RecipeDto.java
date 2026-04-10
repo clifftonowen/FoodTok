@@ -53,8 +53,8 @@ public class RecipeDto {
   @SerializedName("recipe_ingredients")
   public List<RecipeIngredientDto> recipeIngredients;
 
-  /** Nested join: author user row via {@code users!author_id}. */
-  @SerializedName("users")
+  /** Nested join: author profile row via {@code profiles!author_id}. */
+  @SerializedName("profiles")
   public UserDto author;
 
   /** Converts this DTO to the domain {@link Recipe} model. */
@@ -79,13 +79,8 @@ public class RecipeDto {
     recipe.setCookTimeMinutes(cookTimeMinutes);
     recipe.setEstimatedCalories(estimatedCalories);
 
-    if (author != null) {
-      String displayName = author.displayName;
-      if (displayName != null && !displayName.isEmpty()) {
-        recipe.setAuthorName(displayName);
-      } else if (author.username != null) {
-        recipe.setAuthorName(author.username);
-      }
+    if (author != null && author.username != null) {
+      recipe.setAuthorName(author.username);
     }
 
     return recipe;

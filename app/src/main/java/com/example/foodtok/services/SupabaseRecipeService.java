@@ -29,7 +29,7 @@ public class SupabaseRecipeService implements IRecipeService {
   private static final String RECIPE_SELECT =
       "*,recipe_ingredients(quantity,is_optional,"
       + "ingredients(id,name,calories_per_100g)),"
-      + "users!author_id(username,display_name,avatar_url)";
+      + "profiles!author_id(username)";
 
   private final SupabaseApi api;
   private final SupabaseStorageApi storageApi;

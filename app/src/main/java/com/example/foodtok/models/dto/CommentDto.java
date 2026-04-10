@@ -31,24 +31,18 @@ public class CommentDto {
   public String createdAt;
 
   /** Nested join: comment author. */
-  @SerializedName("users")
+  @SerializedName("profiles")
   public UserDto author;
 
   /** Converts this DTO to the domain {@link Comment} model. */
   public Comment toDomain() {
     String authorName = "Unknown";
-    String avatarUrl = null;
-    if (author != null) {
-      if (author.displayName != null && !author.displayName.isEmpty()) {
-        authorName = author.displayName;
-      } else if (author.username != null) {
-        authorName = author.username;
-      }
-      avatarUrl = author.avatarUrl;
+    if (author != null && author.username != null) {
+      authorName = author.username;
     }
 
     long timestampMillis = parseTimestamp(createdAt);
-    return new Comment(id, authorName, avatarUrl, content, timestampMillis);
+    return new Comment(id, authorName, null, content, timestampMillis);
   }
 
   private long parseTimestamp(String iso) {
