@@ -8,6 +8,7 @@ import com.example.foodtok.models.dto.IngredientDto;
 import com.example.foodtok.models.dto.FollowDto;
 import com.example.foodtok.models.dto.InteractionDto;
 import com.example.foodtok.models.dto.RecipeDto;
+import com.example.foodtok.models.dto.TagDto;
 import com.example.foodtok.models.dto.UpdateProfileRequest;
 import com.example.foodtok.models.dto.UploadRecipeRequest;
 import com.example.foodtok.models.dto.UserDto;
@@ -82,6 +83,18 @@ public interface SupabaseApi {
   /** Fetches all ingredients for Trie autocomplete. */
   @GET("ingredients")
   Call<List<IngredientDto>> getAllIngredients(
+      @Query("select") String select,
+      @Query("order") String order
+  );
+
+  // ── Tags ─────────────────────────────────────────────────────────────
+
+  /**
+   * Fetches every distinct recipe tag via the {@code distinct_tags} SQL
+   * view. Used to populate the Trie for tag autocomplete in search.
+   */
+  @GET("distinct_tags")
+  Call<List<TagDto>> getAllTags(
       @Query("select") String select,
       @Query("order") String order
   );

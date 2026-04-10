@@ -24,14 +24,14 @@ public class SearchResultAdapter
     extends RecyclerView.Adapter<SearchResultAdapter.VH> {
 
   private final List<Recipe> recipes = new ArrayList<>();
-  private Set<String> searchedIngredients;
+  private Set<String> searchedTokens;
 
   /** Replaces the result list and refreshes the view. */
   public void setResults(List<Recipe> newRecipes,
-      Set<String> ingredients) {
+      Set<String> tokens) {
     recipes.clear();
     recipes.addAll(newRecipes);
-    this.searchedIngredients = ingredients;
+    this.searchedTokens = tokens;
     notifyDataSetChanged();
   }
 
@@ -49,12 +49,11 @@ public class SearchResultAdapter
     Recipe recipe = recipes.get(position);
     holder.tvTitle.setText(recipe.getTitle());
 
-    if (searchedIngredients != null) {
-      int matchCount =
-          recipe.countMatchingIngredients(searchedIngredients);
-      int total = recipe.getIngredients().size();
+    if (searchedTokens != null) {
+      int matchCount = recipe.countMatchingTokens(searchedTokens);
+      int total = searchedTokens.size();
       holder.tvMatchCount.setText(
-          matchCount + "/" + total + " ingredients matched");
+          matchCount + "/" + total + " matched");
     }
 
     // Thumbnail placeholder — Glide can be wired here later

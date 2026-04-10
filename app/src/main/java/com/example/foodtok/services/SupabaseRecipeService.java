@@ -183,9 +183,11 @@ public class SupabaseRecipeService implements IRecipeService {
   }
 
   @Override
-  public void searchByIngredients(Set<String> ingredientNames,
+  public void searchByIngredients(Set<String> searchTokens,
       RecipeListCallback callback) {
-    // Fetch all recipes, then rank by ingredient overlap client-side
+    // Tokens may be tag names OR ingredient names — we rank by how many
+    // distinct tokens each recipe matches (logical OR). Fetch all recipes
+    // then rank client-side.
     api.getRecipes(RECIPE_SELECT, "created_at.desc", "0-99")
         .enqueue(new Callback<List<RecipeDto>>() {
           @Override
@@ -195,16 +197,15 @@ public class SupabaseRecipeService implements IRecipeService {
               List<Recipe> matched = new ArrayList<>();
               for (RecipeDto dto : response.body()) {
                 Recipe recipe = dto.toDomain();
-                if (recipe.countMatchingIngredients(ingredientNames)
-                    > 0) {
+                if (recipe.countMatchingTokens(searchTokens) > 0) {
                   matched.add(recipe);
                 }
               }
-              // Sort by match count descending
+              // Sort by distinct token match count descending
               Collections.sort(matched, (a, b) ->
                   Integer.compare(
-                      b.countMatchingIngredients(ingredientNames),
-                      a.countMatchingIngredients(ingredientNames)));
+                      b.countMatchingTokens(searchTokens),
+                      a.countMatchingTokens(searchTokens)));
               callback.onSuccess(matched);
             } else {
               callback.onError("Search failed: " + response.code());

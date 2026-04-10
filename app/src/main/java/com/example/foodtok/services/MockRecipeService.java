@@ -63,18 +63,18 @@ public class MockRecipeService implements IRecipeService {
   }
 
   @Override
-  public void searchByIngredients(Set<String> ingredientNames,
+  public void searchByIngredients(Set<String> searchTokens,
       RecipeListCallback callback) {
     List<Recipe> matched = new ArrayList<>();
     for (Recipe r : mockRecipes) {
-      if (r.countMatchingIngredients(ingredientNames) > 0) {
+      if (r.countMatchingTokens(searchTokens) > 0) {
         matched.add(r);
       }
     }
     Collections.sort(matched, (a, b) ->
         Integer.compare(
-            b.countMatchingIngredients(ingredientNames),
-            a.countMatchingIngredients(ingredientNames)));
+            b.countMatchingTokens(searchTokens),
+            a.countMatchingTokens(searchTokens)));
     callback.onSuccess(matched);
   }
 

@@ -2,6 +2,7 @@ package com.example.foodtok.models;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -101,6 +102,36 @@ public class Recipe {
     int count = 0;
     for (Ingredient ingredient : ingredients) {
       if (availableIngredients.contains(ingredient.getName().toLowerCase())) {
+        count++;
+      }
+    }
+    return count;
+  }
+
+  /**
+   * Counts how many of the given search tokens match this recipe via either
+   * an ingredient name OR a tag (logical OR). Each selected token is counted
+   * at most once regardless of how many ingredients/tags it hits. Used by
+   * combined tag + ingredient search to rank results by match breadth.
+   */
+  public int countMatchingTokens(Set<String> searchTokens) {
+    if (searchTokens == null || searchTokens.isEmpty()) {
+      return 0;
+    }
+    Set<String> haystack = new HashSet<>();
+    for (Ingredient ingredient : ingredients) {
+      if (ingredient.getName() != null) {
+        haystack.add(ingredient.getName().toLowerCase());
+      }
+    }
+    for (String tag : tags) {
+      if (tag != null) {
+        haystack.add(tag.toLowerCase());
+      }
+    }
+    int count = 0;
+    for (String token : searchTokens) {
+      if (token != null && haystack.contains(token.toLowerCase())) {
         count++;
       }
     }

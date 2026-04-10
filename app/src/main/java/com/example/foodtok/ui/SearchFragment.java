@@ -24,6 +24,7 @@ import com.example.foodtok.adapters.SearchResultAdapter;
 import com.example.foodtok.data.Trie;
 import com.example.foodtok.models.Recipe;
 import com.example.foodtok.models.dto.IngredientDto;
+import com.example.foodtok.models.dto.TagDto;
 import com.example.foodtok.services.RecipeListCallback;
 import com.example.foodtok.services.RecipeServiceProvider;
 import com.example.foodtok.services.SupabaseApi;
@@ -40,9 +41,10 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 /**
- * Search tab fragment with Trie-powered ingredient autocomplete.
- * Users type ingredient names, select from suggestions, then
- * search for recipes ranked by ingredient match count.
+ * Search tab fragment with Trie-powered autocomplete over both
+ * ingredient names and recipe tags. Users type a prefix, pick a
+ * suggestion, and the selected tokens are OR-matched against recipes,
+ * ranked by how many distinct tokens each recipe matches.
  */
 public class SearchFragment extends Fragment {
 
@@ -56,8 +58,8 @@ public class SearchFragment extends Fragment {
   private RecyclerView rvSearchResults;
   private ChipGroup chipGroupSelected;
 
-  private final Trie ingredientTrie = new Trie();
-  private final Set<String> selectedIngredients = new HashSet<>();
+  private final Trie searchTrie = new Trie();
+  private final Set<String> selectedTokens = new HashSet<>();
 
   private IngredientSuggestionAdapter suggestionAdapter;
   private SearchResultAdapter resultAdapter;
@@ -87,6 +89,7 @@ public class SearchFragment extends Fragment {
     setupResults();
     setupSearchInput();
     loadIngredients();
+    loadTags();
 
     tvSearchAction.setOnClickListener(v -> performSearch());
   }
@@ -98,7 +101,7 @@ public class SearchFragment extends Fragment {
     rvSuggestions.setAdapter(suggestionAdapter);
 
     suggestionAdapter.setListener(name -> {
-      addSelectedIngredient(name);
+      addSelectedToken(name);
       etSearch.setText("");
       rvSuggestions.setVisibility(View.GONE);
     });
@@ -131,9 +134,9 @@ public class SearchFragment extends Fragment {
           return;
         }
         List<String> results =
-            ingredientTrie.autocomplete(prefix, MAX_SUGGESTIONS);
-        // Remove already-selected ingredients from suggestions
-        results.removeAll(selectedIngredients);
+            searchTrie.autocomplete(prefix, MAX_SUGGESTIONS);
+        // Remove already-selected tokens from suggestions
+        results.removeAll(selectedTokens);
         if (results.isEmpty()) {
           rvSuggestions.setVisibility(View.GONE);
         } else {
@@ -157,11 +160,11 @@ public class SearchFragment extends Fragment {
                 && response.body() != null) {
               for (IngredientDto dto : response.body()) {
                 if (dto.name != null) {
-                  ingredientTrie.insert(dto.name);
+                  searchTrie.insert(dto.name.toLowerCase());
                 }
               }
-              Log.d(TAG, "Loaded " + ingredientTrie.size()
-                  + " ingredients into Trie");
+              Log.d(TAG, "Loaded ingredients into Trie; size="
+                  + searchTrie.size());
             } else {
               Log.w(TAG, "Failed to load ingredients: "
                   + response.code());
@@ -176,35 +179,77 @@ public class SearchFragment extends Fragment {
         });
   }
 
-  /** Adds a closable chip for the selected ingredient. */
-  private void addSelectedIngredient(String name) {
+  /**
+   * Fetches every distinct recipe tag from the {@code distinct_tags}
+   * SQL view and inserts them into the same Trie used for ingredient
+   * autocomplete. Tags and ingredient names share one suggestion
+   * namespace.
+   */
+  private void loadTags() {
+    SupabaseApi api =
+        ApiClient.getRestClient().create(SupabaseApi.class);
+    api.getAllTags("name", "name.asc")
+        .enqueue(new Callback<List<TagDto>>() {
+          @Override
+          public void onResponse(Call<List<TagDto>> call,
+              Response<List<TagDto>> response) {
+            if (response.isSuccessful()
+                && response.body() != null) {
+              for (TagDto dto : response.body()) {
+                if (dto.name == null) {
+                  continue;
+                }
+                String normalized = dto.name.trim().toLowerCase();
+                if (normalized.isEmpty()) {
+                  continue;
+                }
+                searchTrie.insert(normalized);
+              }
+              Log.d(TAG, "Loaded tags from distinct_tags view; "
+                  + "Trie size=" + searchTrie.size());
+            } else {
+              Log.w(TAG, "Failed to load tags: "
+                  + response.code());
+            }
+          }
+
+          @Override
+          public void onFailure(Call<List<TagDto>> call,
+              Throwable t) {
+            Log.w(TAG, "Tag load error", t);
+          }
+        });
+  }
+
+  /** Adds a closable chip for the selected token (tag or ingredient). */
+  private void addSelectedToken(String name) {
     String lower = name.toLowerCase();
-    if (selectedIngredients.contains(lower)) {
+    if (selectedTokens.contains(lower)) {
       return;
     }
-    selectedIngredients.add(lower);
+    selectedTokens.add(lower);
 
     Chip chip = new Chip(requireContext());
     chip.setText(name);
     chip.setCloseIconVisible(true);
     chip.setOnCloseIconClickListener(v -> {
-      selectedIngredients.remove(lower);
+      selectedTokens.remove(lower);
       chipGroupSelected.removeView(chip);
     });
     chipGroupSelected.addView(chip);
   }
 
-  /** Searches recipes using the selected ingredients. */
+  /** Searches recipes using the selected tokens (tags + ingredients). */
   private void performSearch() {
-    if (selectedIngredients.isEmpty()) {
+    if (selectedTokens.isEmpty()) {
       Toast.makeText(requireContext(),
-          "Select at least one ingredient", Toast.LENGTH_SHORT)
-          .show();
+          "Select at least one tag or ingredient",
+          Toast.LENGTH_SHORT).show();
       return;
     }
 
     RecipeServiceProvider.getRecipeService()
-        .searchByIngredients(selectedIngredients,
+        .searchByIngredients(selectedTokens,
             new RecipeListCallback() {
               @Override
               public void onSuccess(List<Recipe> recipes) {
@@ -214,14 +259,15 @@ public class SearchFragment extends Fragment {
                 requireActivity().runOnUiThread(() -> {
                   if (recipes.isEmpty()) {
                     tvEmptyState.setText(
-                        "No recipes found with those ingredients.");
+                        "No recipes matched those tags or "
+                            + "ingredients.");
                     tvEmptyState.setVisibility(View.VISIBLE);
                     rvSearchResults.setVisibility(View.GONE);
                   } else {
                     tvEmptyState.setVisibility(View.GONE);
                     rvSearchResults.setVisibility(View.VISIBLE);
                     resultAdapter.setResults(
-                        recipes, selectedIngredients);
+                        recipes, selectedTokens);
                   }
                 });
               }

@@ -44,11 +44,14 @@ public interface IRecipeService {
       RecipeCallback callback);
 
   /**
-   * Searches recipes by selected ingredients, ranked by match count.
+   * Searches recipes by a set of selected tokens (ingredient names OR
+   * recipe tags), ranked by the number of distinct tokens each recipe
+   * matches. Uses logical OR — a recipe is returned if it matches at
+   * least one token, and recipes matching more tokens are ranked first.
    *
-   * @param ingredientNames lowercase ingredient names to match
-   * @param callback        async result callback returning ranked recipes
+   * @param searchTokens lowercase tag or ingredient names to match
+   * @param callback     async result callback returning ranked recipes
    */
-  void searchByIngredients(Set<String> ingredientNames,
+  void searchByIngredients(Set<String> searchTokens,
       RecipeListCallback callback);
 }
