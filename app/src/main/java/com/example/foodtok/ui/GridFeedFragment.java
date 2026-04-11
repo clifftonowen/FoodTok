@@ -201,18 +201,16 @@ public class GridFeedFragment extends Fragment {
       }
     });
 
-    gridFeedViewPager.setAdapter(feedAdapter);
-
+    // Prime the pool BEFORE setting the adapter so the first bind
+    // finds a ready player to attach. Otherwise the first video stays
+    // blank until the user scrolls away and back.
     int startPos = getArguments() != null ? getArguments().getInt("startPosition", 0) : 0;
+    playerPool.setCurrentPosition(startPos);
+
+    gridFeedViewPager.setAdapter(feedAdapter);
     if (startPos > 0) {
       gridFeedViewPager.setCurrentItem(startPos, false);
     }
-
-    gridFeedViewPager.post(() -> {
-      if (playerPool != null) {
-        playerPool.setCurrentPosition(gridFeedViewPager.getCurrentItem());
-      }
-    });
   }
 
   @Override
