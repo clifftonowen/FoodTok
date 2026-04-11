@@ -10,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.foodtok.R;
 import com.example.foodtok.models.Recipe;
+import com.example.foodtok.util.FeedVideoPlayerPool;
 
 import java.util.List;
 
@@ -23,11 +24,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHo
   private final List<Recipe> recipes;
   private ViewPager2 parentVerticalPager;
   private final OnRecipeInteractionListener interactionListener; // Listener for Likes/Saves
+  private final FeedVideoPlayerPool playerPool;
   private OnHorizontalPageChangedListener horizontalPageListener; // Listener for Paging
 
-  public FeedAdapter(List<Recipe> recipes, OnRecipeInteractionListener interactionListener) {
+  public FeedAdapter(List<Recipe> recipes,
+      OnRecipeInteractionListener interactionListener,
+      FeedVideoPlayerPool playerPool) {
     this.recipes = recipes;
     this.interactionListener = interactionListener;
+    this.playerPool = playerPool;
   }
 
   public void setParentVerticalPager(ViewPager2 pager) {
@@ -63,7 +68,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHo
   public void onBindViewHolder(@NonNull FeedPageViewHolder holder, int position) {
     Recipe recipe = recipes.get(position);
 
-    holder.bind(recipe, position, parentVerticalPager, interactionListener, horizontalPageListener);
+    holder.bind(recipe, position, parentVerticalPager, interactionListener,
+        horizontalPageListener, playerPool);
   }
 
   @Override
@@ -86,10 +92,12 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.FeedPageViewHo
          int adapterPosition,
          ViewPager2 parentVerticalPager,
          OnRecipeInteractionListener interactionListener,
-         OnHorizontalPageChangedListener horizontalListener) {
+         OnHorizontalPageChangedListener horizontalListener,
+         FeedVideoPlayerPool playerPool) {
 
       // Pass the interactionListener to the inner adapter for clicks
-      RecipePageAdapter pageAdapter = new RecipePageAdapter(recipe, interactionListener);
+      RecipePageAdapter pageAdapter = new RecipePageAdapter(
+          recipe, interactionListener, playerPool, adapterPosition);
       horizontalPager.setAdapter(pageAdapter);
 
       horizontalPager.setCurrentItem(1, false);

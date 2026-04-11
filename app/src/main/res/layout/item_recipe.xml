@@ -6,17 +6,18 @@
     android:layout_height="match_parent"
     android:background="@android:color/black">
 
-    <!-- Video/image placeholder background -->
-    <ImageView
-        android:id="@+id/recipeBackground"
+    <!-- ExoPlayer surface — player is attached/detached by FeedVideoPlayerPool -->
+    <androidx.media3.ui.PlayerView
+        android:id="@+id/recipeVideoView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:background="#2A2A2A"
-        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:resize_mode="zoom"
+        app:use_controller="false" />
 
     <!-- Bottom-left: username, author, allergen warning, title, tags -->
     <LinearLayout

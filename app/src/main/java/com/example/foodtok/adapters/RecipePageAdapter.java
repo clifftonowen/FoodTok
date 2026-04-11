@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.media3.ui.PlayerView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -24,6 +25,7 @@ import com.example.foodtok.services.ChatServiceProvider;
 import com.example.foodtok.services.EnrichmentCallback;
 import com.example.foodtok.services.EnrichmentServiceProvider;
 import com.example.foodtok.services.InteractionServiceProvider;
+import com.example.foodtok.util.FeedVideoPlayerPool;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,13 +47,20 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
   private final Recipe recipe;
   private final OnRecipeInteractionListener listener;
+  private final FeedVideoPlayerPool playerPool;
+  private final int feedPosition;
 
   private long lastSendTime = 0;
   private static final long SEND_COOLDOWN_MS = 1500; // 1.5 seconds between sends
 
-  public RecipePageAdapter(Recipe recipe, OnRecipeInteractionListener listener) {
+  public RecipePageAdapter(Recipe recipe,
+      OnRecipeInteractionListener listener,
+      FeedVideoPlayerPool playerPool,
+      int feedPosition) {
     this.recipe = recipe;
     this.listener = listener;
+    this.playerPool = playerPool;
+    this.feedPosition = feedPosition;
   }
 
   @Override
@@ -254,6 +263,9 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   // ── Video page (center) ─────────────────────────────────────────────
 
   private void bindVideo(VideoViewHolder holder) {
+    if (playerPool != null) {
+      playerPool.attach(feedPosition, holder.videoView);
+    }
     holder.recipeTitleText.setText(recipe.getTitle());
 
     // Display User.name as the username handle
@@ -508,6 +520,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   }
 
   static class VideoViewHolder extends RecyclerView.ViewHolder {
+    final PlayerView videoView;
     final TextView usernameText;
     final TextView authorNameText;
     final TextView recipeTitleText;
@@ -520,6 +533,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     VideoViewHolder(@NonNull View itemView) {
       super(itemView);
+      videoView = itemView.findViewById(R.id.recipeVideoView);
       usernameText = itemView.findViewById(R.id.usernameText);
       authorNameText = itemView.findViewById(R.id.authorNameText);
       recipeTitleText = itemView.findViewById(R.id.recipeTitleText);

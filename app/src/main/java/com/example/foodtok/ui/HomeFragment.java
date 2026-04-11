@@ -26,6 +26,7 @@ import com.example.foodtok.services.InteractionCallback;
 import com.example.foodtok.services.InteractionServiceProvider;
 import com.example.foodtok.services.RecipeListCallback;
 import com.example.foodtok.services.RecipeServiceProvider;
+import com.example.foodtok.util.FeedVideoPlayerPool;
 
 import java.util.List;
 
@@ -38,6 +39,7 @@ public class HomeFragment extends Fragment {
 
   private ViewPager2 feedViewPager;
   private FeedAdapter feedAdapter;
+  private FeedVideoPlayerPool playerPool;
   private ProgressBar feedLoadingSpinner;
 
   private TextView navIngredients;
@@ -144,6 +146,9 @@ public class HomeFragment extends Fragment {
   }
 
   private void initFeedAdapter(List<Recipe> recipes) {
+    playerPool = new FeedVideoPlayerPool(requireContext());
+    playerPool.setRecipes(recipes);
+
     feedAdapter = new FeedAdapter(recipes, new OnRecipeInteractionListener() {
       @Override
       public void onLikeClicked(Recipe recipe) {
@@ -215,28 +220,68 @@ public class HomeFragment extends Fragment {
               }
             });
       }
-    });
+    }, playerPool);
 
     feedAdapter.setParentVerticalPager(feedViewPager);
 
-    // Update nav style when horizontal page changes inside current recipe card
+    // Update nav style when horizontal page changes inside current recipe card.
+    // Also pause video when leaving the center page, resume when returning.
     feedAdapter.setOnHorizontalPageChangedListener((adapterPosition, horizontalPage) -> {
       if (adapterPosition == feedViewPager.getCurrentItem()) {
         updateNavStyling(horizontalPage);
+        if (horizontalPage == 1) {
+          playerPool.resumeCurrent();
+        } else {
+          playerPool.pauseCurrent();
+        }
       }
     });
 
-    // Reset top nav to "For You" when user swipes to a different recipe
+    // Drive player pool on vertical swipe + reset top nav to "For You".
     feedViewPager.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
       @Override
       public void onPageSelected(int position) {
         if (!isKeyboardVisible) {
           updateNavStyling(1);
         }
+        if (playerPool != null) {
+          playerPool.setCurrentPosition(position);
+        }
       }
     });
 
     feedViewPager.setAdapter(feedAdapter);
+    // Prime the first item now that the adapter is attached.
+    feedViewPager.post(() -> {
+      if (playerPool != null) {
+        playerPool.setCurrentPosition(feedViewPager.getCurrentItem());
+      }
+    });
+  }
+
+  @Override
+  public void onPause() {
+    super.onPause();
+    if (playerPool != null) {
+      playerPool.pauseCurrent();
+    }
+  }
+
+  @Override
+  public void onResume() {
+    super.onResume();
+    if (playerPool != null) {
+      playerPool.resumeCurrent();
+    }
+  }
+
+  @Override
+  public void onDestroyView() {
+    super.onDestroyView();
+    if (playerPool != null) {
+      playerPool.release();
+      playerPool = null;
+    }
   }
 
   private void showToast(String message) {
