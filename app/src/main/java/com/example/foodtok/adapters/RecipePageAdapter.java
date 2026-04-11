@@ -17,7 +17,16 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
+import com.example.foodtok.models.dto.FollowDto;
+import com.example.foodtok.services.SupabaseApi;
 import com.example.foodtok.ui.MainActivity;
+import com.example.foodtok.util.ApiClient;
+import com.example.foodtok.util.SessionManager;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 import androidx.annotation.NonNull;
 import androidx.media3.ui.PlayerView;
@@ -290,6 +299,8 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     bindClickableHashtags(holder.recipeTagsText, recipe.getTags());
+    bindAuthorAvatar(holder);
+    bindFollowState(holder);
 
     // Reflect current like/save/not-interested state (async — set default, update on callback)
     holder.likeButton.clearColorFilter();
@@ -493,6 +504,86 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   }
 
   /**
+   * Loads the recipe author's avatar into the bubble at the top of the
+   * action column. Falls back to the placeholder drawable when the
+   * author has no avatar set.
+   */
+  private void bindAuthorAvatar(VideoViewHolder holder) {
+    // Always keep the placeholder drawable as the background so the
+    // bubble is never blank — Glide will draw the loaded bitmap on top
+    // and the background only shows through during the in-flight load.
+    holder.profileImage.setBackgroundResource(R.drawable.ic_profile_placeholder);
+
+    String url = recipe.getAuthorAvatarUrl();
+    if (url != null && !url.isEmpty()) {
+      Glide.with(holder.profileImage.getContext().getApplicationContext())
+          .load(url)
+          .placeholder(R.drawable.ic_profile_placeholder)
+          .error(R.drawable.ic_profile_placeholder)
+          .circleCrop()
+          .into(holder.profileImage);
+    } else {
+      Glide.with(holder.profileImage.getContext().getApplicationContext())
+          .clear(holder.profileImage);
+      holder.profileImage.setImageDrawable(null);
+    }
+  }
+
+  /**
+   * Hits the {@code follows} table to see whether the current user
+   * already follows this recipe's author. Shows the small "+" button
+   * under the avatar only when the relationship doesn't exist (or
+   * when no one is logged in — they may want to follow after login).
+   * Self-authored recipes never show the plus.
+   */
+  private void bindFollowState(VideoViewHolder holder) {
+    String authorId = recipe.getAuthorId();
+    if (authorId == null || authorId.isEmpty()) {
+      holder.followPlusButton.setVisibility(View.GONE);
+      return;
+    }
+
+    String currentUserId = SessionManager.getInstance().getUserId();
+    if (currentUserId != null && currentUserId.equals(authorId)) {
+      holder.followPlusButton.setVisibility(View.GONE);
+      return;
+    }
+
+    // Optimistically show the plus while we check — this way a slow or
+    // failed request never causes the button to disappear. Only a
+    // successful response that *confirms* the follow row exists will
+    // hide it.
+    holder.followPlusButton.setVisibility(View.VISIBLE);
+
+    if (currentUserId == null) {
+      return;
+    }
+
+    SupabaseApi api = ApiClient.getRestClient().create(SupabaseApi.class);
+    api.checkFollow("eq." + currentUserId, "eq." + authorId)
+        .enqueue(new Callback<List<FollowDto>>() {
+          @Override
+          public void onResponse(@NonNull Call<List<FollowDto>> call,
+              @NonNull Response<List<FollowDto>> response) {
+            if (!response.isSuccessful() || response.body() == null) {
+              return;
+            }
+            boolean alreadyFollowing = !response.body().isEmpty();
+            if (alreadyFollowing) {
+              holder.followPlusButton.post(() ->
+                  holder.followPlusButton.setVisibility(View.GONE));
+            }
+          }
+
+          @Override
+          public void onFailure(@NonNull Call<List<FollowDto>> call,
+              @NonNull Throwable t) {
+            // Leave the optimistic "+" in place on transient failures.
+          }
+        });
+  }
+
+  /**
    * Renders the recipe tag list as a single line of "#tag" tokens where
    * each tag is an independent clickable span. Tapping a tag jumps the
    * user to the Search tab with that tag pre-applied as the query.
@@ -584,6 +675,8 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     final TextView recipeTitleText;
     final TextView recipeTagsText;
     final TextView allergenWarningText;
+    final ImageView profileImage;
+    final ImageView followPlusButton;
     final ImageView likeButton;
     final ImageView commentButton;
     final ImageView saveButton;
@@ -597,6 +690,8 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       recipeTitleText = itemView.findViewById(R.id.recipeTitleText);
       recipeTagsText = itemView.findViewById(R.id.recipeTagsText);
       allergenWarningText = itemView.findViewById(R.id.allergenWarningText);
+      profileImage = itemView.findViewById(R.id.profileImage);
+      followPlusButton = itemView.findViewById(R.id.followPlusButton);
       likeButton = itemView.findViewById(R.id.likeButton);
       commentButton = itemView.findViewById(R.id.commentButton);
       saveButton = itemView.findViewById(R.id.saveButton);

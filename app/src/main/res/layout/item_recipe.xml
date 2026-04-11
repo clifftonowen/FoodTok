@@ -88,13 +88,32 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <ImageView
-            android:id="@+id/profileImage"
+        <FrameLayout
             android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="16dp"
-            android:background="@drawable/ic_profile_placeholder"
-            android:scaleType="centerCrop" />
+            android:layout_height="56dp"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="top|center_horizontal"
+                android:background="@drawable/ic_profile_placeholder"
+                android:contentDescription="Author avatar"
+                android:scaleType="centerCrop" />
+
+            <ImageView
+                android:id="@+id/followPlusButton"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom|center_horizontal"
+                android:background="@android:color/white"
+                android:contentDescription="Follow"
+                android:padding="2dp"
+                android:src="@android:drawable/ic_input_add"
+                android:visibility="gone" />
+
+        </FrameLayout>
 
         <ImageView
             android:id="@+id/likeButton"

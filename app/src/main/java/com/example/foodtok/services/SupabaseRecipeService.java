@@ -45,7 +45,7 @@ public class SupabaseRecipeService implements IRecipeService {
   private static final String RECIPE_SELECT =
       "*,recipe_ingredients(quantity,is_optional,"
       + "ingredients(id,name,calories_per_100g)),"
-      + "profiles!author_id(username)";
+      + "profiles!author_id(id,username,avatar_url)";
 
   private final SupabaseApi api;
   private final SupabaseStorageApi storageApi;

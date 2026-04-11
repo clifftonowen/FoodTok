@@ -79,8 +79,13 @@ public class RecipeDto {
     recipe.setCookTimeMinutes(cookTimeMinutes);
     recipe.setEstimatedCalories(estimatedCalories);
 
-    if (author != null && author.username != null) {
-      recipe.setAuthorName(author.username);
+    if (author != null) {
+      if (author.username != null) {
+        recipe.setAuthorName(author.username);
+      }
+      if (author.avatarUrl != null) {
+        recipe.setAuthorAvatarUrl(author.avatarUrl);
+      }
     }
 
     return recipe;

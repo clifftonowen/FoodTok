@@ -166,6 +166,17 @@ public interface SupabaseApi {
             @Query("select") String select
     );
 
+    /**
+     * Checks whether a specific follower→following row exists. Pass
+     * filters in PostgREST {@code eq.<uuid>} form. Empty list = not
+     * following; one row = following.
+     */
+    @GET("follows")
+    Call<List<FollowDto>> checkFollow(
+            @Query("follower_id") String followerIdFilter,
+            @Query("following_id") String followingIdFilter
+    );
+
     @POST("follows")
     Call<List<FollowDto>> followUser(@Body CreateFollowRequest request);
 

@@ -15,6 +15,7 @@ public class Recipe {
   private String thumbnailUrl;
   private String authorId;
   private String authorName;
+  private String authorAvatarUrl;
   private List<String> tags;
   private List<Ingredient> ingredients;
   private int prepTimeMinutes;
@@ -167,6 +168,7 @@ public class Recipe {
   public String getThumbnailUrl() { return thumbnailUrl; }
   public String getAuthorId() { return authorId; }
   public String getAuthorName() { return authorName; }
+  public String getAuthorAvatarUrl() { return authorAvatarUrl; }
   public int getPrepTimeMinutes() { return prepTimeMinutes; }
   public int getCookTimeMinutes() { return cookTimeMinutes; }
   public double getEstimatedCalories() { return estimatedCalories; }
@@ -188,6 +190,9 @@ public class Recipe {
   public void setThumbnailUrl(String thumbnailUrl) { this.thumbnailUrl = thumbnailUrl; }
   public void setAuthorId(String authorId) { this.authorId = authorId; }
   public void setAuthorName(String authorName) { this.authorName = authorName; }
+  public void setAuthorAvatarUrl(String authorAvatarUrl) {
+    this.authorAvatarUrl = authorAvatarUrl;
+  }
   public void setPrepTimeMinutes(int prepTimeMinutes) { this.prepTimeMinutes = prepTimeMinutes; }
   public void setCookTimeMinutes(int cookTimeMinutes) { this.cookTimeMinutes = cookTimeMinutes; }
   public void setEstimatedCalories(double estimatedCalories) {
