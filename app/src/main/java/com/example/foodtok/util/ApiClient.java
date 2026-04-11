@@ -93,7 +93,8 @@ public final class ApiClient {
 
     return new OkHttpClient.Builder()
         .addInterceptor(chain -> {
-          Request.Builder builder = chain.request().newBuilder()
+          Request original = chain.request();
+          Request.Builder builder = original.newBuilder()
               // Every Supabase request needs the anon key
               .addHeader("apikey", Constants.SUPABASE_ANON_KEY)
               .addHeader("Content-Type", "application/json");
@@ -104,8 +105,13 @@ public final class ApiClient {
             builder.addHeader("Authorization", "Bearer " + token);
           }
 
-          // PostgREST: return the created/updated row in response
-          builder.addHeader("Prefer", "return=representation");
+          // PostgREST Prefer header: default to return=representation, but
+          // let the caller override (e.g. upsert needs to add
+          // resolution=merge-duplicates). Using header() replaces rather
+          // than appends, so we don't end up with two Prefer headers.
+          if (original.header("Prefer") == null) {
+            builder.header("Prefer", "return=representation");
+          }
 
           return chain.proceed(builder.build());
         })

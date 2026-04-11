@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import com.example.foodtok.models.Ingredient;
+import com.example.foodtok.models.IngredientInput;
 import com.example.foodtok.models.Recipe;
 
 import java.util.ArrayList;
@@ -47,12 +48,18 @@ public class MockRecipeService implements IRecipeService {
 
   @Override
   public void uploadRecipe(Context context, Uri videoUri, String title,
-      String description, String[] tags, int prepTimeMinutes,
-      int cookTimeMinutes, double estimatedCalories,
+      String description, String[] tags, List<IngredientInput> ingredients,
+      int prepTimeMinutes, int cookTimeMinutes, double estimatedCalories,
       RecipeCallback callback) {
+    List<Ingredient> domainIngredients = new ArrayList<>();
+    if (ingredients != null) {
+      for (IngredientInput input : ingredients) {
+        domainIngredients.add(new Ingredient(input.getName(), 0));
+      }
+    }
     Recipe recipe = new Recipe(UUID.randomUUID().toString(),
         title, videoUri.toString(), Arrays.asList(tags),
-        new ArrayList<>());
+        domainIngredients);
     recipe.setDescription(description);
     recipe.setPrepTimeMinutes(prepTimeMinutes);
     recipe.setCookTimeMinutes(cookTimeMinutes);

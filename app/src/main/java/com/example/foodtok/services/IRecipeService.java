@@ -3,6 +3,9 @@ package com.example.foodtok.services;
 import android.content.Context;
 import android.net.Uri;
 
+import com.example.foodtok.models.IngredientInput;
+
+import java.util.List;
 import java.util.Set;
 
 /** Interface contract for fetching and creating recipes. */
@@ -33,14 +36,16 @@ public interface IRecipeService {
    * @param title    recipe title (required)
    * @param description recipe description / instructions
    * @param tags     array of tag strings
+   * @param ingredients list of {name, quantity} pairs to persist in the
+   *                    {@code recipe_ingredients} join table
    * @param prepTimeMinutes prep time in minutes
    * @param cookTimeMinutes cook time in minutes
    * @param estimatedCalories estimated calorie count
    * @param callback async result callback returning the created Recipe
    */
   void uploadRecipe(Context context, Uri videoUri, String title,
-      String description, String[] tags, int prepTimeMinutes,
-      int cookTimeMinutes, double estimatedCalories,
+      String description, String[] tags, List<IngredientInput> ingredients,
+      int prepTimeMinutes, int cookTimeMinutes, double estimatedCalories,
       RecipeCallback callback);
 
   /**

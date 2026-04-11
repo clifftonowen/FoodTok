@@ -27,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import com.example.foodtok.R;
 import com.example.foodtok.auth.AuthManager;
 import com.example.foodtok.models.Ingredient;
+import com.example.foodtok.models.IngredientInput;
 import com.example.foodtok.models.Recipe;
 import com.example.foodtok.services.RecipeCallback;
 import com.example.foodtok.services.RecipeServiceProvider;
@@ -61,6 +62,7 @@ public class UploadRecipeFragment extends Fragment {
   private Button addTagButton;
   private LinearLayout tagList;
   private EditText ingredientNameInput;
+  private EditText ingredientQuantityInput;
   private Button addIngredientButton;
   private LinearLayout ingredientList;
   private NumberPicker prepTimePicker;
@@ -122,6 +124,7 @@ public class UploadRecipeFragment extends Fragment {
     addTagButton = view.findViewById(R.id.addTagButton);
     tagList = view.findViewById(R.id.tagList);
     ingredientNameInput = view.findViewById(R.id.ingredientNameInput);
+    ingredientQuantityInput = view.findViewById(R.id.ingredientQuantityInput);
     addIngredientButton = view.findViewById(R.id.addIngredientButton);
     ingredientList = view.findViewById(R.id.ingredientList);
     prepTimePicker = view.findViewById(R.id.prepTimePicker);
@@ -228,23 +231,47 @@ public class UploadRecipeFragment extends Fragment {
 
   /**
      * Adds an ingredient row to the dynamic list. Same duplicate protection
-     * as tags. Allergen status isn't tracked per-ingredient — that's handled
-     * by the user profile blacklist and Gemini enrichment.
+     * as tags. Quantity is captured as free-text alongside the name and
+     * stored in the row's tag as a {@code String[]{name, quantity}} pair.
+     * Allergen status isn't tracked per-ingredient — that's handled by the
+     * user profile blacklist and Gemini enrichment.
      */
   private void addIngredientRow() {
     String name = ingredientNameInput.getText().toString().trim();
+    String quantity = ingredientQuantityInput.getText().toString().trim();
     if (name.isEmpty()) {
       Toast.makeText(requireContext(), "Enter an ingredient name", Toast.LENGTH_SHORT).show();
       return;
     }
-    if (rowExists(ingredientList, name)) {
+    if (ingredientRowExists(name)) {
       Toast.makeText(requireContext(), "Ingredient already added", Toast.LENGTH_SHORT).show();
       return;
     }
+    if (quantity.isEmpty()) {
+      quantity = "1";
+    }
 
-    LinearLayout row = buildRow("• " + name, name);
+    String display = "• " + name + "  (" + quantity + ")";
+    LinearLayout row = buildRow(display, name);
+    row.setTag(new String[]{name, quantity});
     ingredientList.addView(row);
     ingredientNameInput.setText("");
+    ingredientQuantityInput.setText("");
+  }
+
+  /** Case-insensitive duplicate check against the String[]-tagged ingredient rows. */
+  private boolean ingredientRowExists(String name) {
+    String lower = name.toLowerCase();
+    for (int i = 0; i < ingredientList.getChildCount(); i++) {
+      Object tag = ingredientList.getChildAt(i).getTag();
+      if (tag instanceof String[]) {
+        String existing = ((String[]) tag)[0];
+        if (existing != null && existing.toLowerCase().equals(lower)) {
+          return true;
+        }
+      }
+    }
+    return false;
   }
 
   /**
@@ -326,6 +353,18 @@ public class UploadRecipeFragment extends Fragment {
       }
     }
 
+    // Collect ingredients (name + quantity pairs)
+    List<IngredientInput> ingredientValues = new ArrayList<>();
+    for (int i = 0; i < ingredientList.getChildCount(); i++) {
+      Object tag = ingredientList.getChildAt(i).getTag();
+      if (tag instanceof String[]) {
+        String[] pair = (String[]) tag;
+        if (pair.length >= 2 && pair[0] != null) {
+          ingredientValues.add(new IngredientInput(pair[0], pair[1]));
+        }
+      }
+    }
+
     String description =
         instructionsInput.getText().toString().trim();
     int prepTime = prepTimePicker.getValue();
@@ -340,6 +379,7 @@ public class UploadRecipeFragment extends Fragment {
     RecipeServiceProvider.getRecipeService().uploadRecipe(
         requireContext(), videoUri, title, description,
         tagValues.toArray(new String[0]),
+        ingredientValues,
         prepTime, cookTime, calories,
         new RecipeCallback() {
           @Override

@@ -3,7 +3,9 @@ package com.example.foodtok.services;
 import com.example.foodtok.models.dto.CommentDto;
 import com.example.foodtok.models.dto.CreateCommentRequest;
 import com.example.foodtok.models.dto.CreateFollowRequest;
+import com.example.foodtok.models.dto.CreateIngredientRequest;
 import com.example.foodtok.models.dto.CreateInteractionRequest;
+import com.example.foodtok.models.dto.CreateRecipeIngredientRequest;
 import com.example.foodtok.models.dto.IngredientDto;
 import com.example.foodtok.models.dto.FollowDto;
 import com.example.foodtok.models.dto.InteractionDto;
@@ -85,6 +87,34 @@ public interface SupabaseApi {
   Call<List<IngredientDto>> getAllIngredients(
       @Query("select") String select,
       @Query("order") String order
+  );
+
+  /**
+   * Looks up an ingredient row by exact name. Call with
+   * {@code nameFilter = "eq." + name}. Returns an empty list if no such
+   * row exists — callers should then POST a new one via
+   * {@link #createIngredient(CreateIngredientRequest)}.
+   */
+  @GET("ingredients")
+  Call<List<IngredientDto>> getIngredientByName(
+      @Query("name") String nameFilter,
+      @Query("select") String select
+  );
+
+  /**
+   * Inserts a brand-new ingredient row. Caller must first verify the
+   * name does not exist (via {@link #getIngredientByName}) to avoid a
+   * unique-constraint violation.
+   */
+  @POST("ingredients")
+  Call<List<IngredientDto>> createIngredient(
+      @Body CreateIngredientRequest request
+  );
+
+  /** Batch-inserts rows into the {@code recipe_ingredients} join table. */
+  @POST("recipe_ingredients")
+  Call<Void> createRecipeIngredients(
+      @Body List<CreateRecipeIngredientRequest> rows
   );
 
   // ── Tags ─────────────────────────────────────────────────────────────

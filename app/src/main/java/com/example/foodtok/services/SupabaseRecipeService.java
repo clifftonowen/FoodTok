@@ -5,9 +5,14 @@ import android.graphics.Bitmap;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Build;
+import android.util.Log;
 
 import com.example.foodtok.auth.AuthManager;
+import com.example.foodtok.models.IngredientInput;
 import com.example.foodtok.models.Recipe;
+import com.example.foodtok.models.dto.CreateIngredientRequest;
+import com.example.foodtok.models.dto.CreateRecipeIngredientRequest;
+import com.example.foodtok.models.dto.IngredientDto;
 import com.example.foodtok.models.dto.RecipeDto;
 import com.example.foodtok.models.dto.UploadRecipeRequest;
 import com.example.foodtok.util.ApiClient;
@@ -25,12 +30,17 @@ import java.util.UUID;
 import okhttp3.MediaType;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
+import okio.BufferedSink;
+import okio.Okio;
+import okio.Source;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 /** Real {@link IRecipeService} implementation backed by Supabase PostgREST. */
 public class SupabaseRecipeService implements IRecipeService {
+
+  private static final String TAG = "SupabaseRecipeService";
 
   private static final String RECIPE_SELECT =
       "*,recipe_ingredients(quantity,is_optional,"
@@ -101,30 +111,24 @@ public class SupabaseRecipeService implements IRecipeService {
 
   @Override
   public void uploadRecipe(Context context, Uri videoUri, String title,
-      String description, String[] tags, int prepTimeMinutes,
-      int cookTimeMinutes, double estimatedCalories,
+      String description, String[] tags, List<IngredientInput> ingredients,
+      int prepTimeMinutes, int cookTimeMinutes, double estimatedCalories,
       RecipeCallback callback) {
     String userId = AuthManager.getInstance().getCurrentUser().getId();
     String fileId = UUID.randomUUID().toString();
     String videoStoragePath = userId + "/" + fileId + ".mp4";
     String thumbnailStoragePath = userId + "/" + fileId + ".jpg";
 
-    // Step 1: Read the video bytes from the content Uri
-    byte[] videoBytes;
-    try {
-      videoBytes = readBytes(context, videoUri);
-    } catch (IOException e) {
-      callback.onError("Failed to read video file: " + e.getMessage());
-      return;
-    }
-
-    // Step 2: Extract a thumbnail from the video. If extraction fails,
+    // Step 1: Extract a thumbnail from the video. If extraction fails,
     // we still proceed with the upload — the grid has a client-side
     // fallback that decodes the first frame on demand.
     final byte[] thumbnailBytes = extractThumbnailJpeg(context, videoUri);
 
-    RequestBody videoBody = RequestBody.create(
-        MediaType.parse("video/mp4"), videoBytes);
+    // Step 2: Build a streaming request body over the content Uri —
+    // never materialize the entire video into a byte[] (phones easily
+    // run into OOM for >50MB videos).
+    RequestBody videoBody = streamingBody(
+        context.getApplicationContext(), videoUri, "video/mp4");
 
     // Step 3: Upload video to Supabase Storage
     storageApi.uploadFile("videos", videoStoragePath, "video/mp4", videoBody)
@@ -142,16 +146,17 @@ public class SupabaseRecipeService implements IRecipeService {
 
             // Step 4: Upload thumbnail (best-effort, non-blocking for
             // the recipe row creation on failure).
+            final List<IngredientInput> ingredientsRef = ingredients;
             if (thumbnailBytes == null) {
               createRecipeRow(userId, title, description, videoUrl, null,
                   tags, prepTimeMinutes, cookTimeMinutes,
-                  estimatedCalories, callback);
+                  estimatedCalories, withIngredients(ingredientsRef, callback));
               return;
             }
             uploadThumbnail(thumbnailBytes, thumbnailStoragePath, thumbUrl ->
                 createRecipeRow(userId, title, description, videoUrl, thumbUrl,
                     tags, prepTimeMinutes, cookTimeMinutes,
-                    estimatedCalories, callback));
+                    estimatedCalories, withIngredients(ingredientsRef, callback)));
           }
 
           @Override
@@ -287,6 +292,185 @@ public class SupabaseRecipeService implements IRecipeService {
         });
   }
 
+  /**
+   * Wraps the caller's {@link RecipeCallback} so that on a successful recipe
+   * row creation we fan out a series of ingredient upserts + a batched
+   * recipe_ingredients insert before forwarding {@code onSuccess}. If
+   * {@code ingredients} is null or empty the wrapper is a no-op and the
+   * original callback is forwarded directly.
+   *
+   * <p>Persistence flow:
+   * <ol>
+   *   <li>For each input, upsert the ingredient by name (merge-duplicates)
+   *       to obtain its UUID.</li>
+   *   <li>Once all ids are resolved, POST the full list of join rows in
+   *       one request.</li>
+   * </ol>
+   * Errors in ingredient persistence are logged via the callback as
+   * warnings but the recipe itself is still considered posted — the recipe
+   * row already exists and the video is uploaded.
+   */
+  private RecipeCallback withIngredients(
+      List<IngredientInput> ingredients, RecipeCallback original) {
+    if (ingredients == null || ingredients.isEmpty()) {
+      return original;
+    }
+    return new RecipeCallback() {
+      @Override
+      public void onSuccess(Recipe recipe) {
+        persistIngredients(recipe, ingredients, original);
+      }
+
+      @Override
+      public void onError(String message) {
+        original.onError(message);
+      }
+    };
+  }
+
+  /**
+   * Resolves each ingredient name to an id via lookup-then-insert (avoids
+   * needing UPDATE RLS rights that a PostgREST upsert would require). For
+   * every input:
+   * <ol>
+   *   <li>GET {@code /ingredients?name=eq.<name>&select=id}</li>
+   *   <li>If the row exists, use its id.</li>
+   *   <li>Otherwise POST a new ingredient row and use the returned id.</li>
+   * </ol>
+   * Once every id is resolved, all join rows are batch-inserted in one POST.
+   * Ingredient persistence failures are logged and the recipe is still
+   * reported as successfully posted — the recipe row and video already
+   * exist, they just have no ingredients attached.
+   */
+  private void persistIngredients(Recipe recipe,
+      List<IngredientInput> inputs, RecipeCallback callback) {
+    final String[] ingredientIds = new String[inputs.size()];
+    final int[] resolvedCount = {0};
+    final boolean[] failed = {false};
+
+    for (int i = 0; i < inputs.size(); i++) {
+      resolveIngredientId(recipe, inputs, i, ingredientIds,
+          resolvedCount, failed, callback);
+    }
+  }
+
+  /** Resolves a single ingredient name to an id (GET then POST if missing). */
+  private void resolveIngredientId(Recipe recipe, List<IngredientInput> inputs,
+      int index, String[] ingredientIds, int[] resolvedCount,
+      boolean[] failed, RecipeCallback callback) {
+    final IngredientInput input = inputs.get(index);
+    final String name = input.getName().toLowerCase();
+
+    api.getIngredientByName("eq." + name, "id")
+        .enqueue(new Callback<List<IngredientDto>>() {
+          @Override
+          public void onResponse(Call<List<IngredientDto>> call,
+              Response<List<IngredientDto>> response) {
+            if (failed[0]) {
+              return;
+            }
+            if (!response.isSuccessful()) {
+              fail("Ingredient lookup failed for '" + name + "': HTTP "
+                  + response.code());
+              return;
+            }
+            List<IngredientDto> body = response.body();
+            if (body != null && !body.isEmpty()) {
+              ingredientIds[index] = body.get(0).id;
+              markResolved();
+            } else {
+              createAndResolve();
+            }
+          }
+
+          @Override
+          public void onFailure(Call<List<IngredientDto>> call, Throwable t) {
+            fail("Ingredient lookup network error for '" + name + "': "
+                + t.getMessage());
+          }
+
+          /** POSTs a new ingredient row and stores its id on success. */
+          private void createAndResolve() {
+            api.createIngredient(new CreateIngredientRequest(name))
+                .enqueue(new Callback<List<IngredientDto>>() {
+                  @Override
+                  public void onResponse(Call<List<IngredientDto>> call,
+                      Response<List<IngredientDto>> response) {
+                    if (failed[0]) {
+                      return;
+                    }
+                    if (response.isSuccessful() && response.body() != null
+                        && !response.body().isEmpty()) {
+                      ingredientIds[index] = response.body().get(0).id;
+                      markResolved();
+                    } else {
+                      fail("Ingredient insert failed for '" + name
+                          + "': HTTP " + response.code());
+                    }
+                  }
+
+                  @Override
+                  public void onFailure(Call<List<IngredientDto>> call,
+                      Throwable t) {
+                    fail("Ingredient insert network error for '" + name
+                        + "': " + t.getMessage());
+                  }
+                });
+          }
+
+          private void markResolved() {
+            resolvedCount[0]++;
+            if (resolvedCount[0] == inputs.size()) {
+              insertRecipeIngredientRows(recipe, inputs, ingredientIds,
+                  callback);
+            }
+          }
+
+          private void fail(String message) {
+            if (failed[0]) {
+              return;
+            }
+            Log.w(TAG, message);
+            failed[0] = true;
+            callback.onSuccess(recipe);
+          }
+        });
+  }
+
+  /** Batches all join rows into a single POST to {@code recipe_ingredients}. */
+  private void insertRecipeIngredientRows(Recipe recipe,
+      List<IngredientInput> inputs, String[] ingredientIds,
+      RecipeCallback callback) {
+    List<CreateRecipeIngredientRequest> rows = new ArrayList<>();
+    for (int i = 0; i < inputs.size(); i++) {
+      String quantity = inputs.get(i).getQuantity();
+      if (quantity == null || quantity.trim().isEmpty()) {
+        quantity = "1";
+      }
+      rows.add(new CreateRecipeIngredientRequest(
+          recipe.getId(), ingredientIds[i], quantity, false));
+    }
+    api.createRecipeIngredients(rows).enqueue(new Callback<Void>() {
+      @Override
+      public void onResponse(Call<Void> call, Response<Void> response) {
+        if (!response.isSuccessful()) {
+          Log.w(TAG, "recipe_ingredients batch insert failed: HTTP "
+              + response.code());
+        } else {
+          Log.d(TAG, "recipe_ingredients inserted: " + rows.size()
+              + " rows for recipe " + recipe.getId());
+        }
+        callback.onSuccess(recipe);
+      }
+
+      @Override
+      public void onFailure(Call<Void> call, Throwable t) {
+        Log.w(TAG, "recipe_ingredients batch insert network error", t);
+        callback.onSuccess(recipe);
+      }
+    });
+  }
+
   @Override
   public void searchByIngredients(Set<String> searchTokens,
       RecipeListCallback callback) {
@@ -325,22 +509,47 @@ public class SupabaseRecipeService implements IRecipeService {
         });
   }
 
-  /** Reads all bytes from a content:// Uri. */
-  private byte[] readBytes(Context context, Uri uri)
-      throws IOException {
-    try (InputStream is = context.getContentResolver()
-        .openInputStream(uri)) {
-      if (is == null) {
-        throw new IOException("Cannot open input stream for " + uri);
+  /**
+   * Builds an OkHttp {@link RequestBody} that streams directly from a
+   * content:// Uri via Okio, without ever buffering the whole file into
+   * a byte array. Uses {@code AssetFileDescriptor} to report the exact
+   * content length so Supabase Storage receives a proper
+   * {@code Content-Length} header instead of chunked transfer.
+   */
+  private RequestBody streamingBody(Context context, Uri uri,
+      String mediaType) {
+    final MediaType parsedType = MediaType.parse(mediaType);
+    return new RequestBody() {
+      @Override
+      public MediaType contentType() {
+        return parsedType;
       }
-      java.io.ByteArrayOutputStream buffer =
-          new java.io.ByteArrayOutputStream();
-      byte[] chunk = new byte[8192];
-      int bytesRead;
-      while ((bytesRead = is.read(chunk)) != -1) {
-        buffer.write(chunk, 0, bytesRead);
+
+      @Override
+      public long contentLength() {
+        try (android.content.res.AssetFileDescriptor afd =
+            context.getContentResolver().openAssetFileDescriptor(uri, "r")) {
+          if (afd == null) {
+            return -1;
+          }
+          long len = afd.getLength();
+          return len == android.content.res.AssetFileDescriptor
+              .UNKNOWN_LENGTH ? -1 : len;
+        } catch (IOException e) {
+          return -1;
+        }
       }
-      return buffer.toByteArray();
-    }
+
+      @Override
+      public void writeTo(BufferedSink sink) throws IOException {
+        InputStream in = context.getContentResolver().openInputStream(uri);
+        if (in == null) {
+          throw new IOException("Cannot open input stream for " + uri);
+        }
+        try (Source source = Okio.source(in)) {
+          sink.writeAll(source);
+        }
+      }
+    };
   }
 }
