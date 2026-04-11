@@ -4,9 +4,13 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.content.Context;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -167,6 +171,34 @@ public class SearchFragment extends Fragment {
         }
       }
     });
+
+    // Trigger the search when the user hits Done / Search / Enter on the
+    // soft keyboard, so they don't have to dismiss it and tap the button.
+    etSearch.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+    etSearch.setOnEditorActionListener((v, actionId, event) -> {
+      boolean isActionKey = actionId == EditorInfo.IME_ACTION_SEARCH
+          || actionId == EditorInfo.IME_ACTION_DONE
+          || actionId == EditorInfo.IME_ACTION_GO;
+      boolean isEnterKey = event != null
+          && event.getKeyCode() == KeyEvent.KEYCODE_ENTER
+          && event.getAction() == KeyEvent.ACTION_DOWN;
+      if (isActionKey || isEnterKey) {
+        rvSuggestions.setVisibility(View.GONE);
+        hideKeyboard();
+        performSearch();
+        return true;
+      }
+      return false;
+    });
+  }
+
+  private void hideKeyboard() {
+    InputMethodManager imm = (InputMethodManager)
+        requireContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+    if (imm != null && etSearch != null) {
+      imm.hideSoftInputFromWindow(etSearch.getWindowToken(), 0);
+    }
+    etSearch.clearFocus();
   }
 
   /** Fetches all ingredients from Supabase and inserts into the Trie. */
