@@ -19,8 +19,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodtok.R;
+import com.example.foodtok.adapters.GridAdapter;
 import com.example.foodtok.adapters.IngredientSuggestionAdapter;
-import com.example.foodtok.adapters.SearchResultAdapter;
 import com.example.foodtok.data.Trie;
 import com.example.foodtok.models.Recipe;
 import com.example.foodtok.models.dto.IngredientDto;
@@ -32,6 +32,7 @@ import com.example.foodtok.util.ApiClient;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,7 +63,8 @@ public class SearchFragment extends Fragment {
   private final Set<String> selectedTokens = new HashSet<>();
 
   private IngredientSuggestionAdapter suggestionAdapter;
-  private SearchResultAdapter resultAdapter;
+  private GridAdapter resultAdapter;
+  private final List<Recipe> resultRecipes = new ArrayList<>();
 
   @Nullable
   @Override
@@ -108,10 +110,30 @@ public class SearchFragment extends Fragment {
   }
 
   private void setupResults() {
-    resultAdapter = new SearchResultAdapter();
+    resultAdapter = new GridAdapter(resultRecipes, this::openFeedAt);
     rvSearchResults.setLayoutManager(
         new GridLayoutManager(requireContext(), 2));
     rvSearchResults.setAdapter(resultAdapter);
+  }
+
+  /** Opens the full-screen doomscroll feed starting at the tapped recipe. */
+  private void openFeedAt(int position) {
+    GridFeedFragment.setPendingRecipes(new ArrayList<>(resultRecipes));
+    Bundle args = new Bundle();
+    args.putInt("startPosition", position);
+    GridFeedFragment feedFragment = new GridFeedFragment();
+    feedFragment.setArguments(args);
+
+    requireActivity().getSupportFragmentManager()
+        .beginTransaction()
+        .setCustomAnimations(
+            R.anim.feed_enter,
+            R.anim.feed_exit,
+            R.anim.feed_enter,
+            R.anim.feed_exit)
+        .replace(R.id.fragmentContainer, feedFragment)
+        .addToBackStack(null)
+        .commit();
   }
 
   private void setupSearchInput() {
@@ -266,8 +288,9 @@ public class SearchFragment extends Fragment {
                   } else {
                     tvEmptyState.setVisibility(View.GONE);
                     rvSearchResults.setVisibility(View.VISIBLE);
-                    resultAdapter.setResults(
-                        recipes, selectedTokens);
+                    resultRecipes.clear();
+                    resultRecipes.addAll(recipes);
+                    resultAdapter.notifyDataSetChanged();
                   }
                 });
               }

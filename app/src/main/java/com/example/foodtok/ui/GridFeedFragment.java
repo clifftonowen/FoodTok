@@ -31,6 +31,18 @@ public class GridFeedFragment extends Fragment {
 
   private static final int FEED_PAGE_SIZE = 20;
 
+  /**
+   * Optional recipes to display instead of fetching the default feed.
+   * Set via {@link #setPendingRecipes(List)} before committing the
+   * fragment transaction; consumed and cleared on first use.
+   */
+  private static List<Recipe> pendingRecipes;
+
+  /** Stashes a specific recipe list for the next GridFeedFragment instance. */
+  public static void setPendingRecipes(List<Recipe> recipes) {
+    pendingRecipes = recipes;
+  }
+
   private ViewPager2 gridFeedViewPager;
   private FeedAdapter feedAdapter;
   private FeedVideoPlayerPool playerPool;
@@ -62,6 +74,14 @@ public class GridFeedFragment extends Fragment {
 
     view.findViewById(R.id.btnGridFeedBack).setOnClickListener(v ->
         requireActivity().getSupportFragmentManager().popBackStack());
+
+    if (pendingRecipes != null) {
+      List<Recipe> recipes = pendingRecipes;
+      pendingRecipes = null;
+      spinner.setVisibility(View.GONE);
+      initFeedAdapter(recipes);
+      return view;
+    }
 
     RecipeServiceProvider.getRecipeService().getFeedRecipes(
         0, FEED_PAGE_SIZE, new RecipeListCallback() {
