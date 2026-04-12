@@ -28,7 +28,9 @@ MainActivity (BottomNavigationView with 5 tabs)
 └── nav_profile  → ProfileUserFragment (logged in) / ProfileGuestFragment (guest)
                        ├── tap recipe → ProfileSavedFeedFragment
                        ├── tap Followers → FollowListFragment(MODE_FOLLOWERS)
-                       └── tap Following → FollowListFragment(MODE_FOLLOWING)
+                       ├── tap Following → FollowListFragment(MODE_FOLLOWING)
+                       └── gear icon → settings drawer overlay
+                               └── "Manage Profile" → ManageProfileFragment
                                                └── tap user → OtherUserProfileFragment
                                                                ├── tap recipe → ProfileSavedFeedFragment
                                                                ├── tap Followers → FollowListFragment(MODE_FOLLOWERS)
@@ -45,6 +47,7 @@ MainActivity (BottomNavigationView with 5 tabs)
 | `id` | UUID | FK to auth.users |
 | `username` | text | |
 | `avatar_url` | text | nullable |
+| `bio` | text | nullable — shown on profile page, editable via ManageProfileFragment |
 
 ### `recipes`
 | Column | Type |
@@ -93,6 +96,16 @@ MainActivity (BottomNavigationView with 5 tabs)
 @SerializedName("id")         public String id;
 @SerializedName("username")   public String username;
 @SerializedName("avatar_url") public String avatarUrl;
+@SerializedName("bio")        public String bio;
+```
+
+### `UpdateProfileRequest.java`
+Used as the PATCH body for `/profiles`. Gson skips null fields by default — so setting only `bio` (leaving `avatarUrl` null) PATCHes just the bio and leaves `avatar_url` untouched in the DB.
+```java
+@SerializedName("avatar_url")             public String avatarUrl;
+@SerializedName("bio")                    public String bio;
+@SerializedName("interest_profile")       public Map<String, Integer> interestProfile;
+@SerializedName("blacklisted_ingredients") public List<String> blacklistedIngredients;
 ```
 
 ### `FollowDto.java`
@@ -149,8 +162,9 @@ public Recipe toDomain() { ... }  // converts to domain model for use in FeedAda
 @POST("follows") Call<List<FollowDto>> followUser(@Body CreateFollowRequest request);
 @DELETE("follows") Call<Void> unfollowUser(@Query("follower_id") String, @Query("following_id") String);
 
-// Profiles (read)
-@GET("profiles") Call<List<UserDto>> getProfiles(@Query("id") String idFilter, @Query("select") String);
+// Profiles
+@GET("profiles")   Call<List<UserDto>> getProfiles(@Query("id") String idFilter, @Query("select") String);
+@PATCH("profiles") Call<List<UserDto>> updateProfile(@Query("id") String idFilter, @Body UpdateProfileRequest req);
 
 // Saved recipes
 @GET("saved_recipes") Call<List<SavedRecipeDto>> getSavedRecipes(@Query("user_id") String, @Query("select") String, @Query("order") String);
@@ -172,19 +186,19 @@ public Recipe toDomain() { ... }  // converts to domain model for use in FeedAda
 **Layout:** `app/src/main/res/layout/fragment_profile_user.xml`
 
 ### Purpose
-The logged-in user's own profile screen. Shows their username, follower/following/recipe counts, and a tabbed recipe grid (My Recipes | Saved).
+The logged-in user's own profile screen. Shows their username, follower/following/recipe counts, bio, and a tabbed recipe grid (My Recipes | Saved). Has a TikTok-style settings drawer triggered by a gear icon.
 
 ### Layout Structure
 ```
 LinearLayout (vertical, foodtok_cream background)
 ├── RelativeLayout (header)
 │   ├── tvUsername (TextView, top-left, bold 22sp)
-│   └── btnLogout (TextView styled as button, top-right)
+│   └── ivSettings (ImageView, gear icon, top-right — opens settings drawer)
 ├── Divider
 ├── LinearLayout (profile info, centered vertical)
 │   ├── ivProfilePic (ImageView, 80dp circle)
 │   ├── tvDisplayName (TextView, bold 18sp)
-│   ├── tvBio (TextView, secondary color)
+│   ├── tvBio (TextView, secondary color, GONE when no bio set)
 │   └── LinearLayout (stats row, horizontal)
 │       ├── LinearLayout (Recipes column)
 │       │   ├── tvRecipeCount
@@ -208,12 +222,18 @@ LinearLayout (vertical, foodtok_cream background)
 RecyclerView rvProfileRecipes;
 TextView tabMyRecipes, tabSaved;
 TextView tvFollowerCount, tvFollowingCount, tvRecipeCount;
-TextView userName, btnLogout, tvDisplayName;
+TextView userName, tvDisplayName, tvBio;
+ImageView ivProfilePic, ivSettings;
 View llFollowers, llFollowing;          // the clickable stat containers
 boolean isMyRecipesTab = true;          // tracks which tab is active
 List<RecipeDto> myRecipes;              // backing list for My Recipes tab
 List<RecipeDto> savedRecipes;           // backing list for Saved tab
 ProfileRecipeAdapter adapter;           // single adapter — data swapped on tab switch
+// Drawer fields:
+View drawerOverlay;                     // semi-transparent scrim (translationX animated)
+View drawerPanel;                       // white panel sliding in from right
+TextView drawerManageProfile;           // "Manage Profile" row in drawer
+TextView drawerLogout;                  // "Logout" row in drawer
 ```
 
 ### Key Methods
@@ -221,12 +241,39 @@ ProfileRecipeAdapter adapter;           // single adapter — data swapped on ta
 #### `onCreateView`
 1. Inflates layout, binds all views
 2. Sets `tvUsername` and `tvDisplayName` from `AuthManager.getInstance().getCurrentUser().getUsername()`
-3. Logout button → calls `AuthServiceProvider.getAuthService().logout()` then restarts `MainActivity` with `FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK`
-4. **`llFollowers` click** → `FollowListFragment.newInstance(userId, FollowListFragment.MODE_FOLLOWERS)` → `replace + addToBackStack`
-5. **`llFollowing` click** → `FollowListFragment.newInstance(userId, FollowListFragment.MODE_FOLLOWING)` → `replace + addToBackStack`
-6. Sets up `GridLayoutManager(context, 3)` + `ProfileRecipeAdapter`
-7. Recipe click listener → `ProfileSavedFeedFragment.newInstance(position, MODE_MY_RECIPES or MODE_SAVED, userId)`
-8. Calls `fetchProfileStats()`, `fetchMyRecipes()`, `fetchSavedRecipes()`, `switchTab(true)` on load
+3. **`ivSettings` (gear icon)** → calls `openDrawer()` — animates drawer panel sliding in from right + overlay fade in
+4. **Drawer scrim (`drawerOverlay`) click** → `closeDrawer()`
+5. **`drawerLogout` click** → `closeDrawer()`, calls `AuthServiceProvider.getAuthService().logout()`, restarts `MainActivity` with `FLAG_ACTIVITY_NEW_TASK | FLAG_ACTIVITY_CLEAR_TASK`
+6. **`drawerManageProfile` click** → `closeDrawer()`, navigates to `ManageProfileFragment` with slide-right animation
+7. **`llFollowers` click** → `FollowListFragment.newInstance(userId, FollowListFragment.MODE_FOLLOWERS)` → `replace + addToBackStack`
+8. **`llFollowing` click** → `FollowListFragment.newInstance(userId, FollowListFragment.MODE_FOLLOWING)` → `replace + addToBackStack`
+9. Sets up `GridLayoutManager(context, 3)` + `ProfileRecipeAdapter`
+10. Recipe click listener → `ProfileSavedFeedFragment.newInstance(position, MODE_MY_RECIPES or MODE_SAVED, userId)`
+11. Calls `fetchProfileStats()`, `fetchMyRecipes()`, `fetchSavedRecipes()`, `fetchAvatar()`, `switchTab(true)` on load
+
+#### `openDrawer()` / `closeDrawer()`
+```java
+// Open: show overlay (alpha 0→0.5), slide panel in from right (translationX panel_width→0)
+// Close: reverse animations
+// Both use ObjectAnimator or ViewPropertyAnimator, ~300ms
+```
+Back press: `OnBackPressedCallback` intercepts if drawer is open and calls `closeDrawer()` instead of popping the stack.
+
+#### `fetchAvatar()`
+```java
+// Fetches "id,avatar_url,bio" for the logged-in user
+// Loads avatar_url into ivProfilePic with Glide circleCrop + crossfade
+// Sets tvBio text; if bio is null/empty → tvBio.setVisibility(GONE)
+```
+
+#### `onResume()`
+```java
+@Override
+public void onResume() {
+    super.onResume();
+    fetchAvatar();   // refreshes avatar + bio after returning from ManageProfileFragment
+}
+```
 
 #### `switchTab(boolean showMyRecipes)`
 - Sets `isMyRecipesTab`
@@ -516,7 +563,92 @@ Re-fetches `getFollowers("eq." + profileUserId, "follower_id")` and updates `tvF
 
 ---
 
-## 5. GridFragment
+## 5. ManageProfileFragment *(new)*
+
+**File:** `app/src/main/java/com/example/foodtok/ui/ManageProfileFragment.java`
+**Layout:** `app/src/main/res/layout/fragment_manage_profile.xml`
+
+### Purpose
+Edit Profile screen reached via the settings drawer on `ProfileUserFragment`. Lets the logged-in user:
+- See their current avatar (pre-populated from Supabase)
+- Tap "Change Photo" to pick a new image from the gallery
+- Edit their bio (multi-line EditText)
+- Tap "Save" to upload avatar (if changed) and PATCH `profiles` with the new avatar_url and/or bio
+- Returns to `ProfileUserFragment` on save, which refreshes via `onResume()`
+
+### Layout Structure
+```
+LinearLayout (vertical, foodtok_cream background)
+├── RelativeLayout (header)
+│   ├── btnBack (TextView, "Back" styled with bg_button_outline, green text — popBackStack)
+│   └── "Edit Profile" title (TextView, centered, bold 18sp)
+├── Divider (1dp, foodtok_divider color)
+├── ScrollView (layout_weight=1)
+│   └── LinearLayout (vertical, gravity=center_horizontal, padding=24dp)
+│       ├── ivAvatar (ImageView, 80dp, bg_circle_profile, burger placeholder)
+│       ├── tvChangePhoto (TextView, "Change Photo", foodtok_green, 14sp, clickable)
+│       ├── "Bio" label (TextView, 12sp, secondary color, start-aligned)
+│       └── etBio (EditText, multiline, maxLines=4, bg_input_field, hint="Add a bio...")
+└── btnSave (Button, bg_button_primary, white text, margin 16dp)
+```
+
+Note: Back button uses the **TextView-as-button** pattern (same as `FollowListFragment`) — `ic_arrow_back.xml` has white fill so it's invisible on the cream background.
+
+### Fields
+```java
+private ImageView ivAvatar;
+private TextView tvChangePhoto;
+private EditText etBio;
+private Button btnSave;
+private Uri pendingAvatarUri = null;   // null = user did not pick a new photo
+
+private final ActivityResultLauncher<String> galleryLauncher =
+    registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+        if (uri == null) return;
+        pendingAvatarUri = uri;
+        Glide.with(this).load(uri).circleCrop().into(ivAvatar);
+    });
+```
+
+### Key Methods
+
+#### `loadCurrentProfile()`
+Fetches `"id,avatar_url,bio"` for the current user and pre-populates `ivAvatar` (via Glide) and `etBio`.
+
+#### `saveProfile()`
+```
+if (pendingAvatarUri != null):
+    → uploadThenSave(bio)       // upload to Storage, then patchProfile(avatarUrl, bio)
+else:
+    → patchProfile(null, bio)   // Gson omits null avatarUrl — only bio is PATCHed
+```
+
+#### `uploadThenSave(String bio)`
+1. Reads bytes from `pendingAvatarUri` via `ContentResolver`
+2. `storagePath = userId + "/" + UUID.randomUUID() + ".jpg"`
+3. `ApiClient.getStorageClient().create(SupabaseStorageApi.class).uploadFile("avatars", storagePath, "image/jpeg", body)`
+4. On success: constructs `avatarUrl = Constants.SUPABASE_URL + "/storage/v1/object/public/avatars/" + storagePath`
+5. Calls `patchProfile(avatarUrl, bio)`
+
+#### `patchProfile(String avatarUrl, String bio)`
+```java
+UpdateProfileRequest req = new UpdateProfileRequest();
+req.avatarUrl = avatarUrl;  // null if not changed — Gson omits the field
+req.bio = bio;
+ApiClient.getSupabaseApi().updateProfile("eq." + userId, req)
+    .enqueue(callback);
+// On success: requireActivity().runOnUiThread(() -> popBackStack())
+```
+
+Note: `popBackStack()` is wrapped in `runOnUiThread()` because the Retrofit callback runs on a background thread.
+
+### Navigation
+Entered from: `ProfileUserFragment` drawer → "Manage Profile" (slide-in-right animation)
+Back: `popBackStack()` → `ProfileUserFragment.onResume()` fires → `fetchAvatar()` refreshes avatar + bio
+
+---
+
+## 6. GridFragment
 
 **File:** `app/src/main/java/com/example/foodtok/ui/GridFragment.java`
 **Layout:** `app/src/main/res/layout/fragment_grid.xml`
@@ -560,7 +692,7 @@ Note: `GridFragment` is the only fragment that uses custom enter/exit animations
 
 ---
 
-## 6. GridFeedFragment
+## 7. GridFeedFragment
 
 **File:** `app/src/main/java/com/example/foodtok/ui/GridFeedFragment.java`
 **Layout:** `app/src/main/res/layout/fragment_grid_feed.xml`
@@ -777,6 +909,12 @@ FollowListFragment.newInstance(String userId, String mode)
 OtherUserProfileFragment.newInstance(String userId)
 ```
 
+### Drawer Pattern (ProfileUserFragment)
+A slide-in settings drawer layered on top of the profile fragment. The drawer panel slides in from the right with a semi-transparent overlay scrim. Back press is intercepted via `OnBackPressedCallback` to close the drawer first.
+
+### `onResume()` refresh pattern
+`ManageProfileFragment` pops back to `ProfileUserFragment` on save. `ProfileUserFragment` overrides `onResume()` to call `fetchAvatar()`, which re-fetches both `avatar_url` and `bio` and updates the UI — no explicit result callback or event bus needed.
+
 ---
 
 ## Full Navigation Chain (Follow Feature)
@@ -814,7 +952,7 @@ OtherUserProfileFragment → popBackStack → FollowListFragment → popBackStac
 | Pattern | Where |
 |---|---|
 | **Singleton** | `AuthManager`, `SessionManager`, `ApiClient`, `VideoCache` |
-| **Factory Method** | `ProfileSavedFeedFragment.newInstance()`, `FollowListFragment.newInstance()`, `OtherUserProfileFragment.newInstance()` |
+| **Factory Method** | `ProfileSavedFeedFragment.newInstance()`, `FollowListFragment.newInstance()`, `OtherUserProfileFragment.newInstance()` — `ManageProfileFragment` is instantiated directly (no args needed) |
 | **Interface/Callback** | `OnRecipeClickListener`, `OnUserClickListener`, `OnRecipeInteractionListener`, `RecipeListCallback`, `InteractionCallback` |
 | **Adapter (GoF)** | All RecyclerView adapters translate data models to UI |
 | **Object Pool** | `FeedVideoPlayerPool` — 3-5 slot ExoPlayer pool for O(1) video start |

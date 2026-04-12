@@ -1,236 +1,310 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/foodtok_cream"
-    android:orientation="vertical">
+    android:background="@color/foodtok_cream">
 
-    <!-- Header with username and settings -->
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="32dp">
-
-        <TextView
-            android:id="@+id/tvUsername"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Alex_C"
-            android:textColor="@color/foodtok_text_primary"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <!-- Logout button -->
-        <TextView
-            android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/bg_button_outline"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:text="Log out"
-            android:textColor="@color/foodtok_green"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-    </RelativeLayout>
-
-    <!-- Divider -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/foodtok_divider" />
-
-    <!-- Profile info section -->
+    <!-- Main profile content -->
     <LinearLayout
+        android:id="@+id/layoutProfileContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:padding="24dp">
+        android:layout_height="match_parent"
+        android:background="@color/foodtok_cream"
+        android:orientation="vertical">
 
-        <!-- Profile picture -->
-        <ImageView
-            android:id="@+id/ivProfilePic"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:layout_marginBottom="12dp"
-            android:background="@drawable/bg_circle_profile"
-            android:padding="12dp"
-            android:src="@drawable/ic_burger_foodtok"
-            android:contentDescription="Profile picture" />
-
-        <!-- Display name -->
-        <TextView
-            android:id="@+id/tvDisplayName"
-            android:layout_width="wrap_content"
+        <!-- Header with username and settings icon -->
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="Alex_C"
-            android:textColor="@color/foodtok_text_primary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            android:padding="32dp">
 
-        <!-- Bio -->
-        <TextView
-            android:id="@+id/tvBio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="Food Lover | Home Cook"
-            android:textColor="@color/foodtok_text_secondary"
-            android:textSize="14sp" />
+            <TextView
+                android:id="@+id/tvUsername"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:text="Alex_C"
+                android:textColor="@color/foodtok_text_primary"
+                android:textSize="22sp"
+                android:textStyle="bold" />
 
-        <!-- Stats row -->
+            <ImageView
+                android:id="@+id/btnSettings"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ic_settings"
+                android:contentDescription="Settings"
+                android:padding="8dp"
+                android:background="?attr/selectableItemBackgroundBorderless" />
+
+        </RelativeLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/foodtok_divider" />
+
+        <!-- Profile info section -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="horizontal">
+            android:orientation="vertical"
+            android:padding="24dp">
 
-            <!-- Recipes count -->
-            <LinearLayout
-                android:layout_width="0dp"
+            <!-- Profile picture -->
+            <ImageView
+                android:id="@+id/ivProfilePic"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_circle_profile"
+                android:padding="12dp"
+                android:src="@drawable/ic_burger_foodtok"
+                android:contentDescription="Profile picture" />
+
+            <!-- Display name -->
+            <TextView
+                android:id="@+id/tvDisplayName"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical">
+                android:layout_marginBottom="4dp"
+                android:text="Alex_C"
+                android:textColor="@color/foodtok_text_primary"
+                android:textSize="18sp"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tvRecipeCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/foodtok_text_primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Recipes"
-                    android:textColor="@color/foodtok_text_secondary"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <!-- Followers count -->
-            <LinearLayout
-                android:id="@+id/llFollowers"
-                android:layout_width="0dp"
+            <!-- Bio -->
+            <TextView
+                android:id="@+id/tvBio"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:clickable="true"
-                android:focusable="true">
+                android:layout_marginBottom="16dp"
+                android:text="Food Lover | Home Cook"
+                android:textColor="@color/foodtok_text_secondary"
+                android:textSize="14sp" />
 
-                <TextView
-                    android:id="@+id/tvFollowerCount"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/foodtok_text_primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Followers"
-                    android:textColor="@color/foodtok_text_secondary"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <!-- Following count -->
+            <!-- Stats row -->
             <LinearLayout
-                android:id="@+id/llFollowing"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:gravity="center"
-                android:orientation="vertical"
-                android:clickable="true"
-                android:focusable="true">
+                android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvFollowingCount"
-                    android:layout_width="wrap_content"
+                <!-- Recipes count -->
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="0"
-                    android:textColor="@color/foodtok_text_primary"
-                    android:textSize="18sp"
-                    android:textStyle="bold" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                    <TextView
+                        android:id="@+id/tvRecipeCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/foodtok_text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Recipes"
+                        android:textColor="@color/foodtok_text_secondary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <!-- Followers count -->
+                <LinearLayout
+                    android:id="@+id/llFollowers"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:text="Following"
-                    android:textColor="@color/foodtok_text_secondary"
-                    android:textSize="12sp" />
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tvFollowerCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/foodtok_text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Followers"
+                        android:textColor="@color/foodtok_text_secondary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <!-- Following count -->
+                <LinearLayout
+                    android:id="@+id/llFollowing"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:clickable="true"
+                    android:focusable="true">
+
+                    <TextView
+                        android:id="@+id/tvFollowingCount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0"
+                        android:textColor="@color/foodtok_text_primary"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Following"
+                        android:textColor="@color/foodtok_text_secondary"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/foodtok_divider" />
+
+        <!-- Tabs: My Recipes | Saved -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/tabMyRecipes"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="14dp"
+                android:text="My Recipes"
+                android:textColor="@color/foodtok_text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tabSaved"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:padding="14dp"
+                android:text="Saved"
+                android:textColor="@color/foodtok_text_secondary"
+                android:textSize="14sp" />
+
+        </LinearLayout>
+
+        <!-- Tab indicator (sliding underline) -->
+        <View
+            android:id="@+id/tabIndicator"
+            android:layout_width="match_parent"
+            android:layout_height="3dp"
+            android:background="@color/foodtok_green" />
+
+        <!-- Recipe grid -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvProfileRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:padding="8dp" />
+
     </LinearLayout>
 
-    <!-- Divider -->
+    <!-- Dim overlay — sits above content, below drawer -->
     <View
+        android:id="@+id/drawerOverlay"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/foodtok_divider" />
+        android:layout_height="match_parent"
+        android:background="@color/foodtok_overlay"
+        android:alpha="0"
+        android:visibility="gone"
+        android:clickable="true"
+        android:focusable="true" />
 
-    <!-- Tabs: My Recipes | Saved -->
+    <!-- Settings drawer — slides in from the right -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:id="@+id/settingsDrawer"
+        android:layout_width="280dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="end"
+        android:background="@color/foodtok_white"
+        android:orientation="vertical"
+        android:elevation="8dp">
 
         <TextView
-            android:id="@+id/tabMyRecipes"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="14dp"
-            android:text="My Recipes"
+            android:paddingStart="24dp"
+            android:paddingEnd="24dp"
+            android:paddingTop="48dp"
+            android:paddingBottom="24dp"
+            android:text="Settings"
             android:textColor="@color/foodtok_text_primary"
-            android:textSize="14sp"
+            android:textSize="18sp"
             android:textStyle="bold" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/foodtok_divider" />
+
         <TextView
-            android:id="@+id/tabSaved"
-            android:layout_width="0dp"
+            android:id="@+id/drawerManageProfile"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="14dp"
-            android:text="Saved"
-            android:textColor="@color/foodtok_text_secondary"
-            android:textSize="14sp" />
+            android:padding="20dp"
+            android:text="Manage Profile"
+            android:textColor="@color/foodtok_text_primary"
+            android:textSize="15sp" />
+        <TextView
+            android:id="@+id/drawerManagePreferences"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:text="Manage Preferences"
+            android:textSize="16sp"
+            android:textColor="@color/foodtok_text_primary" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/foodtok_divider" />
+
+        <TextView
+            android:id="@+id/drawerLogout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="20dp"
+            android:text="Log out"
+            android:textColor="@color/foodtok_red"
+            android:textSize="15sp" />
 
     </LinearLayout>
 
-    <!-- Tab indicator (sliding underline) -->
-    <View
-        android:id="@+id/tabIndicator"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@color/foodtok_green" />
-
-    <!-- Placeholder for recipe grid -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rvProfileRecipes"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:padding="8dp" />
-
-</LinearLayout>
+</FrameLayout>

@@ -19,4 +19,7 @@ public class UpdateProfileRequest {
 
   @SerializedName("blacklisted_ingredients")
   public List<String> blacklistedIngredients;
+
+  @SerializedName("bio")
+  public String bio;
 }

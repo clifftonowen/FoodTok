@@ -12,6 +12,8 @@ import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
@@ -43,10 +45,21 @@ import retrofit2.Response;
 public class ProfileUserFragment extends Fragment {
     private RecyclerView rvProfileRecipes;
     private ImageView ivProfilePic;
-    private TextView tabMyRecipes, tabSaved, tvFollowerCount, tvFollowingCount, userName, btnLogout, tvDisplayName, tvRecipeCount;
+    private TextView tabMyRecipes, tabSaved, tvFollowerCount, tvFollowingCount, userName, tvDisplayName, tvRecipeCount;
     private View llFollowers, llFollowing;
     private View tabIndicator;
     private int tabWidth = 0;
+
+    private View layoutProfileContent;
+    private View drawerOverlay;
+    private View settingsDrawer;
+    private ImageView btnSettings;
+    private TextView drawerLogout;
+    private TextView drawerManageProfile;
+
+    private TextView drawerManagePreferences;
+    private TextView tvBio;
+    private boolean isDrawerOpen = false;
 
     private boolean isMyRecipesTab = true;
     private List<RecipeDto> myRecipes = new ArrayList<>();
@@ -65,13 +78,25 @@ public class ProfileUserFragment extends Fragment {
         tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
         tabIndicator = view.findViewById(R.id.tabIndicator);
 
+
         userName = view.findViewById(R.id.tvUsername);
-        btnLogout = view.findViewById(R.id.btnLogout);
         tvDisplayName = view.findViewById(R.id.tvDisplayName);
         tvRecipeCount = view.findViewById(R.id.tvRecipeCount);
         ivProfilePic = view.findViewById(R.id.ivProfilePic);
         llFollowers = view.findViewById(R.id.llFollowers);
         llFollowing = view.findViewById(R.id.llFollowing);
+
+        layoutProfileContent = view.findViewById(R.id.layoutProfileContent);
+        drawerOverlay = view.findViewById(R.id.drawerOverlay);
+        settingsDrawer = view.findViewById(R.id.settingsDrawer);
+        btnSettings = view.findViewById(R.id.btnSettings);
+        drawerLogout = view.findViewById(R.id.drawerLogout);
+        drawerManageProfile = view.findViewById(R.id.drawerManageProfile);
+        drawerManagePreferences = view.findViewById(R.id.drawerManagePreferences);
+        tvBio = view.findViewById(R.id.tvBio);
+
+        // Position drawer off-screen to the right before first draw
+        settingsDrawer.post(() -> settingsDrawer.setTranslationX(settingsDrawer.getWidth()));
 
         // Profile picture entrance: scale from 0 with overshoot
         ivProfilePic.setScaleX(0f);
@@ -99,12 +124,54 @@ public class ProfileUserFragment extends Fragment {
             userName.setText("Guest");
         }
 
-        btnLogout.setOnClickListener(v -> {
+        btnSettings.setOnClickListener(v -> openDrawer());
+
+        drawerOverlay.setOnClickListener(v -> closeDrawer());
+        drawerManagePreferences.setOnClickListener(v -> {
+            closeDrawer();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in_right, R.anim.slide_out_left,
+                            R.anim.slide_in_left, R.anim.slide_out_right)
+                    .replace(R.id.fragmentContainer, new ManagePreferencesFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        drawerManageProfile.setOnClickListener(v -> {
+            closeDrawer();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in_right, R.anim.slide_out_left,
+                            R.anim.slide_in_left, R.anim.slide_out_right)
+                    .replace(R.id.fragmentContainer, new ManageProfileFragment())
+                    .addToBackStack(null)
+                    .commit();
+        });
+
+        drawerLogout.setOnClickListener(v -> {
             AuthServiceProvider.getAuthService().logout();
             Intent intent = new Intent(getActivity(), MainActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         });
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(
+                getViewLifecycleOwner(),
+                new OnBackPressedCallback(true) {
+                    @Override
+                    public void handleOnBackPressed() {
+                        if (isDrawerOpen) {
+                            closeDrawer();
+                        } else {
+                            setEnabled(false);
+                            requireActivity().getOnBackPressedDispatcher().onBackPressed();
+                        }
+                    }
+                }
+        );
 
         llFollowers.setOnClickListener(v -> {
             String userId = AuthManager.getInstance().getCurrentUser().getId();
@@ -167,6 +234,57 @@ public class ProfileUserFragment extends Fragment {
         switchTab(isMyRecipesTab);
 
         return view;
+    }
+
+    private void openDrawer() {
+        if (isDrawerOpen) return;
+        isDrawerOpen = true;
+
+        float contentShift = -settingsDrawer.getWidth() * 0.35f;
+
+        drawerOverlay.setVisibility(View.VISIBLE);
+
+        layoutProfileContent.animate()
+                .translationX(contentShift)
+                .setDuration(300)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+
+        settingsDrawer.animate()
+                .translationX(0f)
+                .setDuration(300)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+
+        drawerOverlay.animate()
+                .alpha(1f)
+                .setDuration(300)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+    }
+
+    private void closeDrawer() {
+        if (!isDrawerOpen) return;
+        isDrawerOpen = false;
+
+        layoutProfileContent.animate()
+                .translationX(0f)
+                .setDuration(300)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+
+        settingsDrawer.animate()
+                .translationX(settingsDrawer.getWidth())
+                .setDuration(300)
+                .setInterpolator(new DecelerateInterpolator())
+                .start();
+
+        drawerOverlay.animate()
+                .alpha(0f)
+                .setDuration(300)
+                .setInterpolator(new DecelerateInterpolator())
+                .withEndAction(() -> drawerOverlay.setVisibility(View.GONE))
+                .start();
     }
 
     private void animateStatCount(TextView tv) {
@@ -302,25 +420,38 @@ public class ProfileUserFragment extends Fragment {
 
     private void fetchAvatar() {
         String userId = AuthManager.getInstance().getCurrentUser().getId();
-        ApiClient.getSupabaseApi().getProfiles("eq." + userId, "id,avatar_url")
+        ApiClient.getSupabaseApi().getProfiles("eq." + userId, "id,avatar_url,bio")
                 .enqueue(new Callback<List<UserDto>>() {
                     @Override
                     public void onResponse(Call<List<UserDto>> call, Response<List<UserDto>> response) {
-                        if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
-                            String avatarUrl = response.body().get(0).avatarUrl;
-                            if (!TextUtils.isEmpty(avatarUrl)) {
-                                Glide.with(ProfileUserFragment.this)
-                                        .load(avatarUrl)
-                                        .circleCrop()
-                                        .transition(DrawableTransitionOptions.withCrossFade(300))
-                                        .into(ivProfilePic);
-                            }
+                        if (!response.isSuccessful() || response.body() == null || response.body().isEmpty()) return;
+                        UserDto profile = response.body().get(0);
+
+                        if (!TextUtils.isEmpty(profile.avatarUrl)) {
+                            Glide.with(ProfileUserFragment.this)
+                                    .load(profile.avatarUrl)
+                                    .circleCrop()
+                                    .transition(DrawableTransitionOptions.withCrossFade(300))
+                                    .into(ivProfilePic);
+                        }
+
+                        if (!TextUtils.isEmpty(profile.bio)) {
+                            tvBio.setText(profile.bio);
+                            tvBio.setVisibility(View.VISIBLE);
+                        } else {
+                            tvBio.setVisibility(View.GONE);
                         }
                     }
 
                     @Override
                     public void onFailure(Call<List<UserDto>> call, Throwable t) {}
                 });
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchAvatar();
     }
 
     private void fetchProfileStats() {
