@@ -484,18 +484,27 @@ public class SupabaseRecipeService implements IRecipeService {
               Response<List<RecipeDto>> response) {
             if (response.isSuccessful() && response.body() != null) {
               List<Recipe> matched = new ArrayList<>();
+              List<Recipe> all = new ArrayList<>();
               for (RecipeDto dto : response.body()) {
                 Recipe recipe = dto.toDomain();
+                all.add(recipe);
                 if (recipe.countMatchingTokens(searchTokens) > 0) {
                   matched.add(recipe);
                 }
               }
-              // Sort by distinct token match count descending
-              Collections.sort(matched, (a, b) ->
-                  Integer.compare(
-                      b.countMatchingTokens(searchTokens),
-                      a.countMatchingTokens(searchTokens)));
-              callback.onSuccess(matched);
+              if (matched.isEmpty()) {
+                // No exact matches — return all recipes shuffled
+                // as "suggested" results.
+                Collections.shuffle(all);
+                callback.onSuccess(all);
+              } else {
+                // Sort by distinct token match count descending
+                Collections.sort(matched, (a, b) ->
+                    Integer.compare(
+                        b.countMatchingTokens(searchTokens),
+                        a.countMatchingTokens(searchTokens)));
+                callback.onSuccess(matched);
+              }
             } else {
               callback.onError("Search failed: " + response.code());
             }

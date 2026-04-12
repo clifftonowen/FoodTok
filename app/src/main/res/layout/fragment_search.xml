@@ -41,6 +41,40 @@
 
   </LinearLayout>
 
+  <!-- Recipes / Users toggle -->
+  <LinearLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:layout_marginBottom="8dp"
+      android:gravity="center"
+      android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tvTabRecipes"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Recipes"
+        android:textColor="@color/foodtok_white"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:background="@color/foodtok_green" />
+
+    <TextView
+        android:id="@+id/tvTabUsers"
+        android:layout_width="0dp"
+        android:layout_height="40dp"
+        android:layout_weight="1"
+        android:gravity="center"
+        android:text="Users"
+        android:textColor="@color/foodtok_text_secondary"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        android:background="@color/foodtok_divider" />
+
+  </LinearLayout>
+
   <!-- Autocomplete suggestions (overlays content below) -->
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/rvSuggestions"
@@ -51,7 +85,7 @@
       android:maxHeight="200dp"
       android:visibility="gone" />
 
-  <!-- Selected ingredient chips -->
+  <!-- Selected ingredient chips (recipe mode only) -->
   <com.google.android.material.chip.ChipGroup
       android:id="@+id/chipGroupSelected"
       android:layout_width="match_parent"
@@ -70,9 +104,17 @@
       android:textColor="@color/foodtok_text_secondary"
       android:textSize="14sp" />
 
-  <!-- Search results grid -->
+  <!-- Search results grid (recipe mode) -->
   <androidx.recyclerview.widget.RecyclerView
       android:id="@+id/rvSearchResults"
+      android:layout_width="match_parent"
+      android:layout_height="0dp"
+      android:layout_weight="1"
+      android:visibility="gone" />
+
+  <!-- User search results list (users mode) -->
+  <androidx.recyclerview.widget.RecyclerView
+      android:id="@+id/rvUserResults"
       android:layout_width="match_parent"
       android:layout_height="0dp"
       android:layout_weight="1"

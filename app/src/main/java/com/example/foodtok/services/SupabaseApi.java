@@ -224,6 +224,14 @@ public interface SupabaseApi {
       @Query("select") String select
   );
 
+  /** Searches profiles by username prefix using PostgREST {@code ilike} filter. */
+  @GET("profiles")
+  Call<List<UserDto>> searchProfiles(
+      @Query("username") String usernameFilter,
+      @Query("select") String select,
+      @Query("order") String order
+  );
+
   // ── Follow relationship check ─────────────────────────────────────────
 
   /** Returns the follow row if the relationship exists, empty list otherwise. */

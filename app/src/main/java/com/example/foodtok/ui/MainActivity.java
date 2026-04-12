@@ -12,6 +12,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.foodtok.R;
 import com.example.foodtok.auth.AuthManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import androidx.fragment.app.FragmentManager;
 
 /** Main app activity hosting the BottomNavigationView and fragment container. */
 public class MainActivity extends AppCompatActivity {
@@ -100,7 +101,15 @@ public class MainActivity extends AppCompatActivity {
    * the current auth state (guest vs. logged-in user).
    */
   private void switchToFragment(String tag) {
-    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    // Pop any overlay fragments (e.g. ProfileSavedFeedFragment,
+    // OtherUserProfileFragment) so the base tab fragment is visible.
+    FragmentManager fm = getSupportFragmentManager();
+    if (fm.getBackStackEntryCount() > 0) {
+      fm.popBackStackImmediate(null, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      setBottomNavVisibility(true);
+    }
+
+    FragmentTransaction ft = fm.beginTransaction();
     ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
 
     Fragment target;
