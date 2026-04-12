@@ -1,5 +1,6 @@
 package com.example.foodtok.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -92,8 +93,12 @@ public class OtherUserProfileFragment extends Fragment {
                 .setInterpolator(new OvershootInterpolator(1.5f))
                 .start();
 
-        view.findViewById(R.id.btnBack).setOnClickListener(v ->
-                requireActivity().getSupportFragmentManager().popBackStack());
+        view.findViewById(R.id.btnBack).setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).setBottomNavVisibility(true);
+            }
+            requireActivity().getSupportFragmentManager().popBackStack();
+        });
 
         rvProfileRecipes.setLayoutManager(new GridLayoutManager(getContext(), 3));
         adapter = new ProfileRecipeAdapter(recipes);
@@ -261,7 +266,10 @@ public class OtherUserProfileFragment extends Fragment {
     private void toggleFollow() {
         String myId = AuthManager.getInstance().getCurrentUser() != null
                 ? AuthManager.getInstance().getCurrentUser().getId() : "";
-        if (myId.isEmpty()) return;
+        if (myId.isEmpty()) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            return;
+        }
 
         SupabaseApi api = ApiClient.getSupabaseApi();
 
@@ -303,6 +311,14 @@ public class OtherUserProfileFragment extends Fragment {
         } else {
             btnFollowUnfollow.setText("Follow");
             btnFollowUnfollow.setTextColor(ContextCompat.getColor(requireContext(), R.color.foodtok_green));
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).setBottomNavVisibility(true);
         }
     }
 

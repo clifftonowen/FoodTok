@@ -21,6 +21,10 @@ import com.bumptech.glide.Glide;
 import com.example.foodtok.models.dto.FollowDto;
 import com.example.foodtok.services.SupabaseApi;
 import com.example.foodtok.ui.MainActivity;
+import com.example.foodtok.ui.OtherUserProfileFragment;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentManager;
 import com.example.foodtok.util.ApiClient;
 import com.example.foodtok.util.SessionManager;
 
@@ -124,6 +128,16 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   @Override
   public int getItemCount() {
     return PAGE_COUNT;
+  }
+
+  @Override
+  public void onViewAttachedToWindow(
+      @NonNull RecyclerView.ViewHolder holder) {
+    super.onViewAttachedToWindow(holder);
+    if (holder instanceof VideoViewHolder && playerPool != null) {
+      playerPool.attach(feedPosition,
+          ((VideoViewHolder) holder).videoView);
+    }
   }
 
   // ── Ingredients page ────────────────────────────────────────────────
@@ -301,6 +315,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     bindClickableHashtags(holder.recipeTagsText, recipe.getTags());
     bindAuthorAvatar(holder);
     bindFollowState(holder);
+    bindAvatarClick(holder);
 
     // Reflect current like/save/not-interested state (async — set default, update on callback)
     holder.likeButton.clearColorFilter();
@@ -587,6 +602,45 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             // Leave the optimistic "+" in place on transient failures.
           }
         });
+  }
+
+  /**
+   * Makes the author avatar clickable. Tapping it opens
+   * {@link OtherUserProfileFragment} for that author. If the author is
+   * the currently logged-in user, the tap is ignored (they can use the
+   * Profile tab instead).
+   */
+  private void bindAvatarClick(VideoViewHolder holder) {
+    String authorId = recipe.getAuthorId();
+    if (authorId == null || authorId.isEmpty()) {
+      holder.profileImage.setOnClickListener(null);
+      return;
+    }
+
+    String currentUserId = SessionManager.getInstance().getUserId();
+    if (currentUserId != null && currentUserId.equals(authorId)) {
+      holder.profileImage.setOnClickListener(null);
+      return;
+    }
+
+    holder.profileImage.setOnClickListener(v -> {
+      Context ctx = v.getContext();
+      if (ctx instanceof AppCompatActivity) {
+        AppCompatActivity activity = (AppCompatActivity) ctx;
+        activity.getSupportFragmentManager()
+            .beginTransaction()
+            .setCustomAnimations(
+                R.anim.slide_in_right, R.anim.slide_out_left,
+                R.anim.slide_in_left, R.anim.slide_out_right)
+            .replace(R.id.fragmentContainer,
+                OtherUserProfileFragment.newInstance(authorId))
+            .addToBackStack(null)
+            .commit();
+        if (activity instanceof MainActivity) {
+          ((MainActivity) activity).setBottomNavVisibility(false);
+        }
+      }
+    });
   }
 
   /**

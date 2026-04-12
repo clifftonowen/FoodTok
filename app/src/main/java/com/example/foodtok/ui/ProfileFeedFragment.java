@@ -150,9 +150,6 @@ public class ProfileFeedFragment extends Fragment {
                 }
             }
         });
-
-        viewPager.setAdapter(feedAdapter);
-
         btnBack.setOnClickListener(v -> getParentFragmentManager().popBackStack());
 
         loadRecipes();
@@ -197,24 +194,14 @@ public class ProfileFeedFragment extends Fragment {
                         @Override
                         public void onResponse(Call<List<RecipeDto>> call, Response<List<RecipeDto>> response) {
                             if (response.isSuccessful() && response.body() != null && getActivity() != null) {
-                                getActivity().runOnUiThread(() -> {
-                                    recipes.clear();
-                                    for (RecipeDto dto : response.body()) recipes.add(dto.toDomain());
-                                    feedAdapter.notifyDataSetChanged();
-                                    if (playerPool != null) {
-                                        playerPool.setRecipes(recipes);
-                                    }
-                                    if (startPosition > 0) viewPager.setCurrentItem(startPosition, false);
-                                    viewPager.post(() -> {
-                                        if (playerPool != null) {
-                                            playerPool.setCurrentPosition(viewPager.getCurrentItem());
-                                        }
-                                    });
-                                });
+                                getActivity().runOnUiThread(() ->
+                                    initFeedWithData(response.body(),
+                                        startPosition));
                             }
                         }
                         @Override
-                        public void onFailure(Call<List<RecipeDto>> call, Throwable t) {}
+                        public void onFailure(Call<List<RecipeDto>> call,
+                            Throwable t) {}
                     });
         } else {
             loadSavedRecipes(userId, startPosition);
@@ -244,20 +231,10 @@ public class ProfileFeedFragment extends Fragment {
                                         @Override
                                         public void onResponse(Call<List<RecipeDto>> call, Response<List<RecipeDto>> response) {
                                             if (response.isSuccessful() && response.body() != null && getActivity() != null) {
-                                                getActivity().runOnUiThread(() -> {
-                                                    recipes.clear();
-                                                    for (RecipeDto dto : response.body()) recipes.add(dto.toDomain());
-                                                    feedAdapter.notifyDataSetChanged();
-                                                    if (playerPool != null) {
-                                                        playerPool.setRecipes(recipes);
-                                                    }
-                                                    if (startPosition > 0) viewPager.setCurrentItem(startPosition, false);
-                                                    viewPager.post(() -> {
-                                                        if (playerPool != null) {
-                                                            playerPool.setCurrentPosition(viewPager.getCurrentItem());
-                                                        }
-                                                    });
-                                                });
+                                                getActivity().runOnUiThread(() ->
+                                                    initFeedWithData(
+                                                        response.body(),
+                                                        startPosition));
                                             }
                                         }
                                         @Override
@@ -268,6 +245,30 @@ public class ProfileFeedFragment extends Fragment {
                     @Override
                     public void onFailure(Call<List<InteractionDto>> call, Throwable t) {}
                 });
+    }
+
+    /**
+     * Populates the feed once recipe data arrives. Mirrors the
+     * HomeFragment strategy: prime the pool with recipes and the
+     * starting position BEFORE setting the adapter, so the very
+     * first bind already finds a ready player to attach.
+     */
+    @SuppressLint("NotifyDataSetChanged")
+    private void initFeedWithData(List<RecipeDto> dtos,
+        int startPosition) {
+        recipes.clear();
+        for (RecipeDto dto : dtos) {
+            recipes.add(dto.toDomain());
+        }
+        if (playerPool != null) {
+            playerPool.setRecipes(recipes);
+            int pos = startPosition > 0 ? startPosition : 0;
+            playerPool.setCurrentPosition(pos);
+        }
+        viewPager.setAdapter(feedAdapter);
+        if (startPosition > 0) {
+            viewPager.setCurrentItem(startPosition, false);
+        }
     }
 
     private void showToast(String message) {

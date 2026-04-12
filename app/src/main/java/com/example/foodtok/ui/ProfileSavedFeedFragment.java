@@ -192,17 +192,17 @@ public class ProfileSavedFeedFragment extends Fragment {
 
         viewPager.setOrientation(ViewPager2.ORIENTATION_VERTICAL);
         viewPager.setOffscreenPageLimit(1);
+
+        // Prime the pool BEFORE setting the adapter so the very first
+        // bind already finds a ready player to attach.
+        int pos = startPosition > 0 ? startPosition : 0;
+        playerPool.setCurrentPosition(pos);
+
         viewPager.setAdapter(feedAdapter);
 
         if (startPosition > 0) {
             viewPager.setCurrentItem(startPosition, false);
         }
-
-        viewPager.post(() -> {
-            if (playerPool != null) {
-                playerPool.setCurrentPosition(viewPager.getCurrentItem());
-            }
-        });
     }
 
     private void loadMyRecipes() {
