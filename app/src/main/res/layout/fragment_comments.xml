@@ -2,7 +2,7 @@
 <!-- Bottom sheet comment section — launched as BottomSheetDialogFragment over the feed -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/foodtok_white"
     android:orientation="vertical">
 
@@ -62,11 +62,13 @@
         android:layout_height="1dp"
         android:background="@color/foodtok_divider" />
 
-    <!-- Comments list — height capped so sheet doesn't cover full screen -->
+    <!-- Comments list — flexes to fill remaining space so the input row
+         stays pinned above the keyboard when it opens (ADJUST_RESIZE). -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_comments"
         android:layout_width="match_parent"
-        android:layout_height="360dp"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:clipToPadding="false"
         android:paddingTop="8dp"
         android:paddingBottom="8dp" />

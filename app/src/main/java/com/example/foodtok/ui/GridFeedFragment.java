@@ -134,7 +134,8 @@ public class GridFeedFragment extends Fragment {
 
       @Override
       public void onCommentClicked(Recipe recipe) {
-        showToast("Comment clicked for " + recipe.getTitle());
+        CommentsFragment.newInstance(recipe.getId())
+            .show(getChildFragmentManager(), "comments");
       }
 
       @Override
