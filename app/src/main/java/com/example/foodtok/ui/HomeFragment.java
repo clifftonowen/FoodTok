@@ -28,6 +28,7 @@ import com.example.foodtok.services.RecipeListCallback;
 import com.example.foodtok.services.RecipeServiceProvider;
 import com.example.foodtok.util.FeedVideoPlayerPool;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /** Main feed fragment with vertical ViewPager2 for recipe scrolling and top navigation. */
@@ -47,6 +48,11 @@ public class HomeFragment extends Fragment {
   private TextView navChat;
   private boolean isKeyboardVisible;
   private int currentHorizontalPage = 1;
+
+  /** Cached recipes so the feed survives view destruction (e.g. back from overlay). */
+  private List<Recipe> cachedRecipes;
+  /** Last scroll position before the view was destroyed. */
+  private int cachedPosition;
 
   @Nullable
   @Override
@@ -125,6 +131,13 @@ public class HomeFragment extends Fragment {
   private void setupFeedPager(View view) {
     feedViewPager = view.findViewById(R.id.feedViewPager);
     feedLoadingSpinner = view.findViewById(R.id.feedLoadingSpinner);
+
+    // Restore from cache if available (e.g. returning from an overlay
+    // fragment that destroyed our view).
+    if (cachedRecipes != null && !cachedRecipes.isEmpty()) {
+      initFeedAdapter(new ArrayList<>(cachedRecipes), cachedPosition);
+      return;
+    }
     loadFeed();
   }
 
@@ -135,6 +148,8 @@ public class HomeFragment extends Fragment {
    */
   /** Re-fetches the feed from scratch. Called externally on Home tab reselection. */
   public void refreshFeed() {
+    cachedRecipes = null;
+    cachedPosition = 0;
     if (playerPool != null) {
       playerPool.release();
       playerPool = null;
@@ -158,7 +173,8 @@ public class HomeFragment extends Fragment {
             }
             getActivity().runOnUiThread(() -> {
               feedLoadingSpinner.setVisibility(View.GONE);
-              initFeedAdapter(recipes);
+              cachedRecipes = new ArrayList<>(recipes);
+              initFeedAdapter(recipes, 0);
             });
           }
 
@@ -175,7 +191,7 @@ public class HomeFragment extends Fragment {
         });
   }
 
-  private void initFeedAdapter(List<Recipe> recipes) {
+  private void initFeedAdapter(List<Recipe> recipes, int startPosition) {
     playerPool = new FeedVideoPlayerPool(requireContext());
     playerPool.setRecipes(recipes);
 
@@ -286,12 +302,11 @@ public class HomeFragment extends Fragment {
     // Prime the pool BEFORE setting the adapter so the first bind
     // finds a ready player to attach. Otherwise the first video stays
     // blank until the user scrolls away and back.
-    int startPos = getArguments() != null ? getArguments().getInt("startPosition", 0) : 0;
-    playerPool.setCurrentPosition(startPos);
+    playerPool.setCurrentPosition(startPosition);
 
     feedViewPager.setAdapter(feedAdapter);
-    if (startPos > 0) {
-      feedViewPager.setCurrentItem(startPos, false);
+    if (startPosition > 0) {
+      feedViewPager.setCurrentItem(startPosition, false);
     }
   }
 
@@ -313,13 +328,14 @@ public class HomeFragment extends Fragment {
 
   @Override
   public void onDestroyView() {
+    if (feedViewPager != null) {
+      cachedPosition = feedViewPager.getCurrentItem();
+    }
     super.onDestroyView();
     if (playerPool != null) {
       playerPool.release();
       playerPool = null;
     }
-
-
   }
 
   private void showToast(String message) {
