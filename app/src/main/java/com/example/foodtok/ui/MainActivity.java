@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.foodtok.R;
 import com.example.foodtok.auth.AuthManager;
@@ -14,6 +15,14 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 /** Main app activity hosting the BottomNavigationView and fragment container. */
 public class MainActivity extends AppCompatActivity {
+
+  private static final String TAG_HOME = "tag_home";
+  private static final String TAG_SEARCH = "tag_search";
+  private static final String TAG_CREATE = "tag_create";
+  private static final String TAG_CHAT = "tag_chat";
+  private static final String TAG_PROFILE = "tag_profile";
+
+  private Fragment activeFragment;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -23,68 +32,122 @@ public class MainActivity extends AppCompatActivity {
     BottomNavigationView bottomNav = findViewById(R.id.bottomNav);
 
     View root = findViewById(android.R.id.content);
-    View fragmentContainer = findViewById(R.id.fragmentContainer); // Ensure this ID is correct
+    View fragmentContainer = findViewById(R.id.fragmentContainer);
 
     ViewCompat.setOnApplyWindowInsetsListener(root, (v, insets) -> {
-      // 1. Check if keyboard is open
       boolean isKeyboardOpen = insets.isVisible(WindowInsetsCompat.Type.ime());
-
-      // 2. Hide or Show the Bottom Navigation bar
       bottomNav.setVisibility(isKeyboardOpen ? View.GONE : View.VISIBLE);
-
-      // 3. Get the exact pixel height of the system keyboard
       int keyboardHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
-
-      // 4. Apply that height as padding to the bottom of the Fragment Container
-      // If keyboard is closed, keyboardHeight is 0, returning it to normal.
       fragmentContainer.setPadding(0, 0, 0, keyboardHeight);
-
       return insets;
     });
 
-    // Load HomeFragment by default when app opens
     if (savedInstanceState == null) {
-      loadFragment(new HomeFragment());
+      switchToFragment(TAG_HOME);
+    } else {
+      restoreActiveFragment();
     }
 
-    // Handle tab switching
     bottomNav.setOnItemSelectedListener(item -> {
-      Fragment selectedFragment = null;
       int itemId = item.getItemId();
 
       if (itemId == R.id.nav_home) {
-        selectedFragment = new HomeFragment();
+        switchToFragment(TAG_HOME);
       } else if (itemId == R.id.nav_search) {
-        selectedFragment = new SearchFragment();
+        switchToFragment(TAG_SEARCH);
       } else if (itemId == R.id.nav_create) {
-        selectedFragment = new CreateFragment();
+        switchToFragment(TAG_CREATE);
       } else if (itemId == R.id.nav_chat) {
-        selectedFragment = new GridFragment();
+        switchToFragment(TAG_CHAT);
       } else if (itemId == R.id.nav_profile) {
-        // Later: check AuthManager.isLoggedIn()
-        // If logged in → ProfileUserFragment
-        // If guest → ProfileGuestFragment
-        if (AuthManager.getInstance().isLoggedIn()){
-          selectedFragment = new ProfileUserFragment();
-        } else{
-          selectedFragment = new ProfileGuestFragment();
-        }
-      }
-
-      if (selectedFragment != null) {
-        loadFragment(selectedFragment);
+        switchToFragment(TAG_PROFILE);
       }
 
       return true;
     });
+
+    bottomNav.setOnItemReselectedListener(item -> {
+      if (item.getItemId() == R.id.nav_home) {
+        Fragment home = getSupportFragmentManager().findFragmentByTag(TAG_HOME);
+        if (home instanceof HomeFragment) {
+          ((HomeFragment) home).refreshFeed();
+        }
+      }
+    });
   }
 
-  private void loadFragment(Fragment fragment) {
-    getSupportFragmentManager()
-        .beginTransaction()
-        .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-        .replace(R.id.fragmentContainer, fragment)
-        .commit();
+  /**
+   * Restores the active fragment reference after a configuration change
+   * by finding the currently visible fragment among the known tags.
+   */
+  private void restoreActiveFragment() {
+    String[] tags = {TAG_HOME, TAG_SEARCH, TAG_CREATE, TAG_CHAT, TAG_PROFILE};
+    for (String tag : tags) {
+      Fragment f = getSupportFragmentManager().findFragmentByTag(tag);
+      if (f != null && !f.isHidden()) {
+        activeFragment = f;
+        return;
+      }
+    }
+  }
+
+  /**
+   * Switches to the fragment identified by the given tag, using a
+   * show/hide strategy so that fragments are retained across tab switches
+   * instead of being recreated every time.
+   *
+   * <p>The profile tab is special-cased: it is always recreated to reflect
+   * the current auth state (guest vs. logged-in user).
+   */
+  private void switchToFragment(String tag) {
+    FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+    ft.setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out);
+
+    // Profile tab must always reflect current auth state, so recreate it.
+    if (TAG_PROFILE.equals(tag)) {
+      Fragment existing = getSupportFragmentManager().findFragmentByTag(TAG_PROFILE);
+      if (existing != null) {
+        ft.remove(existing);
+      }
+    }
+
+    Fragment target = getSupportFragmentManager().findFragmentByTag(tag);
+
+    // Create the fragment if it doesn't exist yet.
+    if (target == null) {
+      target = createFragmentForTag(tag);
+      ft.add(R.id.fragmentContainer, target, tag);
+    } else {
+      ft.show(target);
+    }
+
+    // Hide the previously active fragment.
+    if (activeFragment != null && activeFragment != target) {
+      ft.hide(activeFragment);
+    }
+
+    activeFragment = target;
+    ft.commit();
+  }
+
+  private Fragment createFragmentForTag(String tag) {
+    switch (tag) {
+      case TAG_SEARCH:
+        return new SearchFragment();
+      case TAG_CREATE:
+        return new CreateFragment();
+      case TAG_CHAT:
+        return new GridFragment();
+      case TAG_PROFILE:
+        if (AuthManager.getInstance().isLoggedIn()) {
+          return new ProfileUserFragment();
+        } else {
+          return new ProfileGuestFragment();
+        }
+      case TAG_HOME:
+      default:
+        return new HomeFragment();
+    }
   }
 
     public void setBottomNavVisibility(boolean visible) {

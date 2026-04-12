@@ -133,7 +133,8 @@ public class HomeFragment extends Fragment {
    * player pool and adapter so the user gets a fresh batch of recipes.
    * Mirrors the effect of re-tapping the Home tab on the bottom nav.
    */
-  private void refreshFeed() {
+  /** Re-fetches the feed from scratch. Called externally on Home tab reselection. */
+  public void refreshFeed() {
     if (playerPool != null) {
       playerPool.release();
       playerPool = null;
