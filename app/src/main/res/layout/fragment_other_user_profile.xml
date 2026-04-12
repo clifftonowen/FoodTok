@@ -5,38 +5,38 @@
     android:background="@color/foodtok_cream"
     android:orientation="vertical">
 
-    <!-- Header with username and settings -->
+    <!-- Header: back button + username -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="32dp">
+        android:padding="16dp">
 
         <TextView
-            android:id="@+id/tvUsername"
+            android:id="@+id/btnBack"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="Alex_C"
-            android:textColor="@color/foodtok_text_primary"
-            android:textSize="22sp"
-            android:textStyle="bold" />
-
-        <!-- Logout button -->
-        <TextView
-            android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:background="@drawable/bg_button_outline"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
-            android:text="Log out"
+            android:text="Back"
             android:textColor="@color/foodtok_green"
             android:textSize="13sp"
             android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvUsername"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/foodtok_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <!-- Follow / Unfollow button -->
 
     </RelativeLayout>
 
@@ -70,21 +70,10 @@
             android:id="@+id/tvDisplayName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
-            android:text="Alex_C"
+            android:layout_marginBottom="16dp"
             android:textColor="@color/foodtok_text_primary"
             android:textSize="18sp"
             android:textStyle="bold" />
-
-        <!-- Bio -->
-        <TextView
-            android:id="@+id/tvBio"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
-            android:text="Food Lover | Home Cook"
-            android:textColor="@color/foodtok_text_secondary"
-            android:textSize="14sp" />
 
         <!-- Stats row -->
         <LinearLayout
@@ -119,7 +108,7 @@
 
             </LinearLayout>
 
-            <!-- Followers count -->
+            <!-- Followers count (clickable) -->
             <LinearLayout
                 android:id="@+id/llFollowers"
                 android:layout_width="0dp"
@@ -148,7 +137,7 @@
 
             </LinearLayout>
 
-            <!-- Following count -->
+            <!-- Following count (clickable) -->
             <LinearLayout
                 android:id="@+id/llFollowing"
                 android:layout_width="0dp"
@@ -179,7 +168,42 @@
 
         </LinearLayout>
 
+        <!-- Follow / Unfollow button — centered below stats -->
+        <TextView
+            android:id="@+id/btnFollowUnfollow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_button_outline"
+            android:paddingLeft="24dp"
+            android:paddingRight="24dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:text="Follow"
+            android:textColor="@color/foodtok_green"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+
     </LinearLayout>
+
+    <!-- Divider -->
+
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/foodtok_divider" />
+
+    <!-- Recipe grid label -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="Recipes"
+        android:textColor="@color/foodtok_text_primary"
+        android:textSize="14sp"
+        android:textStyle="bold" />
 
     <!-- Divider -->
     <View
@@ -187,45 +211,7 @@
         android:layout_height="1dp"
         android:background="@color/foodtok_divider" />
 
-    <!-- Tabs: My Recipes | Saved -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:id="@+id/tabMyRecipes"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="14dp"
-            android:text="My Recipes"
-            android:textColor="@color/foodtok_text_primary"
-            android:textSize="14sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tabSaved"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:padding="14dp"
-            android:text="Saved"
-            android:textColor="@color/foodtok_text_secondary"
-            android:textSize="14sp" />
-
-    </LinearLayout>
-
-    <!-- Tab indicator (sliding underline) -->
-    <View
-        android:id="@+id/tabIndicator"
-        android:layout_width="match_parent"
-        android:layout_height="3dp"
-        android:background="@color/foodtok_green" />
-
-    <!-- Placeholder for recipe grid -->
+    <!-- Recipe grid -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvProfileRecipes"
         android:layout_width="match_parent"

@@ -62,6 +62,7 @@ dependencies {
     implementation(libs.okhttp.logging)
     implementation(libs.gson)
     implementation(libs.glide)
+    implementation(libs.androidx.media3.ui)
     annotationProcessor(libs.glide.compiler)
     implementation(libs.media3.exoplayer)
     implementation(libs.media3.ui)
