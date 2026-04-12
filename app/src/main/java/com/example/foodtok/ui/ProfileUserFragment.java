@@ -7,10 +7,13 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -28,7 +31,6 @@ import com.example.foodtok.models.dto.UserDto;
 import com.example.foodtok.services.SupabaseApi;
 import com.example.foodtok.util.ApiClient;
 
-import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -43,6 +45,8 @@ public class ProfileUserFragment extends Fragment {
     private ImageView ivProfilePic;
     private TextView tabMyRecipes, tabSaved, tvFollowerCount, tvFollowingCount, userName, btnLogout, tvDisplayName, tvRecipeCount;
     private View llFollowers, llFollowing;
+    private View tabIndicator;
+    private int tabWidth = 0;
 
     private boolean isMyRecipesTab = true;
     private List<RecipeDto> myRecipes = new ArrayList<>();
@@ -59,6 +63,7 @@ public class ProfileUserFragment extends Fragment {
         tabSaved = view.findViewById(R.id.tabSaved);
         tvFollowerCount = view.findViewById(R.id.tvFollowerCount);
         tvFollowingCount = view.findViewById(R.id.tvFollowingCount);
+        tabIndicator = view.findViewById(R.id.tabIndicator);
 
         userName = view.findViewById(R.id.tvUsername);
         btnLogout = view.findViewById(R.id.btnLogout);
@@ -67,6 +72,25 @@ public class ProfileUserFragment extends Fragment {
         ivProfilePic = view.findViewById(R.id.ivProfilePic);
         llFollowers = view.findViewById(R.id.llFollowers);
         llFollowing = view.findViewById(R.id.llFollowing);
+
+        // Profile picture entrance: scale from 0 with overshoot
+        ivProfilePic.setScaleX(0f);
+        ivProfilePic.setScaleY(0f);
+        ivProfilePic.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(500)
+                .setStartDelay(100)
+                .setInterpolator(new OvershootInterpolator(1.5f))
+                .start();
+
+        // Set tab indicator width to exactly one tab after layout
+        tabMyRecipes.post(() -> {
+            tabWidth = tabMyRecipes.getWidth();
+            ViewGroup.LayoutParams lp = tabIndicator.getLayoutParams();
+            lp.width = tabWidth;
+            tabIndicator.setLayoutParams(lp);
+        });
 
         if (AuthManager.getInstance().getCurrentUser() != null) {
             userName.setText(AuthManager.getInstance().getCurrentUser().getUsername());
@@ -86,6 +110,9 @@ public class ProfileUserFragment extends Fragment {
             String userId = AuthManager.getInstance().getCurrentUser().getId();
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in_right, R.anim.slide_out_left,
+                            R.anim.slide_in_left, R.anim.slide_out_right)
                     .replace(R.id.fragmentContainer,
                             FollowListFragment.newInstance(userId, FollowListFragment.MODE_FOLLOWERS))
                     .addToBackStack(null)
@@ -96,13 +123,15 @@ public class ProfileUserFragment extends Fragment {
             String userId = AuthManager.getInstance().getCurrentUser().getId();
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in_right, R.anim.slide_out_left,
+                            R.anim.slide_in_left, R.anim.slide_out_right)
                     .replace(R.id.fragmentContainer,
                             FollowListFragment.newInstance(userId, FollowListFragment.MODE_FOLLOWING))
                     .addToBackStack(null)
                     .commit();
         });
 
-        //GridLayoutManager
         rvProfileRecipes.setLayoutManager(new GridLayoutManager(getContext(), 3));
         adapter = new ProfileRecipeAdapter(myRecipes);
         rvProfileRecipes.setAdapter(adapter);
@@ -120,18 +149,16 @@ public class ProfileUserFragment extends Fragment {
 
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in_right, R.anim.slide_out_left,
+                            R.anim.slide_in_left, R.anim.slide_out_right)
                     .replace(R.id.fragmentContainer, nextFragment)
                     .addToBackStack(null)
                     .commit();
         });
 
-        tabMyRecipes.setOnClickListener(v -> {
-            switchTab(true);
-        });
-
-        tabSaved.setOnClickListener(v -> {
-            switchTab(false);
-        });
+        tabMyRecipes.setOnClickListener(v -> switchTab(true));
+        tabSaved.setOnClickListener(v -> switchTab(false));
 
         fetchProfileStats();
         fetchMyRecipes();
@@ -140,15 +167,22 @@ public class ProfileUserFragment extends Fragment {
         switchTab(isMyRecipesTab);
 
         return view;
+    }
 
-
-
+    private void animateStatCount(TextView tv) {
+        tv.setScaleX(0f);
+        tv.setScaleY(0f);
+        tv.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(400)
+                .setInterpolator(new OvershootInterpolator(2f))
+                .start();
     }
 
     private void switchTab(boolean showMyRecipes) {
         isMyRecipesTab = showMyRecipes;
 
-        // Update tab styling (like toggling active className in React)
         tabMyRecipes.setTextColor(ContextCompat.getColor(getContext(),
                 showMyRecipes ? R.color.foodtok_text_primary : R.color.foodtok_text_secondary));
         tabMyRecipes.setTypeface(null, showMyRecipes ? Typeface.BOLD : Typeface.NORMAL);
@@ -157,7 +191,15 @@ public class ProfileUserFragment extends Fragment {
                 showMyRecipes ? R.color.foodtok_text_secondary : R.color.foodtok_text_primary));
         tabSaved.setTypeface(null, showMyRecipes ? Typeface.NORMAL : Typeface.BOLD);
 
-        // Swap data — like setting setState with different array
+        // Slide the green underline indicator to the active tab
+        if (tabWidth > 0) {
+            tabIndicator.animate()
+                    .translationX(showMyRecipes ? 0f : tabWidth)
+                    .setDuration(200)
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+        }
+
         adapter.updateData(showMyRecipes ? myRecipes : savedRecipes);
     }
 
@@ -235,9 +277,6 @@ public class ProfileUserFragment extends Fragment {
         });
     }
 
-
-
-
     private void fetchMyRecipes() {
         String userId = AuthManager.getInstance().getCurrentUser().getId();
         SupabaseApi api = ApiClient.getSupabaseApi();
@@ -273,6 +312,7 @@ public class ProfileUserFragment extends Fragment {
                                 Glide.with(ProfileUserFragment.this)
                                         .load(avatarUrl)
                                         .circleCrop()
+                                        .transition(DrawableTransitionOptions.withCrossFade(300))
                                         .into(ivProfilePic);
                             }
                         }
@@ -287,46 +327,40 @@ public class ProfileUserFragment extends Fragment {
         String userId = AuthManager.getInstance().getCurrentUser().getId();
         SupabaseApi api = ApiClient.getSupabaseApi();
 
-        // Follower count — people whose following_id = me
         api.getFollowers("eq." + userId, "follower_id").enqueue(new Callback<List<FollowDto>>() {
             @Override
             public void onResponse(Call<List<FollowDto>> call, Response<List<FollowDto>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     tvFollowerCount.setText(String.valueOf(response.body().size()));
+                    animateStatCount(tvFollowerCount);
                 }
             }
             @Override
             public void onFailure(Call<List<FollowDto>> call, Throwable t) {}
         });
 
-        // Following count — people whose follower_id = me
         api.getFollowing("eq." + userId, "following_id").enqueue(new Callback<List<FollowDto>>() {
             @Override
             public void onResponse(Call<List<FollowDto>> call, Response<List<FollowDto>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     tvFollowingCount.setText(String.valueOf(response.body().size()));
+                    animateStatCount(tvFollowingCount);
                 }
             }
             @Override
             public void onFailure(Call<List<FollowDto>> call, Throwable t) {}
         });
 
-        // Recipe count — recipes where author_id = me
-        // Recipe count
         api.getRecipesByAuthor("eq." + userId, "id").enqueue(new Callback<List<RecipeDto>>() {
             @Override
             public void onResponse(Call<List<RecipeDto>> call, Response<List<RecipeDto>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     tvRecipeCount.setText(String.valueOf(response.body().size()));
+                    animateStatCount(tvRecipeCount);
                 }
             }
             @Override
             public void onFailure(Call<List<RecipeDto>> call, Throwable t) {}
         });
     }
-
-
-
-
-
 }

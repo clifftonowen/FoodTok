@@ -5,10 +5,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -79,6 +81,17 @@ public class OtherUserProfileFragment extends Fragment {
         llFollowing = view.findViewById(R.id.llFollowing);
         rvProfileRecipes = view.findViewById(R.id.rvProfileRecipes);
 
+        // Profile picture entrance: scale from 0 with overshoot
+        ivProfilePic.setScaleX(0f);
+        ivProfilePic.setScaleY(0f);
+        ivProfilePic.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(500)
+                .setStartDelay(100)
+                .setInterpolator(new OvershootInterpolator(1.5f))
+                .start();
+
         view.findViewById(R.id.btnBack).setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager().popBackStack());
 
@@ -91,6 +104,9 @@ public class OtherUserProfileFragment extends Fragment {
                     position, ProfileSavedFeedFragment.MODE_MY_RECIPES, profileUserId);
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in_right, R.anim.slide_out_left,
+                            R.anim.slide_in_left, R.anim.slide_out_right)
                     .replace(R.id.fragmentContainer, nextFragment)
                     .addToBackStack(null)
                     .commit();
@@ -99,6 +115,9 @@ public class OtherUserProfileFragment extends Fragment {
         llFollowers.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
+                        .setCustomAnimations(
+                                R.anim.slide_in_right, R.anim.slide_out_left,
+                                R.anim.slide_in_left, R.anim.slide_out_right)
                         .replace(R.id.fragmentContainer,
                                 FollowListFragment.newInstance(profileUserId, FollowListFragment.MODE_FOLLOWERS))
                         .addToBackStack(null)
@@ -107,12 +126,24 @@ public class OtherUserProfileFragment extends Fragment {
         llFollowing.setOnClickListener(v ->
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
+                        .setCustomAnimations(
+                                R.anim.slide_in_right, R.anim.slide_out_left,
+                                R.anim.slide_in_left, R.anim.slide_out_right)
                         .replace(R.id.fragmentContainer,
                                 FollowListFragment.newInstance(profileUserId, FollowListFragment.MODE_FOLLOWING))
                         .addToBackStack(null)
                         .commit());
 
-        btnFollowUnfollow.setOnClickListener(v -> toggleFollow());
+        // Follow button: scale press animation on every tap
+        btnFollowUnfollow.setOnClickListener(v -> {
+            v.animate().scaleX(0.88f).scaleY(0.88f).setDuration(100)
+                    .withEndAction(() -> v.animate().scaleX(1f).scaleY(1f)
+                            .setDuration(200)
+                            .setInterpolator(new OvershootInterpolator(2.5f))
+                            .start())
+                    .start();
+            toggleFollow();
+        });
 
         fetchProfile();
         fetchRecipes();
@@ -120,6 +151,17 @@ public class OtherUserProfileFragment extends Fragment {
         checkFollowState();
 
         return view;
+    }
+
+    private void animateStatCount(TextView tv) {
+        tv.setScaleX(0f);
+        tv.setScaleY(0f);
+        tv.animate()
+                .scaleX(1f)
+                .scaleY(1f)
+                .setDuration(400)
+                .setInterpolator(new OvershootInterpolator(2f))
+                .start();
     }
 
     private void fetchProfile() {
@@ -136,6 +178,7 @@ public class OtherUserProfileFragment extends Fragment {
                                 Glide.with(OtherUserProfileFragment.this)
                                         .load(user.avatarUrl)
                                         .circleCrop()
+                                        .transition(DrawableTransitionOptions.withCrossFade(300))
                                         .into(ivProfilePic);
                             }
                         }
@@ -157,6 +200,7 @@ public class OtherUserProfileFragment extends Fragment {
                     recipes.clear();
                     recipes.addAll(response.body());
                     tvRecipeCount.setText(String.valueOf(recipes.size()));
+                    animateStatCount(tvRecipeCount);
                     adapter.updateData(recipes);
                 }
             }
@@ -174,6 +218,7 @@ public class OtherUserProfileFragment extends Fragment {
             public void onResponse(Call<List<FollowDto>> call, Response<List<FollowDto>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     tvFollowerCount.setText(String.valueOf(response.body().size()));
+                    animateStatCount(tvFollowerCount);
                 }
             }
             @Override
@@ -185,6 +230,7 @@ public class OtherUserProfileFragment extends Fragment {
             public void onResponse(Call<List<FollowDto>> call, Response<List<FollowDto>> response) {
                 if (response.isSuccessful() && response.body() != null) {
                     tvFollowingCount.setText(String.valueOf(response.body().size()));
+                    animateStatCount(tvFollowingCount);
                 }
             }
             @Override
@@ -267,6 +313,7 @@ public class OtherUserProfileFragment extends Fragment {
                     public void onResponse(Call<List<FollowDto>> call, Response<List<FollowDto>> response) {
                         if (response.isSuccessful() && response.body() != null) {
                             tvFollowerCount.setText(String.valueOf(response.body().size()));
+                            animateStatCount(tvFollowerCount);
                         }
                     }
 

@@ -83,6 +83,9 @@ public class FollowListFragment extends Fragment {
         adapter.setOnUserClickListener(user -> {
             requireActivity().getSupportFragmentManager()
                     .beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_in_right, R.anim.slide_out_left,
+                            R.anim.slide_in_left, R.anim.slide_out_right)
                     .replace(R.id.fragmentContainer, OtherUserProfileFragment.newInstance(user.id))
                     .addToBackStack(null)
                     .commit();

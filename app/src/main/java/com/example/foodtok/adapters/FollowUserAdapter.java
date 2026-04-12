@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,6 +25,7 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Vi
 
     private List<UserDto> users;
     private OnUserClickListener clickListener;
+    private int lastAnimatedPosition = -1;
 
     public FollowUserAdapter(List<UserDto> users) {
         this.users = users;
@@ -35,6 +37,7 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Vi
 
     public void updateData(List<UserDto> newUsers) {
         this.users = newUsers;
+        lastAnimatedPosition = -1;
         notifyDataSetChanged();
     }
 
@@ -69,6 +72,20 @@ public class FollowUserAdapter extends RecyclerView.Adapter<FollowUserAdapter.Vi
                 }
             }
         });
+
+        // Staggered entrance: slide in from right, only on first appearance
+        if (position > lastAnimatedPosition) {
+            lastAnimatedPosition = position;
+            holder.itemView.setAlpha(0f);
+            holder.itemView.setTranslationX(60f);
+            holder.itemView.animate()
+                    .alpha(1f)
+                    .translationX(0f)
+                    .setDuration(300)
+                    .setStartDelay(Math.min(position * 70L, 420L))
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+        }
     }
 
     @Override

@@ -218,11 +218,12 @@
 
     </LinearLayout>
 
-    <!-- Divider -->
+    <!-- Tab indicator (sliding underline) -->
     <View
+        android:id="@+id/tabIndicator"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/foodtok_divider" />
+        android:layout_height="3dp"
+        android:background="@color/foodtok_green" />
 
     <!-- Placeholder for recipe grid -->
     <androidx.recyclerview.widget.RecyclerView

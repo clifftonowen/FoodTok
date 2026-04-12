@@ -4,6 +4,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,6 +24,7 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
 
     private List<RecipeDto> recipes;
     private OnRecipeClickListener clickListener;
+    private int lastAnimatedPosition = -1;
 
     public ProfileRecipeAdapter(List<RecipeDto> recipes) {
         this.recipes = recipes;
@@ -34,6 +36,7 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
 
     public void updateData(List<RecipeDto> newRecipes) {
         this.recipes = newRecipes;
+        lastAnimatedPosition = -1;
         notifyDataSetChanged();
     }
 
@@ -65,6 +68,20 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
                 }
             }
         });
+
+        // Staggered entrance: only animate items appearing for the first time
+        if (position > lastAnimatedPosition) {
+            lastAnimatedPosition = position;
+            holder.itemView.setAlpha(0f);
+            holder.itemView.setTranslationY(40f);
+            holder.itemView.animate()
+                    .alpha(1f)
+                    .translationY(0f)
+                    .setDuration(350)
+                    .setStartDelay(Math.min(position * 50L, 300L))
+                    .setInterpolator(new DecelerateInterpolator())
+                    .start();
+        }
     }
 
     @Override
