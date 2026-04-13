@@ -92,4 +92,14 @@ public class MockInteractionService implements IInteractionService {
       BooleanCallback callback) {
     callback.onResult(notInterestedRecipeIds.contains(recipeId));
   }
+
+  @Override
+  public void getLikeCount(String recipeId, IntCallback callback) {
+    callback.onResult(0);
+  }
+
+  @Override
+  public void getSaveCount(String recipeId, IntCallback callback) {
+    callback.onResult(0);
+  }
 }

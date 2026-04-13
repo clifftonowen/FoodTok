@@ -65,6 +65,10 @@ public interface SupabaseApi {
   @POST("recipes")
   Call<List<RecipeDto>> createRecipe(@Body UploadRecipeRequest request);
 
+  /** Deletes a recipe by ID filter (e.g. {@code eq.<uuid>}). */
+  @DELETE("recipes")
+  Call<Void> deleteRecipe(@Query("id") String idFilter);
+
   // ── Comments ─────────────────────────────────────────────────────────
 
   /** Fetches comments for a recipe with nested author join. */

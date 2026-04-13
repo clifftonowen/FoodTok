@@ -47,8 +47,10 @@ import com.example.foodtok.models.User;
 import com.example.foodtok.services.BooleanCallback;
 import com.example.foodtok.services.ChatCallback;
 import com.example.foodtok.services.ChatServiceProvider;
+import com.example.foodtok.services.CommentServiceProvider;
 import com.example.foodtok.services.EnrichmentCallback;
 import com.example.foodtok.services.EnrichmentServiceProvider;
+import com.example.foodtok.services.IntCallback;
 import com.example.foodtok.services.InteractionServiceProvider;
 import com.example.foodtok.util.FeedVideoPlayerPool;
 
@@ -386,6 +388,47 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
           }
         });
 
+    // Fetch and display like / comment / save counts
+    holder.likeCountText.setText("0");
+    holder.commentCountText.setText("0");
+    holder.saveCountText.setText("0");
+
+    InteractionServiceProvider.getInteractionService()
+        .getLikeCount(recipe.getId(), new IntCallback() {
+          @Override
+          public void onResult(int count) {
+            holder.likeCountText.post(
+                () -> holder.likeCountText.setText(formatCount(count)));
+          }
+
+          @Override
+          public void onError(String message) { /* keep 0 */ }
+        });
+
+    CommentServiceProvider.getCommentService()
+        .getCommentCount(recipe.getId(), new IntCallback() {
+          @Override
+          public void onResult(int count) {
+            holder.commentCountText.post(
+                () -> holder.commentCountText.setText(formatCount(count)));
+          }
+
+          @Override
+          public void onError(String message) { /* keep 0 */ }
+        });
+
+    InteractionServiceProvider.getInteractionService()
+        .getSaveCount(recipe.getId(), new IntCallback() {
+          @Override
+          public void onResult(int count) {
+            holder.saveCountText.post(
+                () -> holder.saveCountText.setText(formatCount(count)));
+          }
+
+          @Override
+          public void onError(String message) { /* keep 0 */ }
+        });
+
     // Allergen warning — hidden by default, shown when AllergenService is wired
     Set<String> userBlacklist = getUserBlacklist();
     List<String> personalMatches = recipe.findBlacklistedIngredients(userBlacklist);
@@ -434,6 +477,12 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         listener.onNotInterestedClicked(recipe);
       }
     });
+  }
+
+  private static String formatCount(int count) {
+    if (count >= 1_000_000) return (count / 1_000_000) + "M";
+    if (count >= 1_000) return (count / 1_000) + "K";
+    return String.valueOf(count);
   }
 
   // ── Chat page ───────────────────────────────────────────────────────
@@ -742,8 +791,11 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     final ImageView profileImage;
     final ImageView followPlusButton;
     final ImageView likeButton;
+    final TextView likeCountText;
     final ImageView commentButton;
+    final TextView commentCountText;
     final ImageView saveButton;
+    final TextView saveCountText;
     final ImageView notInterestedButton;
 
     VideoViewHolder(@NonNull View itemView) {
@@ -757,8 +809,11 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       profileImage = itemView.findViewById(R.id.profileImage);
       followPlusButton = itemView.findViewById(R.id.followPlusButton);
       likeButton = itemView.findViewById(R.id.likeButton);
+      likeCountText = itemView.findViewById(R.id.likeCountText);
       commentButton = itemView.findViewById(R.id.commentButton);
+      commentCountText = itemView.findViewById(R.id.commentCountText);
       saveButton = itemView.findViewById(R.id.saveButton);
+      saveCountText = itemView.findViewById(R.id.saveCountText);
       notInterestedButton = itemView.findViewById(R.id.notInterestedButton);
     }
   }

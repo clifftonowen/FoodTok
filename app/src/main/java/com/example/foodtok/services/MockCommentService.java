@@ -22,6 +22,11 @@ public class MockCommentService implements ICommentService {
     callback.onSuccess(comment);
   }
 
+  @Override
+  public void getCommentCount(String recipeId, IntCallback callback) {
+    callback.onResult(buildMockComments().size());
+  }
+
   private List<Comment> buildMockComments() {
     List<Comment> list = new ArrayList<>();
     long now = System.currentTimeMillis();

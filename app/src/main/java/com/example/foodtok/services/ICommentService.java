@@ -19,4 +19,6 @@ public interface ICommentService {
    * @param callback async result callback with the created comment
    */
   void postComment(String recipeId, String text, CommentCallback callback);
+
+  void getCommentCount(String recipeId, IntCallback callback);
 }

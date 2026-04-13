@@ -16,4 +16,8 @@ public interface IInteractionService {
   void isRecipeSaved(String recipeId, BooleanCallback callback);
 
   void isRecipeNotInterested(String recipeId, BooleanCallback callback);
+
+  void getLikeCount(String recipeId, IntCallback callback);
+
+  void getSaveCount(String recipeId, IntCallback callback);
 }

@@ -22,8 +22,14 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
         void onRecipeClick(int position);
     }
 
+    // [NEW] Long-click callback — used for delete in My Recipes tab
+    public interface OnRecipeLongClickListener {
+        void onRecipeLongClick(int position);
+    }
+
     private List<RecipeDto> recipes;
     private OnRecipeClickListener clickListener;
+    private OnRecipeLongClickListener longClickListener; // [NEW]
     private int lastAnimatedPosition = -1;
 
     public ProfileRecipeAdapter(List<RecipeDto> recipes) {
@@ -32,6 +38,11 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
 
     public void setOnRecipeClickListener(OnRecipeClickListener listener) {
         this.clickListener = listener;
+    }
+
+    // [NEW] Setter for long-click listener
+    public void setOnRecipeLongClickListener(OnRecipeLongClickListener listener) {
+        this.longClickListener = listener;
     }
 
     public void updateData(List<RecipeDto> newRecipes) {
@@ -67,6 +78,17 @@ public class ProfileRecipeAdapter extends RecyclerView.Adapter<ProfileRecipeAdap
                     clickListener.onRecipeClick(adapterPosition);
                 }
             }
+        });
+
+        // [NEW] Wire long-click; return true to consume so regular click doesn't also fire
+        holder.itemView.setOnLongClickListener(v -> {
+            if (longClickListener != null) {
+                int pos = holder.getAdapterPosition();
+                if (pos != RecyclerView.NO_POSITION) {
+                    longClickListener.onRecipeLongClick(pos);
+                }
+            }
+            return true;
         });
 
         // Staggered entrance: only animate items appearing for the first time

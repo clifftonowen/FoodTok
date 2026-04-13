@@ -52,6 +52,28 @@ public class SupabaseCommentService implements ICommentService {
   }
 
   @Override
+  public void getCommentCount(String recipeId, IntCallback callback) {
+    // Fetch only the id column to minimise payload — we just need the count.
+    api.getComments("eq." + recipeId, "id", null)
+        .enqueue(new Callback<List<CommentDto>>() {
+          @Override
+          public void onResponse(Call<List<CommentDto>> call,
+              Response<List<CommentDto>> response) {
+            if (response.isSuccessful() && response.body() != null) {
+              callback.onResult(response.body().size());
+            } else {
+              callback.onError("Failed to fetch comment count: " + response.code());
+            }
+          }
+
+          @Override
+          public void onFailure(Call<List<CommentDto>> call, Throwable t) {
+            callback.onError("Network error: " + t.getMessage());
+          }
+        });
+  }
+
+  @Override
   public void postComment(String recipeId, String text,
       CommentCallback callback) {
     String userId = SessionManager.getInstance().getUserId();

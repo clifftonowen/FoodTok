@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.HapticFeedbackConstants;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +12,11 @@ import android.view.animation.DecelerateInterpolator;
 import android.view.animation.OvershootInterpolator;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
+
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
 import androidx.activity.OnBackPressedCallback;
 
@@ -203,6 +209,13 @@ public class ProfileUserFragment extends Fragment {
         adapter = new ProfileRecipeAdapter(myRecipes);
         rvProfileRecipes.setAdapter(adapter);
 
+        // [NEW] Long-press opens delete bottom sheet — only active for My Recipes tab
+        adapter.setOnRecipeLongClickListener(position -> {
+            if (!isMyRecipesTab) return;
+            rvProfileRecipes.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
+            showRecipeActionsSheet(position);
+        });
+
         adapter.setOnRecipeClickListener(position -> {
             String userId = AuthManager.getInstance().getCurrentUser() != null
                     ? AuthManager.getInstance().getCurrentUser().getId() : "";
@@ -319,6 +332,58 @@ public class ProfileUserFragment extends Fragment {
         }
 
         adapter.updateData(showMyRecipes ? myRecipes : savedRecipes);
+    }
+
+    // [NEW] Shows a bottom sheet with Delete and Download actions for a My Recipes item
+    private void showRecipeActionsSheet(int position) {
+        if (position < 0 || position >= myRecipes.size()) return;
+        RecipeDto recipe = myRecipes.get(position);
+
+        BottomSheetDialog sheet = new BottomSheetDialog(requireContext());
+        View sheetView = LayoutInflater.from(requireContext())
+                .inflate(R.layout.bottom_sheet_recipe_actions, null);
+        sheet.setContentView(sheetView);
+
+        sheetView.findViewById(R.id.actionDelete).setOnClickListener(v -> {
+            sheet.dismiss();
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("Delete recipe?")
+                    .setMessage("This action cannot be undone.")
+                    .setPositiveButton("Delete", (dialog, which) -> deleteRecipe(recipe))
+                    .setNegativeButton("Cancel", null)
+                    .show();
+        });
+
+        // Download placeholder — no action yet
+        sheetView.findViewById(R.id.actionDownload).setOnClickListener(v -> sheet.dismiss());
+
+        sheet.show();
+    }
+
+    // [NEW] Calls the Supabase delete endpoint, then removes the item from the local list
+    private void deleteRecipe(RecipeDto recipe) {
+        ApiClient.getSupabaseApi()
+                .deleteRecipe("eq." + recipe.id)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {
+                        if (!isAdded()) return;
+                        if (response.isSuccessful()) {
+                            myRecipes.remove(recipe);
+                            adapter.updateData(myRecipes);
+                            tvRecipeCount.setText(String.valueOf(myRecipes.size()));
+                            Toast.makeText(getContext(), "Recipe deleted", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(getContext(), "Failed to delete", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {
+                        if (!isAdded()) return;
+                        Toast.makeText(getContext(), "Network error", Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
     private void fetchSavedRecipes() {
