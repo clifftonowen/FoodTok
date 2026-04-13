@@ -496,7 +496,8 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
   private static void applyLikeTint(VideoViewHolder holder) {
     if (holder.isLiked) {
-      holder.likeButton.setColorFilter(android.graphics.Color.RED);
+      holder.likeButton.setColorFilter(ContextCompat.getColor(
+          holder.itemView.getContext(), com.example.foodtok.R.color.action_like_active));
     } else {
       holder.likeButton.clearColorFilter();
     }
@@ -504,7 +505,8 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
   private static void applySaveTint(VideoViewHolder holder) {
     if (holder.isSaved) {
-      holder.saveButton.setColorFilter(android.graphics.Color.YELLOW);
+      holder.saveButton.setColorFilter(ContextCompat.getColor(
+          holder.itemView.getContext(), com.example.foodtok.R.color.action_save_active));
     } else {
       holder.saveButton.clearColorFilter();
     }
@@ -512,7 +514,9 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
   private static void applyNotInterestedTint(VideoViewHolder holder) {
     if (holder.isNotInterested) {
-      holder.notInterestedButton.setColorFilter(android.graphics.Color.GRAY);
+      holder.notInterestedButton.setColorFilter(ContextCompat.getColor(
+          holder.itemView.getContext(),
+          com.example.foodtok.R.color.action_not_interested_active));
     } else {
       holder.notInterestedButton.clearColorFilter();
     }

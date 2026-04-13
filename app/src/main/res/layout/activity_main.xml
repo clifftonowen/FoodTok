@@ -23,8 +23,9 @@
         android:layout_marginBottom="-4dp"
         android:background="@color/foodtok_white"
         app:itemActiveIndicatorStyle="@null"
-        app:itemIconTint="@color/foodtok_text_secondary"
-        app:itemTextColor="@color/foodtok_text_secondary"
+        app:itemIconTint="@color/nav_item_tint"
+        app:itemTextColor="@color/nav_item_tint"
+        app:itemIconSize="26dp"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
 

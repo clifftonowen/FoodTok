@@ -235,6 +235,7 @@ public class HomeFragment extends Fragment {
             .saveRecipe(recipe.getId(), new InteractionCallback() {
               @Override
               public void onSuccess() {
+                // UI already updated optimistically in the click handler.
               }
 
               @Override

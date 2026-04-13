@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="20dp"
+    android:height="20dp"
+    android:viewportWidth="24"
+    android:viewportHeight="24"
+    android:tint="@color/foodtok_red">
+    <!-- Shield with exclamation: allergens to avoid -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M12,3l7.5,2.5v6c0,4.5 -3.2,8.5 -7.5,10 -4.3,-1.5 -7.5,-5.5 -7.5,-10v-6z" />
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#000000"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:pathData="M12,8v4" />
+    <path
+        android:fillColor="#000000"
+        android:pathData="M12,15m-1,0a1,1 0,1 1,2 0a1,1 0,1 1,-2 0" />
+</vector>

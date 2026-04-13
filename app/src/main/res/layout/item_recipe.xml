@@ -117,9 +117,11 @@
 
         <ImageView
             android:id="@+id/likeButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@android:color/transparent"
             android:contentDescription="Like"
+            android:padding="2dp"
             android:src="@drawable/ic_like" />
 
         <TextView
@@ -127,16 +129,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="14dp"
             android:text="0"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:shadowColor="#99000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3" />
 
         <ImageView
             android:id="@+id/commentButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@android:color/transparent"
             android:contentDescription="Comment"
+            android:padding="2dp"
             android:src="@drawable/ic_comment" />
 
         <TextView
@@ -144,16 +154,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="14dp"
             android:text="0"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:shadowColor="#99000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3" />
 
         <ImageView
             android:id="@+id/saveButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@android:color/transparent"
             android:contentDescription="Save"
+            android:padding="2dp"
             android:src="@drawable/ic_save" />
 
         <TextView
@@ -161,16 +179,24 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
-            android:layout_marginBottom="12dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="14dp"
             android:text="0"
             android:textColor="@android:color/white"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:textStyle="bold"
+            android:shadowColor="#99000000"
+            android:shadowDx="0"
+            android:shadowDy="1"
+            android:shadowRadius="3" />
 
         <ImageView
             android:id="@+id/notInterestedButton"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:background="@android:color/transparent"
             android:contentDescription="Not Interested"
+            android:padding="2dp"
             android:src="@drawable/ic_thumbs_down" />
 
     </LinearLayout>

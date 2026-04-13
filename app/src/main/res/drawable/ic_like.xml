@@ -4,7 +4,13 @@
     android:height="40dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
+    <!-- Outlined heart: transparent fill, white stroke.
+         setColorFilter() in the adapter tints the stroke when liked. -->
     <path
-        android:fillColor="#FFFFFF"
-        android:pathData="M12,21.35l-1.45,-1.32C5.4,15.36 2,12.28 2,8.5 2,5.42 4.42,3 7.5,3c1.74,0 3.41,0.81 4.5,2.09C13.09,3.81 14.76,3 16.5,3 19.58,3 22,5.42 22,8.5c0,3.78 -3.4,6.86 -8.55,11.54L12,21.35z" />
+        android:fillColor="#00000000"
+        android:strokeColor="#FFFFFF"
+        android:strokeWidth="2"
+        android:strokeLineCap="round"
+        android:strokeLineJoin="round"
+        android:pathData="M12,20.8l-1.28,-1.16C5.9,15.24 2.75,12.41 2.75,8.88c0,-2.86 2.25,-5.13 5.13,-5.13 1.62,0 3.18,0.75 4.12,1.94 0.94,-1.19 2.5,-1.94 4.12,-1.94 2.88,0 5.13,2.27 5.13,5.13 0,3.53 -3.15,6.36 -7.97,10.77L12,20.8z" />
 </vector>
