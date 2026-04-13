@@ -332,17 +332,20 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     holder.saveButton.clearColorFilter();
     holder.notInterestedButton.clearColorFilter();
 
+    // Reset local toggle state before refetching.
+    holder.isLiked = false;
+    holder.isSaved = false;
+    holder.isNotInterested = false;
+    holder.likeCount = 0;
+    holder.saveCount = 0;
+
     InteractionServiceProvider.getInteractionService()
         .isRecipeLiked(recipe.getId(), new BooleanCallback() {
           @Override
           public void onResult(boolean isLiked) {
             holder.likeButton.post(() -> {
-              if (isLiked) {
-                holder.likeButton.setColorFilter(
-                    android.graphics.Color.RED);
-              } else {
-                holder.likeButton.clearColorFilter();
-              }
+              holder.isLiked = isLiked;
+              applyLikeTint(holder);
             });
           }
 
@@ -357,12 +360,8 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
           @Override
           public void onResult(boolean isSaved) {
             holder.saveButton.post(() -> {
-              if (isSaved) {
-                holder.saveButton.setColorFilter(
-                    android.graphics.Color.YELLOW);
-              } else {
-                holder.saveButton.clearColorFilter();
-              }
+              holder.isSaved = isSaved;
+              applySaveTint(holder);
             });
           }
 
@@ -377,12 +376,8 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
           @Override
           public void onResult(boolean isNotInterested) {
             holder.notInterestedButton.post(() -> {
-              if (isNotInterested) {
-                holder.notInterestedButton.setColorFilter(
-                    android.graphics.Color.GRAY);
-              } else {
-                holder.notInterestedButton.clearColorFilter();
-              }
+              holder.isNotInterested = isNotInterested;
+              applyNotInterestedTint(holder);
             });
           }
 
@@ -401,8 +396,10 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         .getLikeCount(recipe.getId(), new IntCallback() {
           @Override
           public void onResult(int count) {
-            holder.likeCountText.post(
-                () -> holder.likeCountText.setText(formatCount(count)));
+            holder.likeCountText.post(() -> {
+              holder.likeCount = count;
+              holder.likeCountText.setText(formatCount(count));
+            });
           }
 
           @Override
@@ -425,8 +422,10 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         .getSaveCount(recipe.getId(), new IntCallback() {
           @Override
           public void onResult(int count) {
-            holder.saveCountText.post(
-                () -> holder.saveCountText.setText(formatCount(count)));
+            holder.saveCountText.post(() -> {
+              holder.saveCount = count;
+              holder.saveCountText.setText(formatCount(count));
+            });
           }
 
           @Override
@@ -459,6 +458,11 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     holder.likeButton.setOnClickListener(v -> {
+      holder.isLiked = !holder.isLiked;
+      holder.likeCount = Math.max(0,
+          holder.likeCount + (holder.isLiked ? 1 : -1));
+      applyLikeTint(holder);
+      holder.likeCountText.setText(formatCount(holder.likeCount));
       if (listener != null) {
         listener.onLikeClicked(recipe);
       }
@@ -471,16 +475,47 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     });
 
     holder.saveButton.setOnClickListener(v -> {
+      holder.isSaved = !holder.isSaved;
+      holder.saveCount = Math.max(0,
+          holder.saveCount + (holder.isSaved ? 1 : -1));
+      applySaveTint(holder);
+      holder.saveCountText.setText(formatCount(holder.saveCount));
       if (listener != null) {
         listener.onSaveClicked(recipe);
       }
     });
 
     holder.notInterestedButton.setOnClickListener(v -> {
+      holder.isNotInterested = !holder.isNotInterested;
+      applyNotInterestedTint(holder);
       if (listener != null) {
         listener.onNotInterestedClicked(recipe);
       }
     });
+  }
+
+  private static void applyLikeTint(VideoViewHolder holder) {
+    if (holder.isLiked) {
+      holder.likeButton.setColorFilter(android.graphics.Color.RED);
+    } else {
+      holder.likeButton.clearColorFilter();
+    }
+  }
+
+  private static void applySaveTint(VideoViewHolder holder) {
+    if (holder.isSaved) {
+      holder.saveButton.setColorFilter(android.graphics.Color.YELLOW);
+    } else {
+      holder.saveButton.clearColorFilter();
+    }
+  }
+
+  private static void applyNotInterestedTint(VideoViewHolder holder) {
+    if (holder.isNotInterested) {
+      holder.notInterestedButton.setColorFilter(android.graphics.Color.GRAY);
+    } else {
+      holder.notInterestedButton.clearColorFilter();
+    }
   }
 
   private static String formatCount(int count) {
@@ -847,6 +882,15 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     final ImageView saveButton;
     final TextView saveCountText;
     final ImageView notInterestedButton;
+
+    // Local toggle/count state used for optimistic UI updates so a
+    // like/save/not-interested tap never needs to notifyDataSetChanged
+    // (which would re-bind the video and cause a visible flicker).
+    boolean isLiked;
+    boolean isSaved;
+    boolean isNotInterested;
+    int likeCount;
+    int saveCount;
 
     VideoViewHolder(@NonNull View itemView) {
       super(itemView);

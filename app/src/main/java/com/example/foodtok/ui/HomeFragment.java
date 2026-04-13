@@ -1,6 +1,5 @@
 package com.example.foodtok.ui;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -207,10 +206,9 @@ public class HomeFragment extends Fragment {
       public void onLikeClicked(Recipe recipe) {
         InteractionServiceProvider.getInteractionService()
             .likeRecipe(recipe.getId(), new InteractionCallback() {
-              @SuppressLint("NotifyDataSetChanged")
               @Override
               public void onSuccess() {
-                feedAdapter.notifyDataSetChanged();
+                // UI already updated optimistically in the click handler.
               }
 
               @Override
@@ -235,10 +233,8 @@ public class HomeFragment extends Fragment {
       public void onSaveClicked(Recipe recipe) {
         InteractionServiceProvider.getInteractionService()
             .saveRecipe(recipe.getId(), new InteractionCallback() {
-              @SuppressLint("NotifyDataSetChanged")
               @Override
               public void onSuccess() {
-                feedAdapter.notifyDataSetChanged();
               }
 
               @Override
@@ -257,10 +253,9 @@ public class HomeFragment extends Fragment {
       public void onNotInterestedClicked(Recipe recipe) {
         InteractionServiceProvider.getInteractionService()
             .markNotInterested(recipe.getId(), new InteractionCallback() {
-              @SuppressLint("NotifyDataSetChanged")
               @Override
               public void onSuccess() {
-                feedAdapter.notifyDataSetChanged();
+                // UI already updated optimistically in the click handler.
               }
 
               @Override
