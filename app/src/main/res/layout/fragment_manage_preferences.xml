@@ -11,8 +11,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="20dp"
-        android:paddingTop="28dp"
-        android:paddingBottom="20dp">
+        android:paddingTop="52dp"
+        android:paddingBottom="20dp"
+        android:clipToPadding="false"
+        android:clipChildren="false">
 
         <TextView
             android:id="@+id/btnBack"
@@ -22,9 +24,13 @@
             android:text="Back"
             android:textColor="@color/foodtok_green_dark"
             android:textStyle="bold"
+            android:textSize="14sp"
             android:background="@drawable/bg_button_outline"
+            android:minHeight="40dp"
+            android:gravity="center"
+            android:includeFontPadding="false"
             android:paddingHorizontal="16dp"
-            android:paddingVertical="8dp" />
+            android:paddingVertical="10dp" />
 
         <TextView
             android:layout_width="wrap_content"
