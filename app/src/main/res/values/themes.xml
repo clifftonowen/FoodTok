@@ -20,5 +20,9 @@
 
         <!-- Status bar -->
         <item name="android:statusBarColor">@color/foodtok_green_dark</item>
+
+        <!-- Global typography -->
+        <item name="fontFamily">@font/poppins</item>
+        <item name="android:fontFamily">@font/poppins</item>
     </style>
 </resources>
