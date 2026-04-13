@@ -38,10 +38,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.foodtok.R;
+import com.example.foodtok.auth.AuthManager;
 import com.example.foodtok.models.ChatMessage;
 import com.example.foodtok.models.Ingredient;
 import com.example.foodtok.models.Recipe;
 import com.example.foodtok.models.RecipeEnrichment;
+import com.example.foodtok.models.User;
 import com.example.foodtok.services.BooleanCallback;
 import com.example.foodtok.services.ChatCallback;
 import com.example.foodtok.services.ChatServiceProvider;
@@ -51,6 +53,7 @@ import com.example.foodtok.services.InteractionServiceProvider;
 import com.example.foodtok.util.FeedVideoPlayerPool;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -250,15 +253,16 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     });
   }
 
-  /**
-     * Returns the current user's allergen blacklist as a lowercase set.
-     * TODO: wire to UserServiceProvider.getCurrentUser().getBlacklistedIngredients()
-     * once the user profile flow is in place. Returning an empty set is safe —
-     * it just means no personalized warning, and Gemini enrichment fills in
-     * the general common-allergen banner instead.
-     */
   private Set<String> getUserBlacklist() {
-    return Collections.emptySet(); //TODO: Connect with BackEnd
+    User user = AuthManager.getInstance().getCurrentUser();
+    if (user == null) {
+      return Collections.emptySet();
+    }
+    List<String> blacklist = user.getBlacklistedIngredients();
+    if (blacklist == null || blacklist.isEmpty()) {
+      return Collections.emptySet();
+    }
+    return new HashSet<>(blacklist);
   }
 
   private void applyEnrichment(IngredientsViewHolder holder,
