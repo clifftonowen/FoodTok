@@ -18,8 +18,4 @@ local.properties
 .env
 *.env
 
-# Claude Code guidance file — not part of the project source
-CLAUDE.md
-.claude/
-AGENTS.md
-FRAGMENT_CONTEXT.md
+
