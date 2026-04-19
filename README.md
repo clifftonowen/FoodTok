@@ -233,11 +233,6 @@ Create `local.properties` in the project root (this file is gitignored):
 
 These values are injected into `BuildConfig` at build time via `app/build.gradle.kts` and surfaced through `util/Constants.java`.
 
-### Database Setup
-
-Apply the schema and RLS policies from `CLAUDE.md` § *Database Schema* to your Supabase project. Seed the `ingredients` table with a catalog of common ingredients so the Trie has data to autocomplete against.
-
----
 
 ## Build & Test
 
