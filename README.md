@@ -288,4 +288,4 @@ Stand up a Vercel project for (a) the public marketing / landing page with APK d
 
 ## License
 
-This project is submitted as academic coursework for SUTD 50.001. All third-party libraries retain their original licenses; Supabase and Google Gemini are used under their respective terms of service.
+This project is submitted as academic coursework for SUTD 50.001 Information Systems & Programming. All third-party libraries retain their original licenses; Supabase and Google Gemini are used under their respective terms of service.
