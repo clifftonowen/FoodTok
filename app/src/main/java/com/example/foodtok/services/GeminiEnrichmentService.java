@@ -125,6 +125,11 @@ public class GeminiEnrichmentService implements IRecipeEnrichmentService {
 
   // --- Private helpers ---
 
+  /**
+   * Builds a system prompt with proper JSON formatting so the chatbot
+   * returns valid output that can be parsed and read into variables
+   */
+
   private String buildSystemPrompt() {
     return "You are a culinary analysis AI. Analyze recipes and return ONLY valid JSON "
         + "(no markdown, no code fences, no explanation). "
