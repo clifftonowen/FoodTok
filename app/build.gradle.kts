@@ -1,7 +1,5 @@
 import java.util.Properties
 
-import java.io.FileInputStream
-
 plugins {
     alias(libs.plugins.android.application)
 }
@@ -10,7 +8,6 @@ val localProps = Properties()
 val localPropsFile = rootProject.file("local.properties")
 if (localPropsFile.exists()) {
     localProps.load(localPropsFile.inputStream())
-    localProps.load(FileInputStream(localPropsFile))
 }
 
 android {
@@ -52,6 +49,17 @@ android {
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
+    }
+
+    testOptions {
+        unitTests.isReturnDefaultValues = true
+    }
+
+    // Existing lint errors are recorded in lint-baseline.xml so CI fails only on
+    // NEW issues. Delete entries from that file as the underlying issues are fixed.
+    lint {
+        baseline = file("lint-baseline.xml")
+        abortOnError = true
     }
 }
 

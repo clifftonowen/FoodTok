@@ -1,0 +1,3 @@
+# Keep the Gradle wrapper script LF so it runs on Linux CI runners.
+gradlew text eol=lf
+*.sh text eol=lf

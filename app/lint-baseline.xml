@@ -1,0 +1,4470 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 9.0.1" type="baseline" client="gradle" dependencies="false" name="AGP (9.0.1)" variant="all" version="9.0.1">
+
+    <issue
+        id="RecyclerView"
+        message="Do not treat position as fixed; only use immediately and call `holder.getAdapterPosition()` to look it up later"
+        errorLine1="    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {"
+        errorLine2="                                                             ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/FollowUserAdapter.java"
+            line="53"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="RecyclerView"
+        message="Do not treat position as fixed; only use immediately and call `holder.getAdapterPosition()` to look it up later"
+        errorLine1="    public void onBindViewHolder(ViewHolder holder, int position) {"
+        errorLine2="                                                    ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/ProfileRecipeAdapter.java"
+            line="105"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    this.name = name.trim().toLowerCase();"
+        errorLine2="                            ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/Ingredient.java"
+            line="13"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        String lower = name.toLowerCase();"
+        errorLine2="                            ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/ManageIngredientsFragment.java"
+            line="179"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                if (existing != null &amp;&amp; existing.toLowerCase().equals(lower)) {"
+        errorLine2="                                                 ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/ManageIngredientsFragment.java"
+            line="184"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="            final String name = inputs.get(i).getName().toLowerCase();"
+        errorLine2="                                                        ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/ManageIngredientsFragment.java"
+            line="272"
+            column="57"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    String lower = userMessage.toLowerCase();"
+        errorLine2="                               ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/services/MockChatService.java"
+            line="53"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="      detectedAllergens.add(name.substring(0, 1).toUpperCase() + name.substring(1));"
+        errorLine2="                                                 ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/services/MockEnrichmentService.java"
+            line="37"
+            column="50"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="      if (blacklistedIngredients.contains(ingredient.getName().toLowerCase())) {"
+        errorLine2="                                                               ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/Recipe.java"
+            line="64"
+            column="64"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="      if (blacklistedIngredients.contains(ingredient.getName().toLowerCase())) {"
+        errorLine2="                                                               ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/Recipe.java"
+            line="78"
+            column="64"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="      if (!availableIngredients.contains(ingredient.getName().toLowerCase())) {"
+        errorLine2="                                                              ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/Recipe.java"
+            line="91"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="      if (availableIngredients.contains(ingredient.getName().toLowerCase())) {"
+        errorLine2="                                                             ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/Recipe.java"
+            line="105"
+            column="62"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        haystack.add(ingredient.getName().toLowerCase());"
+        errorLine2="                                          ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/Recipe.java"
+            line="125"
+            column="43"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        haystack.add(tag.toLowerCase());"
+        errorLine2="                         ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/Recipe.java"
+            line="130"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="      if (token != null &amp;&amp; haystack.contains(token.toLowerCase())) {"
+        errorLine2="                                                   ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/Recipe.java"
+            line="135"
+            column="52"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    String lower = ingredientName.toLowerCase();"
+        errorLine2="                                  ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/RecipeEnrichment.java"
+            line="51"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="      if (allergen.toLowerCase().equals(lower)) {"
+        errorLine2="                   ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/RecipeEnrichment.java"
+            line="53"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        pretty.append(name.substring(0, 1).toUpperCase()).append(name.substring(1));"
+        errorLine2="                                           ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="190"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="            .append(name.substring(0, 1).toUpperCase())"
+        errorLine2="                                         ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="209"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toUpperCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        pretty.append(name.substring(0, 1).toUpperCase()).append(name.substring(1));"
+        errorLine2="                                           ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="455"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="      String key = tag.toLowerCase();"
+        errorLine2="                       ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/services/RecommendationService.java"
+            line="172"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                prefix.toLowerCase(), MAX_SUGGESTIONS);"
+        errorLine2="                       ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="284"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                  searchTrie.insert(dto.name.toLowerCase());"
+        errorLine2="                                             ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="339"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                String normalized = dto.name.trim().toLowerCase();"
+        errorLine2="                                                    ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="378"
+            column="53"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="              usernameTrie.insert(dto.username.toLowerCase());"
+        errorLine2="                                               ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="417"
+            column="48"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    String lower = name.toLowerCase();"
+        errorLine2="                        ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="438"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    String raw = etSearch.getText().toString().trim().toLowerCase();"
+        errorLine2="                                                      ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="467"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="                    tag.toLowerCase(), points);"
+        errorLine2="                        ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/services/SupabaseInteractionService.java"
+            line="322"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    final String name = input.getName().toLowerCase();"
+        errorLine2="                                        ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/services/SupabaseRecipeService.java"
+            line="362"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    String lower = word.trim().toLowerCase();"
+        errorLine2="                               ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/data/Trie.java"
+            line="38"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    TrieNode node = findNode(word.trim().toLowerCase());"
+        errorLine2="                                         ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/data/Trie.java"
+            line="64"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    return findNode(prefix.trim().toLowerCase()) != null;"
+        errorLine2="                                  ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/data/Trie.java"
+            line="80"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    TrieNode node = findNode(prefix.trim().toLowerCase());"
+        errorLine2="                                           ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/data/Trie.java"
+            line="99"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    String lower = name.toLowerCase();"
+        errorLine2="                        ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/UploadRecipeFragment.java"
+            line="264"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="        if (existing != null &amp;&amp; existing.toLowerCase().equals(lower)) {"
+        errorLine2="                                         ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/UploadRecipeFragment.java"
+            line="269"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    String lower = name.toLowerCase();"
+        errorLine2="                        ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/UploadRecipeFragment.java"
+            line="313"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="      if (tag instanceof String &amp;&amp; ((String) tag).toLowerCase().equals(lower)) {"
+        errorLine2="                                                  ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/UploadRecipeFragment.java"
+            line="316"
+            column="51"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    String lower = ingredient.toLowerCase();"
+        errorLine2="                              ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/User.java"
+            line="72"
+            column="31"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    blacklistedIngredients.remove(ingredient.toLowerCase());"
+        errorLine2="                                             ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/User.java"
+            line="78"
+            column="46"/>
+    </issue>
+
+    <issue
+        id="DefaultLocale"
+        message="Implicitly using the default locale is a common source of bugs: Use `toLowerCase(Locale)` instead. For strings meant to be internal use `Locale.ROOT`, otherwise `Locale.getDefault()`."
+        errorLine1="    return blacklistedIngredients.contains(ingredient.toLowerCase());"
+        errorLine2="                                                      ~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/models/User.java"
+            line="83"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="InflateParams"
+        message="Avoid passing `null` as the view root (needed to resolve layout parameters on the inflated layout&apos;s root element)"
+        errorLine1="                .inflate(R.layout.bottom_sheet_recipe_actions, null);"
+        errorLine2="                                                               ~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/ProfileUserFragment.java"
+            line="391"
+            column="64"/>
+    </issue>
+
+    <issue
+        id="ManifestOrder"
+        message="`&lt;uses-permission>` tag appears after `&lt;application>` tag"
+        errorLine1="    &lt;uses-permission android:name=&quot;android.permission.INTERNET&quot; />"
+        errorLine2="     ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/AndroidManifest.xml"
+            line="38"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="AndroidGradlePluginVersion"
+        message="A newer version of com.android.application than 9.0.1 is available: 9.3.1"
+        errorLine1="agp = &quot;9.0.1&quot;"
+        errorLine2="      ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="2"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.ext:junit than 1.1.5 is available: 1.3.0"
+        errorLine1="junitVersion = &quot;1.1.5&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="4"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.test.espresso:espresso-core than 3.5.1 is available: 3.7.0"
+        errorLine1="espressoCore = &quot;3.5.1&quot;"
+        errorLine2="               ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="5"
+            column="16"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.appcompat:appcompat than 1.6.1 is available: 1.8.0"
+        errorLine1="appcompat = &quot;1.6.1&quot;"
+        errorLine2="            ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="6"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of com.google.android.material:material than 1.10.0 is available: 1.14.0"
+        errorLine1="material = &quot;1.10.0&quot;"
+        errorLine2="           ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="7"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.activity:activity than 1.8.0 is available: 1.13.0"
+        errorLine1="activity = &quot;1.8.0&quot;"
+        errorLine2="           ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="8"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.constraintlayout:constraintlayout than 2.1.4 is available: 2.2.2"
+        errorLine1="constraintlayout = &quot;2.1.4&quot;"
+        errorLine2="                   ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="9"
+            column="20"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.media3:media3-datasource-okhttp than 1.4.1 is available: 1.11.0"
+        errorLine1="media3 = &quot;1.4.1&quot;"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.media3:media3-exoplayer than 1.4.1 is available: 1.11.0"
+        errorLine1="media3 = &quot;1.4.1&quot;"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.media3:media3-ui than 1.4.1 is available: 1.11.0"
+        errorLine1="media3 = &quot;1.4.1&quot;"
+        errorLine2="         ~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="14"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="GradleDependency"
+        message="A newer version of androidx.media3:media3-ui than 1.10.0 is available: 1.11.0"
+        errorLine1="media3Ui = &quot;1.10.0&quot;"
+        errorLine2="           ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="15"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.squareup.retrofit2:converter-gson than 2.11.0 is available: 3.0.0"
+        errorLine1="retrofit = &quot;2.11.0&quot;"
+        errorLine2="           ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="10"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.squareup.retrofit2:retrofit than 2.11.0 is available: 3.0.0"
+        errorLine1="retrofit = &quot;2.11.0&quot;"
+        errorLine2="           ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="10"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.squareup.okhttp3:logging-interceptor than 4.12.0 is available: 5.5.0"
+        errorLine1="okhttp = &quot;4.12.0&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="11"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.squareup.okhttp3:okhttp than 4.12.0 is available: 5.5.0"
+        errorLine1="okhttp = &quot;4.12.0&quot;"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="11"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.google.code.gson:gson than 2.11.0 is available: 2.14.0"
+        errorLine1="gson = &quot;2.11.0&quot;"
+        errorLine2="       ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="12"
+            column="8"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.github.bumptech.glide:compiler than 4.16.0 is available: 5.0.9"
+        errorLine1="glide = &quot;4.16.0&quot;"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NewerVersionAvailable"
+        message="A newer version of com.github.bumptech.glide:glide than 4.16.0 is available: 5.0.9"
+        errorLine1="glide = &quot;4.16.0&quot;"
+        errorLine2="        ~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="13"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.media3:media3-ui but with different version"
+        errorLine1="media3-ui = { module = &quot;androidx.media3:media3-ui&quot;, version.ref = &quot;media3&quot; }"
+        errorLine2="             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="27"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="SimilarGradleDependency"
+        message="There are multiple dependencies androidx.media3:media3-ui but with different version"
+        errorLine1="androidx-media3-ui = { group = &quot;androidx.media3&quot;, name = &quot;media3-ui&quot;, version.ref = &quot;media3Ui&quot; }"
+        errorLine2="                      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="$HOME/AndroidStudioProjects/FoodTok/gradle/libs.versions.toml"
+            line="36"
+            column="23"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="                    android:tint=&quot;@color/foodtok_red&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_recipe_actions.xml"
+            line="57"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="                    android:tint=&quot;@android:color/white&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_recipe_actions.xml"
+            line="102"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="            android:tint=&quot;@color/foodtok_text_primary&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="32"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="            android:tint=&quot;@android:color/white&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_feed.xml"
+            line="25"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="                android:tint=&quot;@android:color/white&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="50"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="                android:tint=&quot;@android:color/white&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="78"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="                android:tint=&quot;@android:color/white&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="106"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="                android:tint=&quot;@android:color/white&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="40"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="                android:tint=&quot;@android:color/white&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="68"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="UseAppTint"
+        message="Must use `app:tint` instead of `android:tint`"
+        errorLine1="                android:tint=&quot;@android:color/white&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="96"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="              adapter.notifyDataSetChanged();"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/CommentsFragment.java"
+            line="110"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged();"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/FollowUserAdapter.java"
+            line="41"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="    notifyDataSetChanged();"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/IngredientSuggestionAdapter.java"
+            line="39"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="                rvAvatars.getAdapter().notifyDataSetChanged();"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/OnboardingActivity.java"
+            line="108"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged();"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/OnboardingActivity.java"
+            line="475"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="        notifyDataSetChanged();"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/ProfileRecipeAdapter.java"
+            line="94"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="                  resultAdapter.notifyDataSetChanged();"
+        errorLine2="                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="493"
+            column="19"/>
+    </issue>
+
+    <issue
+        id="NotifyDataSetChanged"
+        message="It will always be more efficient to use more specific change events if you can. Rely on `notifyDataSetChanged` as a last resort."
+        errorLine1="    notifyDataSetChanged();"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/UserSearchAdapter.java"
+            line="39"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Recycle"
+        message="This `InputStream` should be freed up after use with `#close()`"
+        errorLine1="        InputStream in = context.getContentResolver().openInputStream(uri);"
+        errorLine2="                                                      ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/services/SupabaseRecipeService.java"
+            line="554"
+            column="55"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="            &lt;LinearLayout"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="67"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="            &lt;LinearLayout"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="131"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="35"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="63"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="91"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="25"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="53"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UseCompoundDrawables"
+        message="This tag and its children can be replaced by one `&lt;TextView/>` and a compound drawable"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="81"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="    &lt;LinearLayout"
+        errorLine2="     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_create.xml"
+            line="31"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="79"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="            &lt;LinearLayout"
+        errorLine2="             ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="91"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="148"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="    &lt;LinearLayout"
+        errorLine2="     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="21"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="DisableBaselineAlignment"
+        message="Set `android:baselineAligned=&quot;false&quot;` on this element for better performance"
+        errorLine1="    &lt;LinearLayout"
+        errorLine2="     ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="15"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_white` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_white&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_main.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_white` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_white&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `#1C1C1E` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;#1C1C1E&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_recipe_actions.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_white` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_white&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_comments.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_create.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_follow_list.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@android:color/black` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@android:color/black&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_grid_feed.xml"
+            line="4"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@android:color/black` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@android:color/black&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_home.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_profile.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_guest.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream_dark` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream_dark&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_recipe_chat.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream_dark` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream_dark&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_recipe_ingredients.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_search.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `#FFFBEF` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;#FFFBEF&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@android:color/black` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@android:color/black&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_feed_page.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@color/foodtok_cream` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@color/foodtok_cream&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_follow_user.xml"
+            line="5"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `?attr/selectableItemBackground` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;?attr/selectableItemBackground&quot;"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_ingredient_suggestion.xml"
+            line="6"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="Overdraw"
+        message="Possible overdraw: Root element paints background `@android:color/black` with a theme that also paints a background (inferred theme is `@style/Theme.FoodTok`)"
+        errorLine1="    android:background=&quot;@android:color/black&quot;>"
+        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="7"
+            column="5"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.baseline_grid` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/baseline_grid.xml"
+            line="1"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.bg_bottom_sheet_dark` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;>"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/bg_bottom_sheet_dark.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.bg_dialog_rounded` appears to be unused"
+        errorLine1="&lt;shape xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/bg_dialog_rounded.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.foodtok_green_soft` appears to be unused"
+        errorLine1="    &lt;color name=&quot;foodtok_green_soft&quot;>#E4EFE1&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="11"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.foodtok_coral` appears to be unused"
+        errorLine1="    &lt;color name=&quot;foodtok_coral&quot;>#FF6B5B&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="17"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.foodtok_gold` appears to be unused"
+        errorLine1="    &lt;color name=&quot;foodtok_gold&quot;>#F6C453&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="18"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.foodtok_cream_deep` appears to be unused"
+        errorLine1="    &lt;color name=&quot;foodtok_cream_deep&quot;>#EADFC9&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="23"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.foodtok_overlay_soft` appears to be unused"
+        errorLine1="    &lt;color name=&quot;foodtok_overlay_soft&quot;>#55000000&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="36"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.color.action_default` appears to be unused"
+        errorLine1="    &lt;color name=&quot;action_default&quot;>#FFFFFF&lt;/color>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values/colors.xml"
+            line="44"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_download` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_download.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.drawable.ic_not_interested` appears to be unused"
+        errorLine1="&lt;vector xmlns:android=&quot;http://schemas.android.com/apk/res/android&quot;"
+        errorLine2="^">
+        <location
+            file="src/main/res/drawable/ic_not_interested.xml"
+            line="2"
+            column="1"/>
+    </issue>
+
+    <issue
+        id="UnusedResources"
+        message="The resource `R.style.Base_Theme_FoodTok` appears to be unused"
+        errorLine1="    &lt;style name=&quot;Base.Theme.FoodTok&quot; parent=&quot;Theme.Material3.DayNight.NoActionBar&quot;>"
+        errorLine2="           ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-night/themes.xml"
+            line="3"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="UselessParent"
+        message="This `LinearLayout` layout or its `LinearLayout` parent is unnecessary"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="125"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="UselessParent"
+        message="This `LinearLayout` layout or its `LinearLayout` parent is unnecessary"
+        errorLine1="        &lt;LinearLayout"
+        errorLine2="         ~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="125"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="ButtonStyle"
+        message="Buttons in button bars should be borderless; use `style=&quot;?android:attr/buttonBarButtonStyle&quot;` (and `?android:attr/buttonBarStyle` on the parent)"
+        errorLine1="    &lt;Button"
+        errorLine2="     ~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="265"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ButtonStyle"
+        message="Buttons in button bars should be borderless; use `style=&quot;?android:attr/buttonBarButtonStyle&quot;` (and `?android:attr/buttonBarStyle` on the parent)"
+        errorLine1="    &lt;Button"
+        errorLine2="     ~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="277"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="ButtonStyle"
+        message="Buttons in button bars should be borderless; use `style=&quot;?android:attr/buttonBarButtonStyle&quot;` (and `?android:attr/buttonBarStyle` on the parent)"
+        errorLine1="    &lt;Button"
+        errorLine2="     ~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="288"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="TextFields"
+        message="This text field does not specify an `inputType`"
+        errorLine1="                &lt;EditText"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="112"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="TextFields"
+        message="This text field does not specify an `inputType`"
+        errorLine1="                &lt;EditText"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="177"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `9sp`"
+        errorLine1="                android:textSize=&quot;9sp&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="58"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `9sp`"
+        errorLine1="                android:textSize=&quot;9sp&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="86"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `9sp`"
+        errorLine1="                android:textSize=&quot;9sp&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="114"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `9sp`"
+        errorLine1="                android:textSize=&quot;9sp&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="48"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `9sp`"
+        errorLine1="                android:textSize=&quot;9sp&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="76"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="SmallSp"
+        message="Avoid using sizes smaller than `11sp`: `9sp`"
+        errorLine1="                android:textSize=&quot;9sp&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="104"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="52"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="66"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="79"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="            &lt;EditText"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="144"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="          &lt;EditText"
+        errorLine2="           ~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="223"
+            column="12"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="52"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="66"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="79"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_comments.xml"
+            line="102"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="                &lt;EditText"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="79"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="                &lt;EditText"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="90"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="                &lt;EditText"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="112"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="                &lt;EditText"
+        errorLine2="                 ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="177"
+            column="18"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="            &lt;EditText"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_profile.xml"
+            line="96"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_recipe_chat.xml"
+            line="51"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="    &lt;EditText"
+        errorLine2="     ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_search.xml"
+            line="18"
+            column="6"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="51"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="            &lt;EditText"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="73"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="            &lt;EditText"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="112"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="            &lt;EditText"
+        errorLine2="             ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="121"
+            column="14"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="205"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="Autofill"
+        message="Missing `autofillHints` attribute"
+        errorLine1="        &lt;EditText"
+        errorLine2="         ~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="221"
+            column="10"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="        btnSave.setText(&quot;Saving…&quot;);"
+        errorLine2="                        ~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/ManageIngredientsFragment.java"
+            line="235"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="            btnSave.setText(&quot;Save&quot;);"
+        errorLine2="                            ~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/ManageIngredientsFragment.java"
+            line="383"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="    tvStepIndicator.setText(&quot;Step &quot; + (currentStep + 1) + &quot; of 3&quot;);"
+        errorLine2="                            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/OnboardingActivity.java"
+            line="245"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="    tvStepIndicator.setText(&quot;Step &quot; + (currentStep + 1) + &quot; of 3&quot;);"
+        errorLine2="                                       ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/OnboardingActivity.java"
+            line="245"
+            column="40"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="    tvStepIndicator.setText(&quot;Step &quot; + (currentStep + 1) + &quot; of 3&quot;);"
+        errorLine2="                            ~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/OnboardingActivity.java"
+            line="245"
+            column="29"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="    tvStepIndicator.setText(&quot;Step &quot; + (currentStep + 1) + &quot; of 3&quot;);"
+        errorLine2="                                                          ~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/OnboardingActivity.java"
+            line="245"
+            column="59"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="            btnFollowUnfollow.setText(&quot;Unfollow&quot;);"
+        errorLine2="                                      ~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/OtherUserProfileFragment.java"
+            line="309"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="            btnFollowUnfollow.setText(&quot;Follow&quot;);"
+        errorLine2="                                      ~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/OtherUserProfileFragment.java"
+            line="312"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="            userName.setText(&quot;Guest&quot;);"
+        errorLine2="                             ~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/ProfileUserFragment.java"
+            line="137"
+            column="30"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="      holder.recipeDetailAuthor.setText(&quot;by &quot; + author);"
+        errorLine2="                                        ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="159"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.recipeDetailAuthor.setText(&quot;by &quot; + author);"
+        errorLine2="                                        ~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="159"
+            column="41"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="    holder.prepTimeChip.setText(&quot;Prep: &quot; + prep + &quot;m&quot;);"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="167"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="    holder.prepTimeChip.setText(&quot;Prep: &quot; + prep + &quot;m&quot;);"
+        errorLine2="                                ~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="167"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="    holder.cookTimeChip.setText(&quot;Cook: &quot; + cook + &quot;m&quot;);"
+        errorLine2="                                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="168"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="    holder.cookTimeChip.setText(&quot;Cook: &quot; + cook + &quot;m&quot;);"
+        errorLine2="                                ~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="168"
+            column="33"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="      holder.nutrientsChip.setText(&quot;Nutrients: ~&quot; + (int) cal + &quot; kcal/serving&quot;);"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="173"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.nutrientsChip.setText(&quot;Nutrients: ~&quot; + (int) cal + &quot; kcal/serving&quot;);"
+        errorLine2="                                   ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="173"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.nutrientsChip.setText(&quot;Nutrients: ~&quot; + (int) cal + &quot; kcal/serving&quot;);"
+        errorLine2="                                                                ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="173"
+            column="65"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="      holder.caloriesText.setText(&quot;Calories: ~&quot; + (int) cal + &quot; kcal&quot;);"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="174"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.caloriesText.setText(&quot;Calories: ~&quot; + (int) cal + &quot; kcal&quot;);"
+        errorLine2="                                  ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="174"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.caloriesText.setText(&quot;Calories: ~&quot; + (int) cal + &quot; kcal&quot;);"
+        errorLine2="                                                              ~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="174"
+            column="63"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.nutrientsChip.setText(&quot;Nutrients: — kcal/serving&quot;);"
+        errorLine2="                                   ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="176"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.caloriesText.setText(&quot;Calories: —&quot;);"
+        errorLine2="                                  ~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="177"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="          &quot;⚠ Contains allergens: &quot; + pretty + &quot;.&quot;);"
+        errorLine2="          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="194"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="          &quot;⚠ Contains allergens: &quot; + pretty + &quot;.&quot;);"
+        errorLine2="          ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="194"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="    holder.ingredientsHeader.setText(&quot;INGREDIENTS (&quot; + ingredients.size() + &quot;)&quot;);"
+        errorLine2="                                     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="202"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="    holder.ingredientsHeader.setText(&quot;INGREDIENTS (&quot; + ingredients.size() + &quot;)&quot;);"
+        errorLine2="                                     ~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="202"
+            column="38"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="    holder.instructionsHeader.setText(&quot;INSTRUCTIONS&quot;);"
+        errorLine2="                                      ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="221"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="    holder.instructionsList.setText(&quot;Tap \&quot;Generate AI Insights\&quot; to analyse this recipe.&quot;);"
+        errorLine2="                                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="222"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.generateAiButton.setText(&quot;Analysing...&quot;);"
+        errorLine2="                                      ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="237"
+            column="39"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="                holder.generateAiButton.setText(&quot;✦ Generate AI Insights&quot;);"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="254"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="                holder.instructionsList.setText(&quot;Could not generate insights: &quot; + message);"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="255"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="                holder.instructionsList.setText(&quot;Could not generate insights: &quot; + message);"
+        errorLine2="                                                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="255"
+            column="49"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="      holder.allergenBanner.setText(&quot;AI Alert: &quot;"
+        errorLine2="                                    ^">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="281"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.allergenBanner.setText(&quot;AI Alert: &quot;"
+        errorLine2="                                    ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="281"
+            column="37"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="          + &quot; commonly trigger allergies.&quot;);"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="283"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="          &quot;INSTRUCTIONS (&quot; + steps.size() + &quot;) \u2014 AI Generated&quot;);"
+        errorLine2="          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="290"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="          &quot;INSTRUCTIONS (&quot; + steps.size() + &quot;) \u2014 AI Generated&quot;);"
+        errorLine2="          ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="290"
+            column="11"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="          &quot;INSTRUCTIONS (&quot; + steps.size() + &quot;) \u2014 AI Generated&quot;);"
+        errorLine2="                                            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="290"
+            column="45"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="      holder.nutrientsChip.setText(&quot;Nutrients: ~&quot;"
+        errorLine2="                                   ^">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="300"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.nutrientsChip.setText(&quot;Nutrients: ~&quot;"
+        errorLine2="                                   ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="300"
+            column="36"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="          + &quot; kcal/serving \u2014 AI&quot;);"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="302"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="      holder.usernameText.setText(&quot;@&quot; + authorName);"
+        errorLine2="                                  ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="330"
+            column="35"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="      holder.allergenWarningText.setText(&quot;⚠ Contains: &quot; + pretty);"
+        errorLine2="                                         ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="458"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="      holder.allergenWarningText.setText(&quot;⚠ Contains: &quot; + pretty);"
+        errorLine2="                                         ~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="458"
+            column="42"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        holder.allergenWarningText.setText(&quot;AI Alert: &quot;"
+        errorLine2="                                           ^">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="464"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="        holder.allergenWarningText.setText(&quot;AI Alert: &quot;"
+        errorLine2="                                           ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="464"
+            column="44"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="            + &quot; commonly trigger allergies.&quot;);"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/adapters/RecipePageAdapter.java"
+            line="466"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="Do not concatenate text displayed with `setText`. Use resource string with placeholders."
+        errorLine1="        &quot;Search for recipes by ingredient.\n&quot;"
+        errorLine2="        ^">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="160"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="            + &quot;Type to see suggestions.&quot;);"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="161"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="    tvEmptyState.setText(&quot;Search for users by username.&quot;);"
+        errorLine2="                         ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="184"
+            column="26"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="            tvEmptyState.setText(&quot;No users found.&quot;);"
+        errorLine2="                                 ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="590"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="          tvEmptyState.setText(&quot;No users found.&quot;);"
+        errorLine2="                               ~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/SearchFragment.java"
+            line="604"
+            column="32"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="    postButton.setText(&quot;Uploading…&quot;);"
+        errorLine2="                       ~~~~~~~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/UploadRecipeFragment.java"
+            line="377"
+            column="24"/>
+    </issue>
+
+    <issue
+        id="SetTextI18n"
+        message="String literal in `setText` can not be translated. Use Android resources instead."
+        errorLine1="              postButton.setText(&quot;Post&quot;);"
+        errorLine2="                                 ~~~~~~">
+        <location
+            file="src/main/java/com/example/foodtok/ui/UploadRecipeFragment.java"
+            line="411"
+            column="34"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Close&quot;, should use `@string` resource"
+        errorLine1="        android:contentDescription=&quot;Close&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="15"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Food Tok logo&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Food Tok logo&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Log In to Food Tok&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Log In to Food Tok&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="44"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Username&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;Username&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="58"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Email&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;Email&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="72"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Password&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;Password&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="85"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Login&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Login&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="108"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Don&apos;t have an account? &quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Don&apos;t have an account? &quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="136"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Sign Up&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Sign Up&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_login.xml"
+            line="144"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Step 1 of 3&quot;, should use `@string` resource"
+        errorLine1="      android:text=&quot;Step 1 of 3&quot;"
+        errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="15"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Choose your avatar&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Choose your avatar&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Pick a profile picture from your gallery&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Pick a profile picture from your gallery&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="53"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Avatar preview&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Avatar preview&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="64"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Upload from Gallery&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Upload from Gallery&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="73"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Or pick a preset avatar&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Or pick a preset avatar&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="82"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;What do you like to cook?&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;What do you like to cook?&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="109"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Select your favorite cuisines and styles&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Select your favorite cuisines and styles&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="119"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Or add your own&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Or add your own&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="134"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;e.g. Korean BBQ&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;e.g. Korean BBQ&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="153"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add&quot;, should use `@string` resource"
+        errorLine1="              android:text=&quot;Add&quot;"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="165"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Any allergies?&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Any allergies?&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="188"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;We will warn you about recipes with these ingredients&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;We will warn you about recipes with these ingredients&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="198"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Or add your own&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Or add your own&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="213"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;e.g. Mustard&quot;, should use `@string` resource"
+        errorLine1="              android:hint=&quot;e.g. Mustard&quot;"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="232"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add&quot;, should use `@string` resource"
+        errorLine1="              android:text=&quot;Add&quot;"
+        errorLine2="              ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="244"
+            column="15"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Back&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Back&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="272"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Skip&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Skip&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="284"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Next&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Next&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_onboarding.xml"
+            line="295"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Close&quot;, should use `@string` resource"
+        errorLine1="        android:contentDescription=&quot;Close&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="15"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Food Tok logo&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Food Tok logo&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="36"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Sign up for Food Tok&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Sign up for Food Tok&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="44"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Username&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;Username&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="58"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Email&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;Email&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="72"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Password&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;Password&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="85"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Continue&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Continue&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="108"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Already have an account? &quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Already have an account? &quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="136"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Log in&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Log in&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/activity_signup.xml"
+            line="144"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Home&quot;, should use `@string` resource"
+        errorLine1="        android:title=&quot;Home&quot; />"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/bottom_nav_menu.xml"
+            line="7"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Search&quot;, should use `@string` resource"
+        errorLine1="        android:title=&quot;Search&quot; />"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/bottom_nav_menu.xml"
+            line="12"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Grid&quot;, should use `@string` resource"
+        errorLine1="        android:title=&quot;Grid&quot; />"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/bottom_nav_menu.xml"
+            line="22"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Profile&quot;, should use `@string` resource"
+        errorLine1="        android:title=&quot;Profile&quot; />"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/menu/bottom_nav_menu.xml"
+            line="27"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Delete&quot;, should use `@string` resource"
+        errorLine1="                    android:contentDescription=&quot;Delete&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_recipe_actions.xml"
+            line="55"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Delete&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Delete&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_recipe_actions.xml"
+            line="64"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Manage Ingredients&quot;, should use `@string` resource"
+        errorLine1="                    android:contentDescription=&quot;Manage Ingredients&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_recipe_actions.xml"
+            line="100"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Ingredients&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Ingredients&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/bottom_sheet_recipe_actions.xml"
+            line="109"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Comments&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Comments&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_comments.xml"
+            line="31"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;0&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_comments.xml"
+            line="43"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Close comments&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Close comments&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_comments.xml"
+            line="53"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Your profile picture&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Your profile picture&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_comments.xml"
+            line="98"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add a comment...&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;Add a comment...&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_comments.xml"
+            line="109"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Post comment&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Post comment&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_comments.xml"
+            line="122"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;New Recipe&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;New Recipe&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_create.xml"
+            line="16"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Share your cooking with the world&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Share your cooking with the world&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_create.xml"
+            line="26"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Open camera&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Open camera&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_create.xml"
+            line="54"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Camera&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Camera&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_create.xml"
+            line="59"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Record a video&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Record a video&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_create.xml"
+            line="68"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Open gallery&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Open gallery&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_create.xml"
+            line="92"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Gallery&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Gallery&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_create.xml"
+            line="97"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Choose from library&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Choose from library&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_create.xml"
+            line="106"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Back&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Back&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_follow_list.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Followers&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Followers&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_follow_list.xml"
+            line="34"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;No users yet&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;No users yet&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_follow_list.xml"
+            line="63"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Back&quot;, should use `@string` resource"
+        errorLine1="        android:contentDescription=&quot;Back&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_grid_feed.xml"
+            line="27"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Ingredients&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Ingredients&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_home.xml"
+            line="37"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;For You&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;For You&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_home.xml"
+            line="47"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Chat&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Chat&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_home.xml"
+            line="57"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Back&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Back&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Manage Ingredients&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Manage Ingredients&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="39"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add Ingredient&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Add Ingredient&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="68"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;e.g. shrimp&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;e.g. shrimp&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="84"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;200g&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;200g&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="96"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;Add&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="108"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Current Ingredients&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Current Ingredients&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="126"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Save&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Save&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_ingredients.xml"
+            line="156"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Back&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Back&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Manage Preferences&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Manage Preferences&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="39"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Taste profile icon&quot;, should use `@string` resource"
+        errorLine1="                    android:contentDescription=&quot;Taste profile icon&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="77"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Taste Profile&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;Taste Profile&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="84"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Cuisines and flavours you love&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Cuisines and flavours you love&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="94"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add custom interest&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;Add custom interest&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="117"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;Add&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="127"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Allergens icon&quot;, should use `@string` resource"
+        errorLine1="                    android:contentDescription=&quot;Allergens icon&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="142"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Ingredients to Avoid&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;Ingredients to Avoid&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="149"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;We&apos;ll hide recipes that contain these&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;We&apos;ll hide recipes that contain these&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="159"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add new ingredients&quot;, should use `@string` resource"
+        errorLine1="                    android:hint=&quot;Add new ingredients&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="182"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;Add&quot; />"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="192"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Save&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Save&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_preferences.xml"
+            line="202"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Back&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Back&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_profile.xml"
+            line="24"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Edit Profile&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Edit Profile&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_profile.xml"
+            line="33"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Profile picture&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Profile picture&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_profile.xml"
+            line="69"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Change Photo&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Change Photo&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_profile.xml"
+            line="79"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Bio&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Bio&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_profile.xml"
+            line="90"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add a bio...&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;Add a bio...&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_profile.xml"
+            line="102"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Save&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Save&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_manage_profile.xml"
+            line="121"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Back&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Back&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="25"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Profile picture&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Profile picture&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="66"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;0&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="97"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Recipes&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;Recipes&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="105"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;0&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="126"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Followers&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;Followers&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="134"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;0&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="155"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Following&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;Following&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="163"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Follow&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Follow&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="182"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Recipes&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Recipes&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_other_user_profile.xml"
+            line="203"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Back&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Back&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_feed.xml"
+            line="23"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Profile&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Profile&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_guest.xml"
+            line="14"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Profile picture&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Profile picture&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_guest.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Guest User&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Guest User&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_guest.xml"
+            line="48"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Sign up to save recipes\nand customize your feed&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Sign up to save recipes\nand customize your feed&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_guest.xml"
+            line="58"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Sign Up&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Sign Up&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_guest.xml"
+            line="70"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Log In&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Log In&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_guest.xml"
+            line="81"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Alex_C&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Alex_C&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="26"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Settings&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Settings&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="38"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Profile picture&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Profile picture&quot; />"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="67"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Alex_C&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Alex_C&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="75"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Food Lover | Home Cook&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Food Lover | Home Cook&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="86"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;0&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="109"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Recipes&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;Recipes&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="117"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;0&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="138"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Followers&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;Followers&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="146"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;0&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="167"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Following&quot;, should use `@string` resource"
+        errorLine1="                        android:text=&quot;Following&quot;"
+        errorLine2="                        ~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="175"
+            column="25"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;My Recipes&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;My Recipes&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="204"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Saved&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Saved&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="216"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Settings&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Settings&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="267"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Manage Profile&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Manage Profile&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="282"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Manage Preferences&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Manage Preferences&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="290"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Log out&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Log out&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_profile_user.xml"
+            line="304"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Ask about this recipe&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Ask about this recipe&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_recipe_chat.xml"
+            line="15"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;e.g. Can I substitute butter?&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;e.g. Can I substitute butter?&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_recipe_chat.xml"
+            line="57"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Send&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Send&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_recipe_chat.xml"
+            line="68"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;✦ Generate AI Insights&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;✦ Generate AI Insights&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_recipe_ingredients.xml"
+            line="155"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Type an ingredient...&quot;, should use `@string` resource"
+        errorLine1="        android:hint=&quot;Type an ingredient...&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_search.xml"
+            line="27"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Search&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Search&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_search.xml"
+            line="37"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Recipes&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Recipes&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_search.xml"
+            line="58"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Users&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;Users&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_search.xml"
+            line="70"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Search for recipes by ingredient.\nType to see suggestions.&quot;, should use `@string` resource"
+        errorLine1="      android:text=&quot;Search for recipes by ingredient.\nType to see suggestions.&quot;"
+        errorLine2="      ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_search.xml"
+            line="102"
+            column="7"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;New Recipe&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;New Recipe&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="18"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Only title is required — AI will fill in the rest&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Only title is required — AI will fill in the rest&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="27"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Video preview&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Video preview&quot; />"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="40"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Title *&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Title *&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="46"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;e.g. Creamy Garlic Shrimp Pasta&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;e.g. Creamy Garlic Shrimp Pasta&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="55"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Tags (optional)&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Tags (optional)&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="63"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;e.g. pasta&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;e.g. pasta&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="78"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Add&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="86"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Ingredients (optional)&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Ingredients (optional)&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="102"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;e.g. shrimp&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;e.g. shrimp&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="117"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;200g&quot;, should use `@string` resource"
+        errorLine1="                android:hint=&quot;200g&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="127"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Add&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Add&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="135"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Prep time (min)&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;Prep time (min)&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="165"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Cook time (min)&quot;, should use `@string` resource"
+        errorLine1="                    android:text=&quot;Cook time (min)&quot;"
+        errorLine2="                    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="185"
+            column="21"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Calories per serving (optional)&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Calories per serving (optional)&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="200"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Leave blank to let AI estimate&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;Leave blank to let AI estimate&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="209"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Instructions (optional)&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Instructions (optional)&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="216"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Leave blank to let AI generate from your video&quot;, should use `@string` resource"
+        errorLine1="            android:hint=&quot;Leave blank to let AI generate from your video&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="225"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Post Recipe&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;Post Recipe&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/fragment_upload_recipe.xml"
+            line="235"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Commenter&apos;s profile picture&quot;, should use `@string` resource"
+        errorLine1="        android:contentDescription=&quot;Commenter&apos;s profile picture&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_comment.xml"
+            line="20"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Like comment&quot;, should use `@string` resource"
+        errorLine1="        android:contentDescription=&quot;Like comment&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_comment.xml"
+            line="74"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="        android:text=&quot;0&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_comment.xml"
+            line="84"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Avatar&quot;, should use `@string` resource"
+        errorLine1="        android:contentDescription=&quot;Avatar&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_follow_user.xml"
+            line="18"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Recipe thumbnail&quot;, should use `@string` resource"
+        errorLine1="        android:contentDescription=&quot;Recipe thumbnail&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="12"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Like&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Like&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="48"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Like&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Like&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="56"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Save&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Save&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="76"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Save&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Save&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="84"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Not Interested&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Not Interested&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="104"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Nope&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Nope&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_grid_recipe.xml"
+            line="112"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Recipe thumbnail&quot;, should use `@string` resource"
+        errorLine1="        android:contentDescription=&quot;Recipe thumbnail&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="11"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Like&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Like&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="38"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Like&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Like&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="46"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Save&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Save&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="66"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Save&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Save&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="74"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Not Interested&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Not Interested&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="94"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Nope&quot;, should use `@string` resource"
+        errorLine1="                android:text=&quot;Nope&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_profile_recipe.xml"
+            line="102"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Paused&quot;, should use `@string` resource"
+        errorLine1="        android:contentDescription=&quot;Paused&quot;"
+        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="27"
+            column="9"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;⚠ Contains allergens&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;⚠ Contains allergens&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="72"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Author avatar&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Author avatar&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="119"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Follow&quot;, should use `@string` resource"
+        errorLine1="                android:contentDescription=&quot;Follow&quot;"
+        errorLine2="                ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="128"
+            column="17"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Like&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Like&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="140"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;0&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="151"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Comment&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Comment&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="165"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;0&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="176"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Save&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Save&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="190"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;0&quot;, should use `@string` resource"
+        errorLine1="            android:text=&quot;0&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="201"
+            column="13"/>
+    </issue>
+
+    <issue
+        id="HardcodedText"
+        message="Hardcoded string &quot;Not Interested&quot;, should use `@string` resource"
+        errorLine1="            android:contentDescription=&quot;Not Interested&quot;"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/layout/item_recipe.xml"
+            line="215"
+            column="13"/>
+    </issue>
+
+</issues>

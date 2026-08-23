@@ -1,5 +1,7 @@
 # FoodTok
 
+[![CI](https://github.com/clifftonowen/FoodTok/actions/workflows/ci.yml/badge.svg)](https://github.com/clifftonowen/FoodTok/actions/workflows/ci.yml)
+
 > A TikTok-style Android app for infinite-scroll recipe discovery, built for SUTD 50.001 Information Systems & Programming (Spring 2026).
 
 FoodTok lets home cooks swipe through short cooking videos, filter recipes by ingredients on hand, chat with an AI about any dish, and receive personalized recommendations based on their taste and allergens.
