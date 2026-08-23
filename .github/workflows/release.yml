@@ -1,0 +1,101 @@
+name: Release
+
+on:
+  push:
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    name: Build and publish demo APK
+    runs-on: ubuntu-latest
+    # Hoisted to job level so the Appetize step's `if` can test it; the
+    # `secrets` context is not available in a step-level condition.
+    env:
+      APPETIZE_TOKEN: ${{ secrets.APPETIZE_API_TOKEN }}
+      APPETIZE_PUBLIC_KEY: ${{ secrets.APPETIZE_PUBLIC_KEY }}
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v3
+
+      # The Gemini key is deliberately absent: it lives as a Supabase secret and
+      # is read by the Edge Functions, never by the app. sdk.dir is not needed
+      # because the runner sets ANDROID_HOME.
+      - name: Write local.properties from secrets
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          if [ -z "$SUPABASE_URL" ] || [ -z "$SUPABASE_ANON_KEY" ]; then
+            echo "::error::SUPABASE_URL and SUPABASE_ANON_KEY repository secrets must be set."
+            exit 1
+          fi
+          printf 'SUPABASE_URL=%s\nSUPABASE_ANON_KEY=%s\n' \
+            "$SUPABASE_URL" "$SUPABASE_ANON_KEY" > local.properties
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      # Debug-signed on purpose. Appetize accepts debug builds and a debug APK
+      # installs on a real device straight from the Release page, so release
+      # signing is not a prerequisite for the demo.
+      - name: Build demo APK
+        run: ./gradlew assembleDebug --stacktrace
+
+      - name: Confirm no Gemini key made it into the APK
+        run: |
+          APK=$(ls app/build/outputs/apk/debug/*.apk | head -1)
+          if unzip -p "$APK" 'classes*.dex' | grep -qa 'generativelanguage.googleapis.com'; then
+            echo "::error::APK still references the Gemini endpoint. Refusing to publish."
+            exit 1
+          fi
+          if unzip -p "$APK" 'classes*.dex' | grep -qaE 'AIza[0-9A-Za-z_-]{30,}'; then
+            echo "::error::APK contains a Google API key. Refusing to publish."
+            exit 1
+          fi
+          echo "No Gemini key or endpoint found in $APK"
+
+      - name: Rename APK with the tag
+        run: |
+          mkdir -p dist
+          cp app/build/outputs/apk/debug/app-debug.apk \
+             "dist/foodtok-${GITHUB_REF_NAME}.apk"
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.apk
+          generate_release_notes: true
+
+      # Uploads the build to Appetize so the "Try it in your browser" link always
+      # points at the latest release. Skipped automatically when the token is not
+      # set, so the release still succeeds and the APK can be uploaded by hand.
+      - name: Publish to Appetize
+        if: ${{ env.APPETIZE_TOKEN != '' }}
+        run: |
+          APK=$(ls dist/*.apk | head -1)
+          if [ -n "$APPETIZE_PUBLIC_KEY" ]; then
+            URL="https://api.appetize.io/v1/apps/$APPETIZE_PUBLIC_KEY"
+          else
+            URL="https://api.appetize.io/v1/apps"
+          fi
+          curl --fail-with-body -sS "$URL" \
+            -u "$APPETIZE_TOKEN:" \
+            -F "file=@$APK" \
+            -F "platform=android"
