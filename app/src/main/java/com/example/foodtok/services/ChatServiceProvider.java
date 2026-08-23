@@ -1,10 +1,11 @@
 package com.example.foodtok.services;
 
-import com.example.foodtok.BuildConfig;
+import com.example.foodtok.util.Constants;
 
 /**
  * Factory for IChatService instances.
- * Auto-selects GeminiChatService when an API key is configured,
+ * Auto-selects SupabaseChatService when the app is pointed at a Supabase
+ * project (the Gemini key now lives server-side in an Edge Function),
  * falls back to MockChatService otherwise.
  *
  * Follows the same Singleton Provider pattern as AuthServiceProvider
@@ -20,9 +21,8 @@ public final class ChatServiceProvider {
 
   public static IChatService getChatService() {
     if (chatService == null) {
-      String key = BuildConfig.GEMINI_API_KEY;
-      if (key != null && !key.isEmpty()) {
-        chatService = new GeminiChatService(key);
+      if (Constants.isAiProxyConfigured()) {
+        chatService = new SupabaseChatService();
       } else {
         chatService = new MockChatService();
       }

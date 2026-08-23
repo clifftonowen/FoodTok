@@ -22,6 +22,7 @@ public final class ApiClient {
   private static Retrofit restRetrofit;   // for table queries
   private static Retrofit authRetrofit;   // for signup/login
   private static Retrofit storageRetrofit; // for file upload
+  private static Retrofit functionsRetrofit; // for Edge Functions (AI proxy)
   private static SupabaseApi supabaseApi; // cached instance
 
   private static final Gson GSON = new GsonBuilder()
@@ -162,6 +163,48 @@ public final class ApiClient {
         .build();
   }
 
+  /**
+   * OkHttpClient for Supabase Edge Functions.
+   *
+   * <p>Differs from {@link #buildClient()} in two deliberate ways:
+   *
+   * <ul>
+   *   <li>No {@code Prefer} header — that is PostgREST-specific and meaningless here.
+   *   <li>The anon key is used as a bearer token when no user is logged in. The functions
+   *       run with {@code verify_jwt = true}, so a guest with no Authorization header
+   *       would get a hard 401 — and the feed and chat pages are reachable without
+   *       logging in, which is exactly the public-demo case this must support.
+   * </ul>
+   */
+  private static OkHttpClient buildFunctionsClient() {
+    HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+    logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+    return new OkHttpClient.Builder()
+        .addInterceptor(chain -> {
+          Request.Builder builder = chain.request().newBuilder()
+              .addHeader("apikey", Constants.SUPABASE_ANON_KEY)
+              .addHeader("Content-Type", "application/json");
+
+          String token = SessionManager.getInstance().getAccessToken();
+          builder.addHeader("Authorization",
+              "Bearer " + (token != null ? token : Constants.SUPABASE_ANON_KEY));
+
+          return chain.proceed(builder.build());
+        })
+        .authenticator((route, response) -> {
+          String newToken = tryRefreshToken();
+          if (newToken == null) {
+            return null;
+          }
+          return response.request().newBuilder()
+              .header("Authorization", "Bearer " + newToken)
+              .build();
+        })
+        .addInterceptor(logging)
+        .build();
+  }
+
   // Retrofit instance for table CRUD (recipes, profiles, follows, etc.)
   public static Retrofit getRestClient() {
     if (restRetrofit == null) {
@@ -196,6 +239,18 @@ public final class ApiClient {
           .build();
     }
     return storageRetrofit;
+  }
+
+  /** Retrofit instance for the Supabase Edge Functions that proxy Gemini. */
+  public static Retrofit getFunctionsClient() {
+    if (functionsRetrofit == null) {
+      functionsRetrofit = new Retrofit.Builder()
+          .baseUrl(Constants.FUNCTIONS_BASE_URL)
+          .client(buildFunctionsClient())
+          .addConverterFactory(GsonConverterFactory.create())
+          .build();
+    }
+    return functionsRetrofit;
   }
 
   /** Convenience accessor for the PostgREST API interface. */

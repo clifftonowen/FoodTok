@@ -225,7 +225,8 @@ Row-Level Security is enabled on all tables; users can only mutate their own row
 - Android Studio Koala or later
 - JDK 11+
 - A Supabase project (free tier is fine)
-- A Google AI Studio API key for Gemini (optional — the app falls back to mocks)
+- A Google AI Studio API key for Gemini, set as a Supabase secret — **not** in
+  `local.properties`. See [AI proxy](#ai-proxy) below.
 
 ### Configuration
 
@@ -234,6 +235,29 @@ Create `local.properties` in the project root (this file is gitignored):
 
 
 These values are injected into `BuildConfig` at build time via `app/build.gradle.kts` and surfaced through `util/Constants.java`.
+
+<a name="ai-proxy"></a>
+### AI proxy
+
+Gemini is **not** called from the device. Both AI features go through Supabase Edge
+Functions in `supabase/functions/`, which hold the API key as a server-side secret:
+
+| Function | Used by |
+|---|---|
+| `gemini-chat` | Per-recipe cooking assistant |
+| `gemini-enrich` | Allergen detection, instruction generation, calorie estimate |
+
+Deploy them and set the key with:
+
+```bash
+supabase link --project-ref <your-project-ref>
+supabase secrets set GEMINI_API_KEY=<your-key>
+supabase functions deploy gemini-chat gemini-enrich
+```
+
+The app decides real-vs-mock on whether `SUPABASE_URL` and `SUPABASE_ANON_KEY` are
+configured (`Constants.isAiProxyConfigured()`), so a clone without a Supabase project
+falls back to the mock services rather than failing.
 
 
 ## Build & Test
@@ -252,8 +276,11 @@ These values are injected into `BuildConfig` at build time via `app/build.gradle
 
 The current build is feature-complete for the course deliverable. To take FoodTok from a course project to a deployable consumer product, the following work is queued:
 
-### 1. Move Gemini behind a Supabase Edge Function
-The Gemini API key is currently bundled into `BuildConfig` for development. For production, requests should be proxied through a Supabase Edge Function (e.g. `/functions/v1/gemini-chat`) so the key lives server-side and requests can be rate-limited per authenticated user via the Supabase JWT. This removes any risk of key extraction from the APK and lets us rotate credentials without shipping a new build.
+### 1. ~~Move Gemini behind a Supabase Edge Function~~ — done
+The Gemini key no longer ships in the APK. Chat and enrichment are proxied through the
+`gemini-chat` and `gemini-enrich` Edge Functions, which build the prompts server-side so
+the client sends a typed recipe object rather than free-form model input. See
+[AI proxy](#ai-proxy).
 
 ### 2. Upgrade Gemini API to a paid tier
 The free tier's 15 RPM / 1,500 RPD ceiling is shared across the whole Google account and will not survive a public launch — a single user stress-testing the chat can exhaust the daily quota. Moving to a paid tier (or Vertex AI with committed throughput) gives per-project quotas, higher RPM, and SLAs suitable for a production feed. This pairs naturally with the Edge Function above, which becomes the single billed caller.

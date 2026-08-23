@@ -18,4 +18,7 @@ local.properties
 .env
 *.env
 
-
+# Supabase CLI local state
+supabase/.temp
+supabase/.env
+supabase/.branches

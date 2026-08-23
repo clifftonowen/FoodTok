@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Mock implementation of IChatService for testing without a Gemini API key.
+ * Mock implementation of IChatService for testing without a Supabase backend.
  * Returns canned responses based on the recipe context.
  *
  * Follows the same pattern as MockInteractionService and MockAuthService.
@@ -62,17 +62,18 @@ public class MockChatService implements IChatService {
     if (lower.contains("equipment") || lower.contains("tool")) {
       return "[Mock] For \"" + recipe.getTitle()
           + "\", you'd typically need basic kitchen equipment. "
-          + "Connect a Gemini API key for detailed recommendations.";
+          + "Connect a Supabase project for detailed recommendations.";
     }
 
     if (lower.contains("calorie") || lower.contains("nutrition")) {
       return "[Mock] This recipe has an estimated "
           + (int) recipe.getEstimatedCalories()
-          + " kcal. Connect a Gemini API key for detailed nutritional breakdown.";
+          + " kcal. Connect a Supabase project for a detailed nutritional breakdown.";
     }
 
     return "[Mock] I'm a mock cooking assistant for \""
         + recipe.getTitle() + "\". "
-        + "Configure a Gemini API key in local.properties for real AI responses.";
+        + "Configure SUPABASE_URL and SUPABASE_ANON_KEY in local.properties "
+        + "for real AI responses.";
   }
 }
