@@ -1,6 +1,7 @@
 package com.example.foodtok.services;
 
 import com.example.foodtok.BuildConfig;
+import com.example.foodtok.util.PreviewMode;
 
 /**
  * Factory for IRecipeEnrichmentService instances.
@@ -20,6 +21,10 @@ public final class EnrichmentServiceProvider {
 
   public static IRecipeEnrichmentService getEnrichmentService() {
     if (enrichmentService == null) {
+      if (PreviewMode.isEnabled()) {
+        enrichmentService = new MockEnrichmentService();
+        return enrichmentService;
+      }
       String key = BuildConfig.GEMINI_API_KEY;
       if (key != null && !key.isEmpty()) {
         enrichmentService = new GeminiEnrichmentService(key);

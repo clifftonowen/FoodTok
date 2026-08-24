@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true"
-    android:background="#FFFBEF">
+    android:background="@color/foodtok_cream">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:text="New Recipe"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="#2E5D3B"
+            android:textColor="@color/foodtok_green_foreground"
             android:paddingBottom="4dp" />
 
         <TextView
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text="Only title is required — AI will fill in the rest"
             android:textSize="12sp"
-            android:textColor="#777777"
+            android:textColor="@color/foodtok_text_secondary"
             android:paddingBottom="12dp" />
 
         <!-- Video thumbnail preview -->
@@ -36,7 +36,7 @@
             android:layout_height="200dp"
             android:scaleType="fitCenter"
             android:adjustViewBounds="true"
-            android:background="#E0E0E0"
+            android:background="@color/foodtok_divider"
             android:contentDescription="Video preview" />
 
         <!-- Title / Caption (REQUIRED) -->

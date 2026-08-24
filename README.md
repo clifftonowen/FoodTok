@@ -236,6 +236,21 @@ These values are injected into `BuildConfig` at build time via `app/build.gradle
 
 ## Build & Test
 
+### Offline UI preview
+
+The debug build uses deterministic local data by default. It does not require
+Supabase or Gemini credentials, and its HTTP client blocks outbound requests.
+
+```bash
+./gradlew assembleDebug
+```
+
+To intentionally build against configured live services instead:
+
+```bash
+./gradlew assembleDebug -Pfoodtok.stub=false
+```
+
 ```bash
 ./gradlew assembleDebug         # Build debug APK
 ./gradlew assembleRelease       # Build release APK

@@ -66,7 +66,11 @@ public class RecipeDto {
     if (recipeIngredients != null) {
       for (RecipeIngredientDto ri : recipeIngredients) {
         if (ri.ingredient != null) {
-          ingredientList.add(ri.ingredient.toDomain());
+          ingredientList.add(new Ingredient(
+              ri.ingredient.name,
+              ri.ingredient.caloriesPer100g,
+              ri.quantity,
+              ri.isOptional));
         }
       }
     }

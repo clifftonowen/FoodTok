@@ -1,13 +1,13 @@
 package com.example.foodtok.ui;
 
 import android.content.Intent;
-import android.graphics.Typeface;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,18 +35,17 @@ import java.util.List;
 /** Main feed fragment with vertical ViewPager2 for recipe scrolling and top navigation. */
 public class HomeFragment extends Fragment {
 
-  private static final float ALPHA_ACTIVE = 1.0f;
-  private static final float ALPHA_INACTIVE = 0.45f;
   private static final int FEED_PAGE_SIZE = 20;
 
   private ViewPager2 feedViewPager;
   private FeedAdapter feedAdapter;
   private FeedVideoPlayerPool playerPool;
   private ProgressBar feedLoadingSpinner;
+  private View topNavBar;
 
-  private TextView navIngredients;
-  private TextView navForYou;
-  private TextView navChat;
+  private View navIngredientsAction;
+  private View navChatAction;
+  private View navBackAction;
   private boolean isKeyboardVisible;
   private int currentHorizontalPage = 1;
   private final RecommendationService recommendationService =
@@ -97,49 +96,47 @@ public class HomeFragment extends Fragment {
   }
 
   private void setupTopNav(View view) {
-    navIngredients = view.findViewById(R.id.navIngredients);
-    navForYou = view.findViewById(R.id.navForYou);
-    navChat = view.findViewById(R.id.navChat);
+    topNavBar = view.findViewById(R.id.topNavBar);
+    navIngredientsAction = view.findViewById(R.id.navIngredientsAction);
+    navChatAction = view.findViewById(R.id.navChatAction);
+    navBackAction = view.findViewById(R.id.navBackAction);
 
     // Default active tab = For You
     updateNavStyling(1);
 
-    navIngredients.setOnClickListener(v -> {
+    navIngredientsAction.setOnClickListener(v -> {
       if (feedAdapter != null) {
         feedAdapter.navigateCurrentPageTo(0);
       }
     });
 
-    navForYou.setOnClickListener(v -> {
-      // If the user is on Ingredients/Chat, just slide back to the
-      // video page — don't tear down the feed. Only refresh when
-      // they're already on For You (mirrors re-tapping the bottom nav).
-      boolean alreadyOnForYou = currentHorizontalPage == 1;
+    navChatAction.setOnClickListener(v -> {
       if (feedAdapter != null) {
-        feedAdapter.navigateCurrentPageTo(1);
-      }
-      if (alreadyOnForYou) {
-        refreshFeed();
+        feedAdapter.navigateCurrentPageTo(2);
       }
     });
 
-    navChat.setOnClickListener(v -> {
+    navBackAction.setOnClickListener(v -> {
       if (feedAdapter != null) {
-        feedAdapter.navigateCurrentPageTo(2);
+        feedAdapter.navigateCurrentPageTo(1);
       }
     });
   }
 
   private void updateNavStyling(int activePage) {
-    TextView[] tabs = {navIngredients, navForYou, navChat};
-    for (int i = 0; i < tabs.length; i++) {
-      boolean active = (i == activePage);
-      tabs[i].setTypeface(null, active ? Typeface.BOLD : Typeface.NORMAL);
-      tabs[i].animate()
-          .alpha(active ? ALPHA_ACTIVE : ALPHA_INACTIVE)
-          .setDuration(150)
-          .start();
-    }
+    boolean showingFeed = activePage == 1;
+    topNavBar.setVisibility(showingFeed ? View.VISIBLE : View.GONE);
+    navBackAction.setVisibility(showingFeed ? View.GONE : View.VISIBLE);
+
+    FrameLayout.LayoutParams backParams =
+        (FrameLayout.LayoutParams) navBackAction.getLayoutParams();
+    backParams.gravity = Gravity.TOP
+        | (activePage == 0 ? Gravity.END : Gravity.START);
+    navBackAction.setLayoutParams(backParams);
+
+    // Each detail page points back toward the center feed: Recipes is
+    // to its left, while Ask AI is to its right.
+    navBackAction.setScaleX(activePage == 0 ? -1f : 1f);
   }
 
   private void setupFeedPager(View view) {

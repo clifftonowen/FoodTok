@@ -17,47 +17,88 @@
         android:layout_gravity="center"
         android:visibility="gone" />
 
-    <!-- Top navigation scrim + overlay: Ingredients | For You | Chat -->
+    <!-- Lightweight recipe utilities replace the previous segmented toolbar. -->
     <LinearLayout
         android:id="@+id/topNavBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/scrim_top_nav"
-        android:gravity="center_horizontal"
+        android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingTop="52dp"
-        android:paddingBottom="12dp">
+        android:paddingStart="18dp"
+        android:paddingTop="48dp"
+        android:paddingEnd="18dp">
 
-        <TextView
-            android:id="@+id/navIngredients"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="6dp"
-            android:text="Ingredients"
-            android:textColor="@android:color/white"
-            android:textSize="15sp" />
+        <LinearLayout
+            android:id="@+id/navIngredientsAction"
+            android:layout_width="72dp"
+            android:layout_height="64dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Open recipes"
+            android:gravity="center"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/navForYou"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="6dp"
-            android:text="For You"
-            android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_recipe_book" />
 
-        <TextView
-            android:id="@+id/navChat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:paddingHorizontal="14dp"
-            android:paddingVertical="6dp"
-            android:text="Chat"
-            android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            <TextView
+                android:id="@+id/navIngredients"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="Recipes"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
+            android:id="@+id/navChatAction"
+            android:layout_width="72dp"
+            android:layout_height="64dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="Open Ask AI"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="27dp"
+                android:layout_height="27dp"
+                android:contentDescription="@null"
+                android:src="@drawable/ic_ask_chat" />
+
+            <TextView
+                android:id="@+id/navChat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="3dp"
+                android:text="Ask AI"
+                android:textColor="@android:color/white"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+        </LinearLayout>
 
     </LinearLayout>
+
+    <ImageButton
+        android:id="@+id/navBackAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_gravity="top|start"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginTop="48dp"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="Back to feed"
+        android:padding="12dp"
+        android:src="@drawable/ic_arrow_back"
+        android:visibility="gone" />
 
 </FrameLayout>

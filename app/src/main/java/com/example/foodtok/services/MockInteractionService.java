@@ -95,11 +95,21 @@ public class MockInteractionService implements IInteractionService {
 
   @Override
   public void getLikeCount(String recipeId, IntCallback callback) {
-    callback.onResult(0);
+    int base = previewBaseCount(recipeId, 1_248, 317);
+    callback.onResult(base + (likedRecipeIds.contains(recipeId) ? 1 : 0));
   }
 
   @Override
   public void getSaveCount(String recipeId, IntCallback callback) {
-    callback.onResult(0);
+    int base = previewBaseCount(recipeId, 286, 71);
+    callback.onResult(base + (savedRecipeIds.contains(recipeId) ? 1 : 0));
+  }
+
+  private int previewBaseCount(String recipeId, int base, int step) {
+    try {
+      return base + (Math.max(1, Integer.parseInt(recipeId)) - 1) * step;
+    } catch (NumberFormatException ignored) {
+      return base;
+    }
   }
 }

@@ -10,7 +10,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
+import okhttp3.MediaType;
+import okhttp3.Protocol;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -40,6 +43,9 @@ public final class ApiClient {
    * Returns {@code null} on failure (caller should redirect to login).
    */
   private static synchronized String tryRefreshToken() {
+    if (PreviewMode.isEnabled()) {
+      return null;
+    }
     String refreshToken =
         SessionManager.getInstance().getRefreshToken();
     if (refreshToken == null) {
@@ -91,7 +97,9 @@ public final class ApiClient {
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-    return new OkHttpClient.Builder()
+    OkHttpClient.Builder client = new OkHttpClient.Builder();
+    addPreviewBlocker(client);
+    return client
         .addInterceptor(chain -> {
           Request original = chain.request();
           Request.Builder builder = original.newBuilder()
@@ -137,7 +145,9 @@ public final class ApiClient {
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-    return new OkHttpClient.Builder()
+    OkHttpClient.Builder client = new OkHttpClient.Builder();
+    addPreviewBlocker(client);
+    return client
         .addInterceptor(chain -> {
           Request.Builder builder = chain.request().newBuilder()
               .addHeader("apikey", Constants.SUPABASE_ANON_KEY);
@@ -160,6 +170,22 @@ public final class ApiClient {
         })
         .addInterceptor(logging)
         .build();
+  }
+
+  /** Returns a local synthetic response before DNS/socket work in preview mode. */
+  private static void addPreviewBlocker(OkHttpClient.Builder client) {
+    if (!PreviewMode.isEnabled()) {
+      return;
+    }
+    client.addInterceptor(chain -> new okhttp3.Response.Builder()
+        .request(chain.request())
+        .protocol(Protocol.HTTP_1_1)
+        .code(503)
+        .message("Offline preview")
+        .body(ResponseBody.create(
+            "{\"message\":\"Offline preview\"}",
+            MediaType.get("application/json")))
+        .build());
   }
 
   // Retrofit instance for table CRUD (recipes, profiles, follows, etc.)

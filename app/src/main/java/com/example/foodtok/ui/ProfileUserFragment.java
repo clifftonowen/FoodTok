@@ -45,6 +45,8 @@ import com.example.foodtok.models.dto.SavedRecipeDto;
 import com.example.foodtok.models.dto.UserDto;
 import com.example.foodtok.services.SupabaseApi;
 import com.example.foodtok.util.ApiClient;
+import com.example.foodtok.util.PreviewData;
+import com.example.foodtok.util.PreviewMode;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -285,10 +287,14 @@ public class ProfileUserFragment extends Fragment {
         tabMyRecipes.setOnClickListener(v -> switchTab(true));
         tabSaved.setOnClickListener(v -> switchTab(false));
 
-        fetchProfileStats();
-        fetchMyRecipes();
-        fetchSavedRecipes();
-        fetchAvatar();
+        if (PreviewMode.isEnabled()) {
+            loadPreviewProfile();
+        } else {
+            fetchProfileStats();
+            fetchMyRecipes();
+            fetchSavedRecipes();
+            fetchAvatar();
+        }
         switchTab(isMyRecipesTab);
 
         return view;
@@ -423,6 +429,13 @@ public class ProfileUserFragment extends Fragment {
 
     // [NEW] Calls the Supabase delete endpoint, then removes the item from the local list
     private void deleteRecipe(RecipeDto recipe) {
+        if (PreviewMode.isEnabled()) {
+            myRecipes.remove(recipe);
+            adapter.updateData(myRecipes);
+            tvRecipeCount.setText(String.valueOf(myRecipes.size()));
+            Toast.makeText(getContext(), "Removed from preview", Toast.LENGTH_SHORT).show();
+            return;
+        }
         ApiClient.getSupabaseApi()
                 .deleteRecipe("eq." + recipe.id)
                 .enqueue(new Callback<Void>() {
@@ -545,6 +558,11 @@ public class ProfileUserFragment extends Fragment {
     }
 
     private void fetchAvatar() {
+        if (PreviewMode.isEnabled()) {
+            tvBio.setText("Cooking one swipe at a time • Offline preview");
+            tvBio.setVisibility(View.VISIBLE);
+            return;
+        }
         String userId = AuthManager.getInstance().getCurrentUser().getId();
         ApiClient.getSupabaseApi().getProfiles("eq." + userId, "id,avatar_url,bio")
                 .enqueue(new Callback<List<UserDto>>() {
@@ -578,6 +596,22 @@ public class ProfileUserFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fetchAvatar();
+    }
+
+    private void loadPreviewProfile() {
+        myRecipes.clear();
+        myRecipes.addAll(PreviewData.profileRecipes());
+        savedRecipes.clear();
+        savedRecipes.addAll(PreviewData.profileRecipes().subList(0, 4));
+        tvRecipeCount.setText(String.valueOf(myRecipes.size()));
+        tvFollowerCount.setText("12.8K");
+        tvFollowingCount.setText("184");
+        tvBio.setText("Cooking one swipe at a time • Offline preview");
+        tvBio.setVisibility(View.VISIBLE);
+        adapter.updateData(myRecipes);
+        animateStatCount(tvRecipeCount);
+        animateStatCount(tvFollowerCount);
+        animateStatCount(tvFollowingCount);
     }
 
     private void fetchProfileStats() {

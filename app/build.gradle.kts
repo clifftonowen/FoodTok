@@ -13,6 +13,10 @@ if (localPropsFile.exists()) {
     localProps.load(FileInputStream(localPropsFile))
 }
 
+// Safe default for viewing the UI without Supabase or Gemini.
+// Opt into live services with: -Pfoodtok.stub=false
+val useStubData = providers.gradleProperty("foodtok.stub").orElse("true")
+
 android {
     namespace = "com.example.foodtok"
     compileSdk {
@@ -32,6 +36,7 @@ android {
             "\"${localProps.getProperty("GEMINI_API_KEY", "")}\"")
         buildConfigField("String", "SUPABASE_URL", "\"${localProps.getProperty("SUPABASE_URL", "")}\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localProps.getProperty("SUPABASE_ANON_KEY", "")}\"")
+        buildConfigField("boolean", "USE_STUB_DATA", useStubData.get())
     }
 
     buildFeatures {

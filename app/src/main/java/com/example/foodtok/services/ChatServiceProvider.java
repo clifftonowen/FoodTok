@@ -1,6 +1,7 @@
 package com.example.foodtok.services;
 
 import com.example.foodtok.BuildConfig;
+import com.example.foodtok.util.PreviewMode;
 
 /**
  * Factory for IChatService instances.
@@ -20,6 +21,10 @@ public final class ChatServiceProvider {
 
   public static IChatService getChatService() {
     if (chatService == null) {
+      if (PreviewMode.isEnabled()) {
+        chatService = new MockChatService();
+        return chatService;
+      }
       String key = BuildConfig.GEMINI_API_KEY;
       if (key != null && !key.isEmpty()) {
         chatService = new GeminiChatService(key);

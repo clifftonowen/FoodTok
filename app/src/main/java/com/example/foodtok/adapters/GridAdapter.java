@@ -15,6 +15,8 @@ import com.bumptech.glide.Glide;
 import com.example.foodtok.R;
 import com.example.foodtok.models.Recipe;
 import com.example.foodtok.util.VideoThumbnailLoader;
+import com.example.foodtok.util.PreviewMode;
+import androidx.core.content.ContextCompat;
 
 import java.util.List;
 
@@ -71,7 +73,14 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ViewHolder> {
     boolean isActive = (position == activePosition);
 
     // Thumbnail
-    if (!TextUtils.isEmpty(recipe.getThumbnailUrl())) {
+    if (PreviewMode.isEnabled()) {
+      int[] colors = {R.color.foodtok_green_dark, R.color.foodtok_orange_dark,
+          R.color.foodtok_red, R.color.foodtok_green, R.color.foodtok_orange};
+      holder.ivRecipeThumb.setBackgroundColor(ContextCompat.getColor(
+          holder.itemView.getContext(), colors[position % colors.length]));
+      holder.ivRecipeThumb.setImageResource(R.drawable.ic_burger_foodtok);
+      holder.ivRecipeThumb.setPadding(42, 42, 42, 42);
+    } else if (!TextUtils.isEmpty(recipe.getThumbnailUrl())) {
       Glide.with(holder.ivRecipeThumb)
           .load(recipe.getThumbnailUrl())
           .centerCrop()
