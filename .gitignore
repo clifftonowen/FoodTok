@@ -22,3 +22,8 @@ local.properties
 supabase/.temp
 supabase/.env
 supabase/.branches
+
+# IDE shelved patches and per-user state
+.idea/shelf/
+.idea/workspace.xml
+.idea/caches/

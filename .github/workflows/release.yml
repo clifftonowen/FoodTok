@@ -92,6 +92,18 @@ jobs:
         with:
           files: dist/*.apk
           generate_release_notes: true
+          # generate_release_notes alone gives a raw commit list, which is useless to
+          # someone trying to sideload. This tells them what to expect.
+          body: |
+            **Debug-signed demo build.** Android 7.0+ (API 24).
+
+            To install: download the `.apk`, open it, and allow your browser to
+            install unknown apps when prompted. Sign up with any email — no
+            confirmation needed — or just browse the feed as a guest.
+
+            The Gemini API key is not in this build. AI features call Supabase Edge
+            Functions that hold the key server-side, and this release is built by a
+            workflow that fails if a key or the Gemini endpoint is found in the APK.
 
       # Uploads the build to Appetize so the "Try it in your browser" link always
       # points at the latest release. Skipped automatically when the token is not
