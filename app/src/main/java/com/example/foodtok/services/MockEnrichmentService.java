@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Mock implementation of IRecipeEnrichmentService for testing without a Gemini API key.
+ * Mock implementation of IRecipeEnrichmentService for testing without a Supabase backend.
  * Returns hardcoded enrichment data based on the recipe's ingredients.
  *
  * Follows the same pattern as MockChatService and MockInteractionService.

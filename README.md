@@ -1,8 +1,53 @@
 # FoodTok
 
-> A TikTok-style Android app for infinite-scroll recipe discovery, built for SUTD 50.001 Information Systems & Programming (Spring 2026).
+[![CI](https://github.com/clifftonowen/FoodTok/actions/workflows/ci.yml/badge.svg)](https://github.com/clifftonowen/FoodTok/actions/workflows/ci.yml)
+[![Download APK](https://img.shields.io/badge/download-latest%20APK-3ddc84)](https://github.com/clifftonowen/FoodTok/releases/latest)
+[![Platform](https://img.shields.io/badge/Android-7.0%2B%20(API%2024)-3ddc84)](#getting-started)
+[![Language](https://img.shields.io/badge/Java-11-b07219)](#tech-stack)
 
-FoodTok lets home cooks swipe through short cooking videos, filter recipes by ingredients on hand, chat with an AI about any dish, and receive personalized recommendations based on their taste and allergens.
+> **TikTok, but for recipes.** Swipe a vertical video feed, search by the ingredients already
+> in your fridge, and ask an AI about any dish. Native Android (Java) on Supabase + Gemini.
+
+**What you are looking at**
+
+- **Feed** &mdash; nested `ViewPager2` over a pooled ExoPlayer. Vertical swipe between recipes,
+  horizontal between *Ingredients / For You / Chat*.
+- **Ingredient search** &mdash; a hand-written **Trie** (`data/Trie.java`), O(L) autocomplete
+  over the full ingredient catalog, multi-chip queries ranked by match count.
+- **AI** &mdash; Gemini 2.5 Flash behind **Supabase Edge Functions**, so the API key never
+  ships in the APK. Per-recipe chatbot with conversation memory, plus on-demand allergen
+  detection, instruction generation and calorie estimation.
+- **For You** &mdash; a custom **max-heap priority queue** re-ranks the feed against a HashMap
+  interest profile after every like, save or not-interested.
+
+<!-- DEMO MEDIA — paste this block in once docs/demo.gif exists, replacing the bullet list
+     above with a two-column layout so the GIF and the bullets sit side by side:
+
+<table>
+<tr>
+<td width="320" valign="top">
+
+<img src="docs/demo.gif" width="300" alt="FoodTok demo: swiping the vertical recipe video feed, generating AI allergen and instruction insights, chatting with the per-recipe assistant, and searching by ingredient with Trie autocomplete">
+
+</td>
+<td valign="top">
+
+...the four bullets above go here, unchanged...
+
+</td>
+</tr>
+</table>
+-->
+
+<!-- Appetize browser demo: uncomment once the app is uploaded.
+**[Try it in your browser](https://appetize.io/app/APPETIZE_PUBLIC_KEY)** &middot;
+-->
+**[Download the APK](https://github.com/clifftonowen/FoodTok/releases/latest)** &middot;
+**[How it works](#architecture)** &middot;
+**[Data structures](#data-structures--algorithms)** &middot;
+**[Full feature list](#feature-set)**
+
+<sub>Built for SUTD 50.001 Information Systems &amp; Programming, Spring 2026.</sub>
 
 ---
 
@@ -88,28 +133,34 @@ The project was scoped to demonstrate strong object-oriented design, custom data
 
 ```
 ┌──────────────────────────┐       Retrofit + OkHttp
-│    Android (Java, XML)   │──────────┬────────────────────────────┐
-│  MVVM-lite: UI / Service │          │                            │
-│  / Model layers          │          ▼                            ▼
-└──────────────────────────┘   ┌──────────────────┐       ┌────────────────┐
-            │                   │   Supabase       │       │  Gemini REST   │
-            │                   │  ┌────────────┐  │       │  2.5 Flash     │
-            │                   │  │  GoTrue    │  │       └────────────────┘
-            │                   │  │  (Auth)    │  │
-            │                   │  └────────────┘  │
-            │                   │  ┌────────────┐  │
-            │                   │  │ PostgREST  │  │
-            │                   │  │ (Postgres) │  │
-            │                   │  └────────────┘  │
-            │                   │  ┌────────────┐  │
-            │                   │  │  Storage   │  │
-            │                   │  │  (video)   │  │
-            │                   │  └────────────┘  │
-            │                   └──────────────────┘
+│    Android (Java, XML)   │──────────┐
+│  MVVM-lite: UI / Service │          │
+│  / Model layers          │          ▼
+└──────────────────────────┘   ┌──────────────────┐
+            │                  │   Supabase       │
+            │                  │  ┌────────────┐  │
+            │                  │  │  GoTrue    │  │
+            │                  │  │  (Auth)    │  │
+            │                  │  └────────────┘  │
+            │                  │  ┌────────────┐  │
+            │                  │  │ PostgREST  │  │
+            │                  │  │ (Postgres) │  │
+            │                  │  └────────────┘  │
+            │                  │  ┌────────────┐  │
+            │                  │  │  Storage   │  │
+            │                  │  │  (video)   │  │
+            │                  │  └────────────┘  │      ┌────────────────┐
+            │                  │  ┌────────────┐  │      │  Gemini REST   │
+            │                  │  │ Edge Funcs │──┼─────►│  2.5 Flash     │
+            │                  │  │ gemini-chat│  │      └────────────────┘
+            │                  │  │ gemini-    │  │       key = Supabase
+            │                  │  │   enrich   │  │       secret, never
+            │                  │  └────────────┘  │       on the device
+            │                  └──────────────────┘
             └─── ExoPlayer ◄─── HLS/MP4 (direct Storage URL)
 ```
 
-The app is fully serverless on the backend — Supabase handles auth, Postgres with auto-generated REST, and object storage. Gemini is currently called from the device with a debug key, and will move behind an Edge Function for production (see [Next Steps](#next-steps)).
+The app is fully serverless on the backend — Supabase handles auth, Postgres with auto-generated REST, object storage, and the Edge Functions that broker Gemini. **The Gemini API key never ships in the APK**: it lives as a Supabase secret and is read server-side by `gemini-chat` and `gemini-enrich`. The release workflow enforces this — a build step greps the compiled DEX for the Gemini endpoint and for `AIza…` key patterns, and fails the release if either is present.
 
 ### Service Architecture
 
@@ -119,7 +170,7 @@ Every external capability is expressed as an **interface + real impl + mock impl
 IRecipeService ──► SupabaseRecipeService   (prod)
                 └─ MockRecipeService       (tests / offline)
 
-IChatService  ──► GeminiChatService
+IChatService  ──► SupabaseChatService
                 └─ MockChatService
 
 IAuthService  ──► SupabaseAuthService
@@ -223,15 +274,42 @@ Row-Level Security is enabled on all tables; users can only mutate their own row
 - Android Studio Koala or later
 - JDK 11+
 - A Supabase project (free tier is fine)
-- A Google AI Studio API key for Gemini (optional — the app falls back to mocks)
+- A Google AI Studio API key for Gemini, set as a Supabase secret — **not** in
+  `local.properties`. See [AI proxy](#ai-proxy) below.
 
 ### Configuration
 
 Create `local.properties` in the project root (this file is gitignored):
 
-
+```properties
+SUPABASE_URL=https://<your-project-ref>.supabase.co
+SUPABASE_ANON_KEY=<your-supabase-anon-key>
+```
 
 These values are injected into `BuildConfig` at build time via `app/build.gradle.kts` and surfaced through `util/Constants.java`.
+
+<a name="ai-proxy"></a>
+### AI proxy
+
+Gemini is **not** called from the device. Both AI features go through Supabase Edge
+Functions in `supabase/functions/`, which hold the API key as a server-side secret:
+
+| Function | Used by |
+|---|---|
+| `gemini-chat` | Per-recipe cooking assistant |
+| `gemini-enrich` | Allergen detection, instruction generation, calorie estimate |
+
+Deploy them and set the key with:
+
+```bash
+supabase link --project-ref <your-project-ref>
+supabase secrets set GEMINI_API_KEY=<your-key>
+supabase functions deploy gemini-chat gemini-enrich
+```
+
+The app decides real-vs-mock on whether `SUPABASE_URL` and `SUPABASE_ANON_KEY` are
+configured (`Constants.isAiProxyConfigured()`), so a clone without a Supabase project
+falls back to the mock services rather than failing.
 
 
 ## Build & Test
@@ -250,8 +328,11 @@ These values are injected into `BuildConfig` at build time via `app/build.gradle
 
 The current build is feature-complete for the course deliverable. To take FoodTok from a course project to a deployable consumer product, the following work is queued:
 
-### 1. Move Gemini behind a Supabase Edge Function
-The Gemini API key is currently bundled into `BuildConfig` for development. For production, requests should be proxied through a Supabase Edge Function (e.g. `/functions/v1/gemini-chat`) so the key lives server-side and requests can be rate-limited per authenticated user via the Supabase JWT. This removes any risk of key extraction from the APK and lets us rotate credentials without shipping a new build.
+### 1. ~~Move Gemini behind a Supabase Edge Function~~ — done
+The Gemini key no longer ships in the APK. Chat and enrichment are proxied through the
+`gemini-chat` and `gemini-enrich` Edge Functions, which build the prompts server-side so
+the client sends a typed recipe object rather than free-form model input. See
+[AI proxy](#ai-proxy).
 
 ### 2. Upgrade Gemini API to a paid tier
 The free tier's 15 RPM / 1,500 RPD ceiling is shared across the whole Google account and will not survive a public launch — a single user stress-testing the chat can exhaust the daily quota. Moving to a paid tier (or Vertex AI with committed throughput) gives per-project quotas, higher RPM, and SLAs suitable for a production feed. This pairs naturally with the Edge Function above, which becomes the single billed caller.

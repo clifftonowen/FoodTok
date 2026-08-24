@@ -1,0 +1,10 @@
+# Keep the Gradle wrapper script LF so it runs on Linux CI runners.
+gradlew text eol=lf
+*.sh text eol=lf
+
+# Binary media: never diff or line-ending-mangle these
+*.gif  binary
+*.webp binary
+*.mp4  binary
+*.png  binary
+*.jpg  binary

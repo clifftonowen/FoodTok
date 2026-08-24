@@ -1,0 +1,7 @@
+project_id = "fpselsvrblnhygszdtbi"
+
+[functions.gemini-chat]
+verify_jwt = true
+
+[functions.gemini-enrich]
+verify_jwt = true

@@ -1,0 +1,59 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build, test and lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repository
+        uses: actions/checkout@v5
+
+      # Pinned explicitly. The project's toolchain is JDK 21; the Java 11 setting
+      # in compileOptions is the bytecode target and is independent of the JDK
+      # that runs Gradle. Relying on the runner default lets it drift.
+      - name: Set up JDK 21
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: '21'
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v6
+
+      # AGP 9.0.1 / Gradle 9.1.0 / compileSdk 36 is a new toolchain and the
+      # runner's preinstalled SDK may not carry platform 36.
+      - name: Set up Android SDK
+        uses: android-actions/setup-android@v4
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Build, test and lint
+        run: ./gradlew assembleDebug testDebugUnitTest lint --stacktrace
+
+      - name: Upload debug APK
+        uses: actions/upload-artifact@v7
+        with:
+          name: foodtok-debug-apk
+          path: app/build/outputs/apk/debug/*.apk
+          if-no-files-found: error
+
+      - name: Upload build reports
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-reports
+          path: app/build/reports/
+          if-no-files-found: warn
