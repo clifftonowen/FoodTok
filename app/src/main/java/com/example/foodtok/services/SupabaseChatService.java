@@ -34,7 +34,8 @@ import retrofit2.Response;
  */
 public class SupabaseChatService implements IChatService {
 
-  private static final int MAX_HISTORY_SIZE = 6;
+  /** How many of the most recent messages are sent to the model as context. */
+  private static final int MAX_CONTEXT_MESSAGES = 6;
 
   private final AiProxyApi api;
   private final Map<String, List<ChatMessage>> conversationHistory;
@@ -51,9 +52,13 @@ public class SupabaseChatService implements IChatService {
 
     // Note: the user message is already added to history by the UI layer
     // (adapter.addMessage shares the same list reference). Do NOT add it again.
-    trimHistory(history);
-
-    AiChatRequest request = AiChatRequest.create(recipe, history);
+    //
+    // That sharing is also why we must not trim `history` in place: it is the backing
+    // list of a ChatMessageAdapter, and removing from it without notifying RecyclerView
+    // desyncs the item count and crashes the next layout pass. Bound what we *send*
+    // instead, and leave what is *displayed* alone.
+    AiChatRequest request =
+        AiChatRequest.create(recipe, contextWindow(history, MAX_CONTEXT_MESSAGES));
 
     api.chat(request).enqueue(new Callback<AiTextResponse>() {
       @Override
@@ -101,9 +106,25 @@ public class SupabaseChatService implements IChatService {
     return conversationHistory.get(recipeId);
   }
 
-  private void trimHistory(List<ChatMessage> history) {
-    while (history.size() > MAX_HISTORY_SIZE) {
-      history.remove(0);
+  /**
+   * Returns the most recent {@code max} messages to send to the model.
+   *
+   * <p>Never mutates {@code history}. The caller's list is shared by reference with
+   * {@code ChatMessageAdapter} as its RecyclerView backing store, so trimming it in place
+   * would change the adapter's item count with no notification and throw
+   * {@code IndexOutOfBoundsException: Inconsistency detected} on the next layout pass.
+   *
+   * <p>Returns the original list unchanged when it is already within the limit, so short
+   * conversations avoid a pointless copy.
+   *
+   * @param history the full conversation, oldest first
+   * @param max the maximum number of messages to include
+   * @return the last {@code max} messages, or {@code history} itself if it is shorter
+   */
+  static List<ChatMessage> contextWindow(List<ChatMessage> history, int max) {
+    if (history.size() <= max) {
+      return history;
     }
+    return new ArrayList<>(history.subList(history.size() - max, history.size()));
   }
 }
