@@ -6,7 +6,7 @@ import java.util.List;
 
 /**
  * Holds AI-generated metadata for a recipe.
- * Populated by GeminiEnrichmentService; displayed with "AI Generated" labels.
+ * Populated by SupabaseEnrichmentService; displayed with "AI Generated" labels.
  *
  * OOP: Encapsulation — all fields private, unmodifiable lists returned.
  * Tell, Don't Ask — query methods like hasAllergenWarnings() encapsulate logic.

@@ -19,6 +19,21 @@
         app:resize_mode="zoom"
         app:use_controller="false" />
 
+    <!-- Visible only in connection-free preview mode. -->
+    <ImageView
+        android:id="@+id/stubArtwork"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:contentDescription="Offline recipe preview"
+        android:padding="110dp"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_burger_foodtok"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <!-- Center play indicator: visible only while paused. Tap on video toggles. -->
     <ImageView
         android:id="@+id/playPauseOverlay"
@@ -34,14 +49,24 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <!-- Keeps captions legible over bright food footage without covering it. -->
+    <View
+        android:layout_width="0dp"
+        android:layout_height="310dp"
+        android:background="@drawable/scrim_bottom_feed"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <!-- Bottom-left: username, author, allergen warning, title, tags -->
     <LinearLayout
         android:id="@+id/bottomLeftInfo"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginEnd="72dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="82dp"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/bottomRightActions"
@@ -52,15 +77,18 @@
             android:id="@+id/usernameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:textColor="#BBBBBB"
-            android:textSize="13sp" />
+            android:layout_marginBottom="8dp"
+            android:shadowColor="#B3000000"
+            android:shadowRadius="3"
+            android:textColor="@android:color/white"
+            android:textSize="15sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/authorNameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="4dp"
+            android:visibility="gone"
             android:textColor="@android:color/white"
             android:textSize="15sp"
             android:textStyle="bold" />
@@ -79,7 +107,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="20sp"
+            android:lineSpacingExtra="2dp"
+            android:maxLines="2"
+            android:textSize="17sp"
             android:textStyle="bold" />
 
         <TextView
@@ -87,7 +117,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@android:color/white"
-            android:textSize="14sp" />
+            android:layout_marginTop="6dp"
+            android:maxLines="2"
+            android:textSize="13sp" />
 
     </LinearLayout>
 
@@ -98,8 +130,8 @@
         android:id="@+id/bottomRightActions"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
-        android:layout_marginBottom="32dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="118dp"
         android:gravity="center_horizontal"
         android:orientation="vertical"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -110,35 +142,39 @@
             android:layout_height="56dp"
             android:layout_marginBottom="16dp">
 
-            <ImageView
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/profileImage"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
                 android:layout_gravity="top|center_horizontal"
                 android:background="@drawable/ic_profile_placeholder"
                 android:contentDescription="Author avatar"
-                android:scaleType="centerCrop" />
+                android:scaleType="centerCrop"
+                app:shapeAppearanceOverlay="@style/ShapeAppearanceOverlay.FoodTok.Circle"
+                app:strokeColor="@android:color/white"
+                app:strokeWidth="1.5dp" />
 
             <ImageView
                 android:id="@+id/followPlusButton"
-                android:layout_width="20dp"
-                android:layout_height="20dp"
+                android:layout_width="18dp"
+                android:layout_height="18dp"
                 android:layout_gravity="bottom|center_horizontal"
-                android:background="@android:color/white"
+                android:background="@drawable/bg_follow_badge"
                 android:contentDescription="Follow"
-                android:padding="2dp"
-                android:src="@android:drawable/ic_input_add"
+                android:padding="4dp"
+                android:src="@drawable/ic_follow_plus"
                 android:visibility="gone" />
 
         </FrameLayout>
 
         <ImageView
             android:id="@+id/likeButton"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@android:color/transparent"
             android:contentDescription="Like"
-            android:padding="2dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="7dp"
             android:src="@drawable/ic_like" />
 
         <TextView
@@ -159,11 +195,12 @@
 
         <ImageView
             android:id="@+id/commentButton"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@android:color/transparent"
             android:contentDescription="Comment"
-            android:padding="2dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="7dp"
             android:src="@drawable/ic_comment" />
 
         <TextView
@@ -184,11 +221,12 @@
 
         <ImageView
             android:id="@+id/saveButton"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@android:color/transparent"
             android:contentDescription="Save"
-            android:padding="2dp"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="7dp"
             android:src="@drawable/ic_save" />
 
         <TextView
@@ -209,12 +247,22 @@
 
         <ImageView
             android:id="@+id/notInterestedButton"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
             android:background="@android:color/transparent"
-            android:contentDescription="Not Interested"
-            android:padding="2dp"
+            android:contentDescription="Dislike"
+            android:foreground="?attr/selectableItemBackgroundBorderless"
+            android:padding="7dp"
             android:src="@drawable/ic_thumbs_down" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
+            android:text="Dislike"
+            android:textColor="@android:color/white"
+            android:textSize="11sp"
+            android:textStyle="bold" />
 
     </LinearLayout>
 

@@ -9,7 +9,7 @@
     <item
         android:id="@+id/nav_search"
         android:icon="@drawable/ic_nav_search"
-        android:title="Search" />
+        android:title="Discover" />
 
     <item
         android:id="@+id/nav_create"
@@ -19,7 +19,7 @@
     <item
         android:id="@+id/nav_chat"
         android:icon="@drawable/ic_nav_grid"
-        android:title="Grid" />
+        android:title="Recipes" />
 
     <item
         android:id="@+id/nav_profile"

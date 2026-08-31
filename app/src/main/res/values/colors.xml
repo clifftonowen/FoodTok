@@ -9,6 +9,7 @@
     <color name="foodtok_green">#447A52</color>
     <color name="foodtok_green_light">#7BAE85</color>
     <color name="foodtok_green_soft">#E4EFE1</color>
+    <color name="foodtok_green_foreground">#2F5D3F</color>
 
     <!-- Warm accents (hand-picked to harmonise with cream + green) -->
     <color name="foodtok_orange">#F29F3C</color>

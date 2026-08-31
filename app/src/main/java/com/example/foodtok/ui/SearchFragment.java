@@ -35,6 +35,8 @@ import com.example.foodtok.services.RecipeListCallback;
 import com.example.foodtok.services.RecipeServiceProvider;
 import com.example.foodtok.services.SupabaseApi;
 import com.example.foodtok.util.ApiClient;
+import com.example.foodtok.util.PreviewData;
+import com.example.foodtok.util.PreviewMode;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
 
@@ -144,12 +146,10 @@ public class SearchFragment extends Fragment {
       return;
     }
     isRecipeMode = true;
-    tvTabRecipes.setBackgroundColor(
-        getResources().getColor(R.color.foodtok_green));
+    tvTabRecipes.setBackgroundResource(R.drawable.bg_search_tab_active);
     tvTabRecipes.setTextColor(
-        getResources().getColor(R.color.foodtok_white));
-    tvTabUsers.setBackgroundColor(
-        getResources().getColor(R.color.foodtok_divider));
+        getResources().getColor(R.color.foodtok_text_primary));
+    tvTabUsers.setBackgroundResource(R.drawable.bg_search_tab_inactive);
     tvTabUsers.setTextColor(
         getResources().getColor(R.color.foodtok_text_secondary));
 
@@ -168,12 +168,10 @@ public class SearchFragment extends Fragment {
       return;
     }
     isRecipeMode = false;
-    tvTabUsers.setBackgroundColor(
-        getResources().getColor(R.color.foodtok_green));
+    tvTabUsers.setBackgroundResource(R.drawable.bg_search_tab_active);
     tvTabUsers.setTextColor(
-        getResources().getColor(R.color.foodtok_white));
-    tvTabRecipes.setBackgroundColor(
-        getResources().getColor(R.color.foodtok_divider));
+        getResources().getColor(R.color.foodtok_text_primary));
+    tvTabRecipes.setBackgroundResource(R.drawable.bg_search_tab_inactive);
     tvTabRecipes.setTextColor(
         getResources().getColor(R.color.foodtok_text_secondary));
 
@@ -325,6 +323,12 @@ public class SearchFragment extends Fragment {
 
   /** Fetches all ingredients from Supabase and inserts into the Trie. */
   private void loadIngredients() {
+    if (PreviewMode.isEnabled()) {
+      for (String term : PreviewData.SEARCH_TERMS) {
+        searchTrie.insert(term);
+      }
+      return;
+    }
     SupabaseApi api =
         ApiClient.getRestClient().create(SupabaseApi.class);
     api.getAllIngredients("name", "name.asc")
@@ -362,6 +366,9 @@ public class SearchFragment extends Fragment {
    * namespace.
    */
   private void loadTags() {
+    if (PreviewMode.isEnabled()) {
+      return; // PreviewData already provides the combined term namespace.
+    }
     SupabaseApi api =
         ApiClient.getRestClient().create(SupabaseApi.class);
     api.getAllTags("name", "name.asc")
@@ -399,6 +406,12 @@ public class SearchFragment extends Fragment {
 
   /** Fetches all usernames from Supabase and inserts into the username Trie. */
   private void loadUsernames() {
+    if (PreviewMode.isEnabled()) {
+      for (UserDto user : PreviewData.users()) {
+        usernameTrie.insert(user.username);
+      }
+      return;
+    }
     SupabaseApi api =
         ApiClient.getRestClient().create(SupabaseApi.class);
     api.searchProfiles(
@@ -516,6 +529,17 @@ public class SearchFragment extends Fragment {
       return;
     }
 
+    if (PreviewMode.isEnabled()) {
+      List<UserDto> matches = new ArrayList<>();
+      for (UserDto user : PreviewData.users()) {
+        if (user.username.toLowerCase().contains(query.toLowerCase())) {
+          matches.add(user);
+        }
+      }
+      showPreviewUsers(matches.isEmpty() ? PreviewData.users() : matches);
+      return;
+    }
+
     SupabaseApi api =
         ApiClient.getRestClient().create(SupabaseApi.class);
     api.searchProfiles(
@@ -561,6 +585,10 @@ public class SearchFragment extends Fragment {
 
   /** Fetches all profiles and displays them shuffled as suggestions. */
   private void loadFallbackUsers() {
+    if (PreviewMode.isEnabled()) {
+      showPreviewUsers(PreviewData.users());
+      return;
+    }
     SupabaseApi api =
         ApiClient.getRestClient().create(SupabaseApi.class);
     api.searchProfiles(
@@ -606,5 +634,12 @@ public class SearchFragment extends Fragment {
         });
       }
     });
+  }
+
+  private void showPreviewUsers(List<UserDto> users) {
+    tvEmptyState.setVisibility(View.GONE);
+    rvSearchResults.setVisibility(View.GONE);
+    rvUserResults.setVisibility(View.VISIBLE);
+    userAdapter.setUsers(users);
   }
 }

@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:text="Back"
-            android:textColor="@color/foodtok_green_dark"
+            android:textColor="@color/foodtok_green_foreground"
             android:textStyle="bold"
             android:textSize="14sp"
             android:background="@drawable/bg_button_outline"
@@ -63,6 +63,42 @@
             android:paddingTop="20dp"
             android:paddingBottom="24dp">
 
+            <!-- ── Appearance section ────────────────────────── -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Appearance"
+                android:textColor="@color/foodtok_text_primary"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <com.google.android.material.switchmaterial.SwitchMaterial
+                android:id="@+id/switchDarkMode"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/bg_ingredient_row"
+                android:checked="true"
+                android:gravity="center_vertical"
+                android:minHeight="64dp"
+                android:paddingStart="16dp"
+                android:paddingEnd="16dp"
+                android:text="Dark mode"
+                android:textColor="@color/foodtok_text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                app:switchPadding="12dp"
+                app:useMaterialThemeColors="true" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:layout_marginBottom="30dp"
+                android:text="Use a darker background throughout FoodTok"
+                android:textColor="@color/foodtok_text_secondary"
+                android:textSize="12sp" />
+
             <!-- ── Taste Profile section ─────────────────────── -->
             <LinearLayout
                 android:layout_width="match_parent"
@@ -75,7 +111,7 @@
                     android:layout_height="22dp"
                     android:src="@drawable/ic_taste"
                     android:contentDescription="Taste profile icon"
-                    app:tint="@color/foodtok_green_dark" />
+                    app:tint="@color/foodtok_green_foreground" />
 
                 <TextView
                     android:layout_width="wrap_content"

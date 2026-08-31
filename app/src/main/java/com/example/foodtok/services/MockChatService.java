@@ -27,8 +27,7 @@ public class MockChatService implements IChatService {
     // Generate a canned response based on the recipe
     String response = generateMockResponse(recipe, userMessage);
     ChatMessage botMsg = new ChatMessage("model", response);
-    history.add(botMsg);
-
+    // The UI adapter owns this shared history list and appends the callback result.
     callback.onResponse(botMsg);
   }
 

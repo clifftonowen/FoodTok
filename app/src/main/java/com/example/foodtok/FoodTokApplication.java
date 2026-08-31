@@ -6,18 +6,24 @@ import android.util.Log;
 
 import com.example.foodtok.auth.AuthManager;
 import com.example.foodtok.auth.AuthServiceProvider;
+import com.example.foodtok.auth.MockAuthService;
 import com.example.foodtok.auth.SupabaseAuthService;
 import com.example.foodtok.models.User;
 import com.example.foodtok.models.dto.UserDto;
 import com.example.foodtok.services.CommentServiceProvider;
 import com.example.foodtok.services.InteractionServiceProvider;
+import com.example.foodtok.services.MockCommentService;
+import com.example.foodtok.services.MockInteractionService;
+import com.example.foodtok.services.MockRecipeService;
 import com.example.foodtok.services.RecipeServiceProvider;
 import com.example.foodtok.services.SupabaseApi;
 import com.example.foodtok.services.SupabaseCommentService;
 import com.example.foodtok.services.SupabaseInteractionService;
 import com.example.foodtok.services.SupabaseRecipeService;
 import com.example.foodtok.util.ApiClient;
+import com.example.foodtok.util.PreviewMode;
 import com.example.foodtok.util.SessionManager;
+import com.example.foodtok.util.ThemePreferences;
 
 import java.util.List;
 import java.util.Map;
@@ -33,8 +39,16 @@ public class FoodTokApplication extends Application {
   public void onCreate() {
     super.onCreate();
 
+    // Apply appearance before any activity is created. A fresh install starts dark.
+    ThemePreferences.applySavedTheme(this);
+
     // 1. Initialize SessionManager (needs Context, so must be first)
     SessionManager.init(this);
+
+    if (PreviewMode.isEnabled()) {
+      configurePreviewMode();
+      return;
+    }
 
     // 2. Set real auth service (replaces MockAuthService)
     AuthServiceProvider.setAuthService(new SupabaseAuthService());
@@ -47,6 +61,21 @@ public class FoodTokApplication extends Application {
 
     // 4. Restore login state if user was previously logged in
     restoreSession();
+  }
+
+  /** Installs only in-memory services and a demo identity; no API client is created. */
+  private void configurePreviewMode() {
+    AuthServiceProvider.setAuthService(new MockAuthService());
+    RecipeServiceProvider.setRecipeService(new MockRecipeService());
+    CommentServiceProvider.setCommentService(new MockCommentService());
+    InteractionServiceProvider.setInteractionService(new MockInteractionService());
+
+    User demoUser = new User("preview-user", "yourkitchen", "preview@foodtok.local");
+    demoUser.addBlacklistedIngredient("peanuts");
+    demoUser.updateInterestScore("quick", 20);
+    demoUser.updateInterestScore("asian", 15);
+    AuthManager.getInstance().login(demoUser);
+    Log.i("FoodTokApp", "Offline preview mode enabled");
   }
 
   private void restoreSession() {

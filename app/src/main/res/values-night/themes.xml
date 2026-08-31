@@ -1,7 +1,19 @@
-<resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.FoodTok" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+<resources>
+    <style name="Theme.FoodTok" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/foodtok_green_light</item>
+        <item name="colorPrimaryVariant">@color/foodtok_green_dark</item>
+        <item name="colorOnPrimary">@color/foodtok_text_on_dark</item>
+        <item name="colorSecondary">@color/foodtok_orange</item>
+        <item name="colorSecondaryVariant">@color/foodtok_orange_dark</item>
+        <item name="colorOnSecondary">@color/foodtok_text_on_dark</item>
+        <item name="android:colorBackground">@color/foodtok_cream</item>
+        <item name="colorSurface">@color/foodtok_white</item>
+        <item name="colorOnSurface">@color/foodtok_text_primary</item>
+        <item name="colorError">@color/foodtok_error</item>
+        <item name="android:statusBarColor">@android:color/black</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="fontFamily">@font/poppins</item>
+        <item name="android:fontFamily">@font/poppins</item>
     </style>
 </resources>

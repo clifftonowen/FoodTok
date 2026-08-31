@@ -6,26 +6,28 @@
     android:layout_height="match_parent"
     android:background="@color/foodtok_cream">
 
-    <!-- Fragment container: this is where each screen loads -->
-    <!-- Infinite scroll will live here -->
+    <!-- Content is full-bleed. MainActivity adds bottom breathing room on
+         utility screens while the Home feed deliberately runs behind nav. -->
     <FrameLayout
         android:id="@+id/fragmentContainer"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottomNav" />
+        android:layout_height="match_parent" />
 
     <!-- Bottom Navigation Bar -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="80dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="-4dp"
-        android:background="@color/foodtok_white"
+        android:background="@drawable/bg_bottom_nav"
+        android:elevation="0dp"
         app:itemActiveIndicatorStyle="@null"
         app:itemIconTint="@color/nav_item_tint"
         app:itemTextColor="@color/nav_item_tint"
-        app:itemIconSize="26dp"
+        app:itemHorizontalTranslationEnabled="false"
+        app:itemIconSize="22dp"
+        app:itemTextAppearanceActive="@style/TextAppearance.FoodTok.BottomNav"
+        app:itemTextAppearanceInactive="@style/TextAppearance.FoodTok.BottomNav"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_nav_menu" />
 

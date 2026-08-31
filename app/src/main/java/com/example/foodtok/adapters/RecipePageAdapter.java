@@ -1,6 +1,7 @@
 package com.example.foodtok.adapters;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
@@ -10,8 +11,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +34,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import com.example.foodtok.util.ApiClient;
 import com.example.foodtok.util.SessionManager;
+import com.example.foodtok.util.PreviewMode;
+import com.example.foodtok.util.VideoThumbnailLoader;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -59,6 +64,7 @@ import com.example.foodtok.services.InteractionServiceProvider;
 import com.example.foodtok.util.FeedVideoPlayerPool;
 
 import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -152,6 +158,8 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   // ── Ingredients page ────────────────────────────────────────────────
 
   private void bindIngredients(IngredientsViewHolder holder) {
+    bindRecipeHero(holder.recipeHeroImage, holder.itemView);
+
     // Title and author
     holder.recipeDetailTitle.setText(recipe.getTitle());
     String author = recipe.getAuthorName();
@@ -161,19 +169,19 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       holder.recipeDetailAuthor.setText("");
     }
 
-    // Time chips
+    // Unified recipe stats
     int prep = recipe.getPrepTimeMinutes();
     int cook = recipe.getCookTimeMinutes();
-    holder.prepTimeChip.setText("Prep: " + prep + "m");
-    holder.cookTimeChip.setText("Cook: " + cook + "m");
+    holder.prepTimeChip.setText("PREP\n" + prep + " min");
+    holder.cookTimeChip.setText("COOK\n" + cook + " min");
 
     // Nutrients chip
     double cal = recipe.getEstimatedCalories();
     if (cal > 0) {
-      holder.nutrientsChip.setText("Nutrients: ~" + (int) cal + " kcal/serving");
+      holder.nutrientsChip.setText("~" + (int) cal + "\nKCAL");
       holder.caloriesText.setText("Calories: ~" + (int) cal + " kcal");
     } else {
-      holder.nutrientsChip.setText("Nutrients: — kcal/serving");
+      holder.nutrientsChip.setText("—\nKCAL");
       holder.caloriesText.setText("Calories: —");
     }
 
@@ -197,52 +205,71 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       holder.allergenBanner.setVisibility(View.GONE);
     }
 
-    // Ingredients list with checkbox styling
+    // Visual ingredient rows make the list scannable at a glance.
     List<Ingredient> ingredients = recipe.getIngredients();
     holder.ingredientsHeader.setText("INGREDIENTS (" + ingredients.size() + ")");
 
-    if (!ingredients.isEmpty()) {
-      StringBuilder sb = new StringBuilder();
-      for (int i = 0; i < ingredients.size(); i++) {
-        String name = ingredients.get(i).getName();
-        sb.append("\u2610  ")
-            .append(name.substring(0, 1).toUpperCase())
-            .append(name.substring(1));
-        if (i < ingredients.size() - 1) {
-          sb.append("\n");
-        }
+    holder.ingredientsList.removeAllViews();
+    for (Ingredient ingredient : ingredients) {
+      String name = ingredient.getName() == null ? "" : ingredient.getName().trim();
+      if (name.isEmpty()) {
+        continue;
       }
-      holder.ingredientsList.setText(sb.toString());
-    } else {
-      holder.ingredientsList.setText("");
+      View row = LayoutInflater.from(holder.itemView.getContext())
+          .inflate(R.layout.item_ingredient_row, holder.ingredientsList, false);
+      TextView icon = row.findViewById(R.id.ingredientIcon);
+      TextView label = row.findViewById(R.id.ingredientName);
+      TextView quantity = row.findViewById(R.id.ingredientQuantity);
+      CheckBox check = row.findViewById(R.id.ingredientCheck);
+      icon.setText(iconForIngredient(name));
+      icon.setContentDescription(name + " icon");
+      label.setText(name.substring(0, 1).toUpperCase() + name.substring(1));
+      String amount = ingredient.getQuantity();
+      if (amount == null || amount.isEmpty()) amount = "As needed";
+      if (ingredient.isOptional()) amount += " · optional";
+      quantity.setText(amount);
+      check.setContentDescription("Mark " + name + " as prepared");
+      check.setOnCheckedChangeListener((button, checked) -> {
+        int strike = Paint.STRIKE_THRU_TEXT_FLAG;
+        label.setPaintFlags(checked
+            ? label.getPaintFlags() | strike
+            : label.getPaintFlags() & ~strike);
+        quantity.setPaintFlags(checked
+            ? quantity.getPaintFlags() | strike
+            : quantity.getPaintFlags() & ~strike);
+        row.setAlpha(checked ? 0.52f : 1f);
+      });
+      row.setOnClickListener(v -> check.setChecked(!check.isChecked()));
+      holder.ingredientsList.addView(row);
     }
 
-    // Instructions placeholder — populated by enrichment when user taps "Generate"
+    // Use cached enrichment when available; otherwise keep useful cook-mode
+    // guidance without presenting a second AI entry point.
     holder.instructionsHeader.setText("INSTRUCTIONS");
-    holder.instructionsList.setText("Tap \"Generate AI Insights\" to analyse this recipe.");
+    holder.instructionsList.setText(buildFallbackInstructions());
 
     // Check if enrichment is already cached (free — no API call)
     RecipeEnrichment cached = EnrichmentServiceProvider.getEnrichmentService()
         .getCachedEnrichment(recipe.getId());
     if (cached != null) {
       applyEnrichment(holder, cached, personalMatches.isEmpty());
-      holder.generateAiButton.setVisibility(View.GONE);
+      holder.generateAiButton.setText("✓ Generated");
+      holder.generateAiButton.setEnabled(false);
     } else {
-      holder.generateAiButton.setVisibility(View.VISIBLE);
+      holder.generateAiButton.setText("✦ AI Insights");
+      holder.generateAiButton.setEnabled(true);
     }
 
-    // On-demand enrichment — only fires when the user explicitly requests it
     holder.generateAiButton.setOnClickListener(v -> {
       holder.generateAiButton.setEnabled(false);
-      holder.generateAiButton.setText("Analysing...");
+      holder.generateAiButton.setText("Analysing…");
       EnrichmentServiceProvider.getEnrichmentService().enrichRecipe(recipe,
           new EnrichmentCallback() {
             @Override
             public void onEnriched(RecipeEnrichment enrichment) {
               holder.generateAiButton.post(() -> {
                 applyEnrichment(holder, enrichment, personalMatches.isEmpty());
-                holder.generateAiButton.setVisibility(View.GONE);
-                // Refresh the Video page to show the new allergen warning
+                holder.generateAiButton.setText("✓ Generated");
                 notifyItemChanged(PAGE_VIDEO);
               });
             }
@@ -251,12 +278,101 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             public void onError(String message) {
               holder.generateAiButton.post(() -> {
                 holder.generateAiButton.setEnabled(true);
-                holder.generateAiButton.setText("✦ Generate AI Insights");
-                holder.instructionsList.setText("Could not generate insights: " + message);
+                holder.generateAiButton.setText("Try again");
+                Toast.makeText(holder.itemView.getContext(), message,
+                    Toast.LENGTH_SHORT).show();
               });
             }
           });
     });
+    holder.startCookingButton.setOnClickListener(v ->
+        showCookStep(holder.itemView.getContext(), buildCookingSteps(holder), 0));
+  }
+
+  private String buildFallbackInstructions() {
+    return "1. Gather and measure every ingredient.\n\n"
+        + "2. Prepare the ingredients before heating your pan.\n\n"
+        + "3. Cook for about " + recipe.getCookTimeMinutes()
+        + " minutes, tasting and adjusting as you go.\n\n"
+        + "4. Plate and serve while fresh.";
+  }
+
+  private List<String> buildCookingSteps(IngredientsViewHolder holder) {
+    String raw = holder.instructionsList.getText().toString().trim();
+    List<String> steps = new ArrayList<>();
+    for (String block : raw.split("\\n\\s*\\n")) {
+      String clean = block.replaceFirst("^\\d+[.)]\\s*", "").trim();
+      if (!clean.isEmpty()) steps.add(clean);
+    }
+    if (steps.isEmpty()) steps.add("Prepare the recipe ingredients.");
+    return steps;
+  }
+
+  private void showCookStep(Context context, List<String> steps, int index) {
+    boolean last = index >= steps.size() - 1;
+    new androidx.appcompat.app.AlertDialog.Builder(context)
+        .setTitle("Step " + (index + 1) + " of " + steps.size())
+        .setMessage(steps.get(index))
+        .setNegativeButton("Exit", null)
+        .setPositiveButton(last ? "Finish" : "Next", (dialog, which) -> {
+          if (!last) showCookStep(context, steps, index + 1);
+        })
+        .show();
+  }
+
+  private void bindRecipeHero(ImageView heroImage, View itemView) {
+    heroImage.setPadding(0, 0, 0, 0);
+    heroImage.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+    if (PreviewMode.isEnabled()) {
+      int[] colors = {R.color.foodtok_green_dark, R.color.foodtok_orange_dark,
+          R.color.foodtok_red, R.color.foodtok_green, R.color.foodtok_orange};
+      heroImage.setBackgroundColor(ContextCompat.getColor(
+          itemView.getContext(), colors[feedPosition % colors.length]));
+      int padding = Math.round(64 * itemView.getResources()
+          .getDisplayMetrics().density);
+      heroImage.setPadding(padding, padding, padding, padding);
+      heroImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+      heroImage.setImageResource(R.drawable.ic_burger_foodtok);
+      return;
+    }
+
+    String thumbnail = recipe.getThumbnailUrl();
+    if (thumbnail != null && !thumbnail.trim().isEmpty()) {
+      Glide.with(heroImage)
+          .load(thumbnail.trim())
+          .centerCrop()
+          .into(heroImage);
+    } else {
+      VideoThumbnailLoader.load(recipe.getVideoUrl(), heroImage);
+    }
+  }
+
+  private String iconForIngredient(String rawName) {
+    String name = rawName.toLowerCase();
+    if (name.contains("egg")) return "🥚";
+    if (name.contains("avocado")) return "🥑";
+    if (name.contains("lemon") || name.contains("lime")) return "🍋";
+    if (name.contains("chocolate") || name.contains("cocoa")) return "🍫";
+    if (name.contains("butter")) return "🧈";
+    if (name.contains("cheese") || name.contains("parmesan")) return "🧀";
+    if (name.contains("bread") || name.contains("sourdough")) return "🍞";
+    if (name.contains("chicken")) return "🍗";
+    if (name.contains("noodle") || name.contains("ramen")) return "🍜";
+    if (name.contains("pasta") || name.contains("spaghetti")) return "🍝";
+    if (name.contains("tortilla") || name.contains("taco")) return "🌮";
+    if (name.contains("chili") || name.contains("chilli")
+        || name.contains("gochujang")) return "🌶️";
+    if (name.contains("cabbage") || name.contains("spinach")
+        || name.contains("lettuce")) return "🥬";
+    if (name.contains("tomato")) return "🍅";
+    if (name.contains("onion")) return "🧅";
+    if (name.contains("garlic")) return "🧄";
+    if (name.contains("salt") || name.contains("pepper")) return "🧂";
+    if (name.contains("sugar")) return "🍬";
+    if (name.contains("flour")) return "🌾";
+    if (name.contains("broth") || name.contains("soup")) return "🥣";
+    return "🥄";
   }
 
   private Set<String> getUserBlacklist() {
@@ -297,9 +413,8 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     }
 
     if (enrichment.hasEstimatedCalories()) {
-      holder.nutrientsChip.setText("Nutrients: ~"
-          + (int) enrichment.getEstimatedCalories()
-          + " kcal/serving \u2014 AI");
+      holder.nutrientsChip.setText("~" + (int) enrichment.getEstimatedCalories()
+          + "\nKCAL · AI");
     }
   }
 
@@ -308,6 +423,21 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   private void bindVideo(VideoViewHolder holder) {
     if (playerPool != null) {
       playerPool.attach(feedPosition, holder.videoView);
+    }
+
+    if (PreviewMode.isEnabled()) {
+      int[] previewColors = {
+          R.color.foodtok_green_dark,
+          R.color.foodtok_orange_dark,
+          R.color.foodtok_red,
+          R.color.foodtok_green,
+          R.color.foodtok_orange
+      };
+      holder.stubArtwork.setBackgroundColor(ContextCompat.getColor(
+          holder.itemView.getContext(), previewColors[feedPosition % previewColors.length]));
+      holder.stubArtwork.setVisibility(View.VISIBLE);
+    } else {
+      holder.stubArtwork.setVisibility(View.GONE);
     }
 
     // Tap the video surface to toggle play/pause. Center overlay reflects state.
@@ -544,16 +674,25 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   // ── Chat page ───────────────────────────────────────────────────────
 
   private void bindChat(ChatViewHolder holder) {
+    bindRecipeHero(holder.chatHeroImage, holder.itemView);
+
     // Set up RecyclerView for chat messages
     if (holder.chatRecyclerView.getLayoutManager() == null) {
       LinearLayoutManager lm = new LinearLayoutManager(holder.itemView.getContext());
-      lm.setStackFromEnd(true);
+      // Start short conversations below the title instead of pinning the
+      // welcome state to the bottom of an otherwise empty screen.
+      lm.setStackFromEnd(false);
       holder.chatRecyclerView.setLayoutManager(lm);
     }
 
     // Load existing history or create new adapter
     List<ChatMessage> history = ChatServiceProvider.getChatService()
         .getHistory(recipe.getId());
+    if (history.isEmpty()) {
+      history.add(new ChatMessage("model",
+          "Hi! Ask me about substitutions, cooking steps, equipment, or nutrition for "
+              + recipe.getTitle() + "."));
+    }
     ChatMessageAdapter adapter = new ChatMessageAdapter(history);
     holder.chatRecyclerView.setAdapter(adapter);
 
@@ -687,6 +826,10 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     holder.followPlusButton.setOnClickListener(
         v -> handleFollowClick(holder, authorId));
 
+    if (PreviewMode.isEnabled()) {
+      return;
+    }
+
     if (currentUserId == null) {
       return;
     }
@@ -723,6 +866,11 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
    */
   private void handleFollowClick(VideoViewHolder holder, String authorId) {
     Context ctx = holder.followPlusButton.getContext();
+    if (PreviewMode.isEnabled()) {
+      holder.followPlusButton.setVisibility(View.GONE);
+      Toast.makeText(ctx, "Following in preview", Toast.LENGTH_SHORT).show();
+      return;
+    }
     String currentUserId = SessionManager.getInstance().getUserId();
     if (currentUserId == null || currentUserId.isEmpty()) {
       ctx.startActivity(new Intent(ctx, LoginActivity.class));
@@ -853,6 +1001,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   // ── ViewHolder inner classes ────────────────────────────────────────
 
   static class IngredientsViewHolder extends RecyclerView.ViewHolder {
+    final ImageView recipeHeroImage;
     final TextView recipeDetailTitle;
     final TextView recipeDetailAuthor;
     final TextView prepTimeChip;
@@ -860,14 +1009,16 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     final TextView nutrientsChip;
     final TextView allergenBanner;
     final TextView ingredientsHeader;
-    final TextView ingredientsList;
+    final LinearLayout ingredientsList;
     final TextView instructionsHeader;
     final TextView instructionsList;
-    final Button generateAiButton;
+    final TextView generateAiButton;
+    final Button startCookingButton;
     final TextView caloriesText;
 
     IngredientsViewHolder(@NonNull View itemView) {
       super(itemView);
+      recipeHeroImage = itemView.findViewById(R.id.recipeHeroImage);
       recipeDetailTitle = itemView.findViewById(R.id.recipeDetailTitle);
       recipeDetailAuthor = itemView.findViewById(R.id.recipeDetailAuthor);
       prepTimeChip = itemView.findViewById(R.id.prepTimeChip);
@@ -879,12 +1030,14 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
       instructionsHeader = itemView.findViewById(R.id.instructionsHeader);
       instructionsList = itemView.findViewById(R.id.instructionsList);
       generateAiButton = itemView.findViewById(R.id.generateAiButton);
+      startCookingButton = itemView.findViewById(R.id.startCookingButton);
       caloriesText = itemView.findViewById(R.id.caloriesText);
     }
   }
 
   static class VideoViewHolder extends RecyclerView.ViewHolder {
     final PlayerView videoView;
+    final ImageView stubArtwork;
     final TextView usernameText;
     final TextView authorNameText;
     final TextView recipeTitleText;
@@ -913,6 +1066,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
     VideoViewHolder(@NonNull View itemView) {
       super(itemView);
       videoView = itemView.findViewById(R.id.recipeVideoView);
+      stubArtwork = itemView.findViewById(R.id.stubArtwork);
       usernameText = itemView.findViewById(R.id.usernameText);
       authorNameText = itemView.findViewById(R.id.authorNameText);
       recipeTitleText = itemView.findViewById(R.id.recipeTitleText);
@@ -932,6 +1086,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
   }
 
   static class ChatViewHolder extends RecyclerView.ViewHolder {
+    final ImageView chatHeroImage;
     final RecyclerView chatRecyclerView;
     final EditText chatInput;
     final ImageView chatSendButton;
@@ -939,6 +1094,7 @@ public class RecipePageAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
     ChatViewHolder(@NonNull View itemView) {
       super(itemView);
+      chatHeroImage = itemView.findViewById(R.id.chatHeroImage);
       chatRecyclerView = itemView.findViewById(R.id.chatRecyclerView);
       chatInput = itemView.findViewById(R.id.chatInput);
       chatSendButton = itemView.findViewById(R.id.chatSendButton);

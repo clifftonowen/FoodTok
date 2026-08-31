@@ -9,7 +9,8 @@ public final class Constants {
   }
 
   // Base URL from local.properties via BuildConfig
-  public static final String SUPABASE_URL = BuildConfig.SUPABASE_URL;
+  public static final String SUPABASE_URL = PreviewMode.isEnabled()
+      ? "http://127.0.0.1" : BuildConfig.SUPABASE_URL;
   public static final String SUPABASE_ANON_KEY = BuildConfig.SUPABASE_ANON_KEY;
 
   // PostgREST endpoints (CRUD for tables)

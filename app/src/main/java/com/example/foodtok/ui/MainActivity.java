@@ -1,11 +1,13 @@
 package com.example.foodtok.ui;
 
 import android.os.Bundle;
+import android.content.res.Configuration;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.core.view.WindowCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -17,6 +19,8 @@ import androidx.fragment.app.FragmentManager;
 /** Main app activity hosting the BottomNavigationView and fragment container. */
 public class MainActivity extends AppCompatActivity {
 
+  private static final int BOTTOM_NAV_HEIGHT_DP = 80;
+
   private static final String TAG_HOME = "tag_home";
   private static final String TAG_SEARCH = "tag_search";
   private static final String TAG_CREATE = "tag_create";
@@ -24,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
   private static final String TAG_PROFILE = "tag_profile";
 
   private Fragment activeFragment;
+  private String activeTag = TAG_HOME;
 
   @Override
   protected void onCreate(Bundle savedInstanceState) {
@@ -39,7 +44,9 @@ public class MainActivity extends AppCompatActivity {
       boolean isKeyboardOpen = insets.isVisible(WindowInsetsCompat.Type.ime());
       bottomNav.setVisibility(isKeyboardOpen ? View.GONE : View.VISIBLE);
       int keyboardHeight = insets.getInsets(WindowInsetsCompat.Type.ime()).bottom;
-      fragmentContainer.setPadding(0, 0, 0, keyboardHeight);
+      int screenPadding = TAG_HOME.equals(activeTag) ? 0 : dpToPx(BOTTOM_NAV_HEIGHT_DP);
+      fragmentContainer.setPadding(0, 0, 0,
+          isKeyboardOpen ? keyboardHeight : screenPadding);
       return insets;
     });
 
@@ -87,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
       Fragment f = getSupportFragmentManager().findFragmentByTag(tag);
       if (f != null && !f.isHidden()) {
         activeFragment = f;
+        activeTag = tag;
+        updateContentInset();
         return;
       }
     }
@@ -138,7 +147,31 @@ public class MainActivity extends AppCompatActivity {
     }
 
     activeFragment = target;
+    activeTag = tag;
+    updateContentInset();
     ft.commit();
+  }
+
+  /** The video feed stays edge-to-edge; utility screens stop above floating nav. */
+  private void updateContentInset() {
+    View container = findViewById(R.id.fragmentContainer);
+    int bottom = TAG_HOME.equals(activeTag) ? 0 : dpToPx(BOTTOM_NAV_HEIGHT_DP);
+    container.setPadding(0, 0, 0, bottom);
+    updateSystemBarAppearance();
+  }
+
+  private void updateSystemBarAppearance() {
+    boolean darkTheme = (getResources().getConfiguration().uiMode
+        & Configuration.UI_MODE_NIGHT_MASK) == Configuration.UI_MODE_NIGHT_YES;
+    // The feed always uses dark media; utility screens use dark icons in light mode.
+    WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
+        .setAppearanceLightStatusBars(!darkTheme && !TAG_HOME.equals(activeTag));
+    WindowCompat.getInsetsController(getWindow(), getWindow().getDecorView())
+        .setAppearanceLightNavigationBars(false);
+  }
+
+  private int dpToPx(int dp) {
+    return Math.round(dp * getResources().getDisplayMetrics().density);
   }
 
   private Fragment createFragmentForTag(String tag) {

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="foodtok_green_dark">#274B34</color>
+    <color name="foodtok_green">#4F865C</color>
+    <color name="foodtok_green_light">#86BE91</color>
+    <color name="foodtok_green_soft">#22372A</color>
+    <color name="foodtok_green_foreground">#9CCBA5</color>
+
+    <color name="foodtok_cream">#101410</color>
+    <color name="foodtok_cream_dark">#151A16</color>
+    <color name="foodtok_cream_deep">#222921</color>
+    <color name="foodtok_white">#1C221D</color>
+
+    <color name="foodtok_text_primary">#F4F1E8</color>
+    <color name="foodtok_text_secondary">#B7BCB3</color>
+    <color name="foodtok_text_muted">#878E85</color>
+    <color name="foodtok_text_on_dark">#FFFFFF</color>
+
+    <color name="foodtok_divider">#343C35</color>
+    <color name="foodtok_error">#FF7468</color>
+</resources>

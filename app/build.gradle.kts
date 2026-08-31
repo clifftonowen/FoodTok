@@ -10,6 +10,10 @@ if (localPropsFile.exists()) {
     localProps.load(localPropsFile.inputStream())
 }
 
+// Live services by default so local builds, CI and releases all behave the same.
+// Opt into the connection-free UI preview with: -Pfoodtok.stub=true
+val useStubData = providers.gradleProperty("foodtok.stub").orElse("false")
+
 android {
     namespace = "com.example.foodtok"
     compileSdk {
@@ -27,6 +31,7 @@ android {
 
         buildConfigField("String", "SUPABASE_URL", "\"${localProps.getProperty("SUPABASE_URL", "")}\"")
         buildConfigField("String", "SUPABASE_ANON_KEY", "\"${localProps.getProperty("SUPABASE_ANON_KEY", "")}\"")
+        buildConfigField("boolean", "USE_STUB_DATA", useStubData.get())
     }
 
     buildFeatures {

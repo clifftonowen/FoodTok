@@ -13,7 +13,7 @@ import com.example.foodtok.models.RecipeEnrichment;
  *
  * Results are cached per recipe to avoid redundant API calls.
  *
- * Implementations: GeminiEnrichmentService (real), MockEnrichmentService (testing).
+ * Implementations: SupabaseEnrichmentService (real), MockEnrichmentService (testing).
  */
 public interface IRecipeEnrichmentService {
 

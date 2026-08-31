@@ -10,7 +10,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import okhttp3.OkHttpClient;
+import okhttp3.MediaType;
+import okhttp3.Protocol;
 import okhttp3.Request;
+import okhttp3.ResponseBody;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Response;
 import retrofit2.Retrofit;
@@ -41,6 +44,9 @@ public final class ApiClient {
    * Returns {@code null} on failure (caller should redirect to login).
    */
   private static synchronized String tryRefreshToken() {
+    if (PreviewMode.isEnabled()) {
+      return null;
+    }
     String refreshToken =
         SessionManager.getInstance().getRefreshToken();
     if (refreshToken == null) {
@@ -92,7 +98,9 @@ public final class ApiClient {
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-    return new OkHttpClient.Builder()
+    OkHttpClient.Builder client = new OkHttpClient.Builder();
+    addPreviewBlocker(client);
+    return client
         .addInterceptor(chain -> {
           Request original = chain.request();
           Request.Builder builder = original.newBuilder()
@@ -138,7 +146,9 @@ public final class ApiClient {
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-    return new OkHttpClient.Builder()
+    OkHttpClient.Builder client = new OkHttpClient.Builder();
+    addPreviewBlocker(client);
+    return client
         .addInterceptor(chain -> {
           Request.Builder builder = chain.request().newBuilder()
               .addHeader("apikey", Constants.SUPABASE_ANON_KEY);
@@ -169,10 +179,10 @@ public final class ApiClient {
    * <p>Differs from {@link #buildClient()} in two deliberate ways:
    *
    * <ul>
-   *   <li>No {@code Prefer} header — that is PostgREST-specific and meaningless here.
+   *   <li>No {@code Prefer} header - that is PostgREST-specific and meaningless here.
    *   <li>The anon key is used as a bearer token when no user is logged in. The functions
    *       run with {@code verify_jwt = true}, so a guest with no Authorization header
-   *       would get a hard 401 — and the feed and chat pages are reachable without
+   *       would get a hard 401 - and the feed and chat pages are reachable without
    *       logging in, which is exactly the public-demo case this must support.
    * </ul>
    */
@@ -180,7 +190,7 @@ public final class ApiClient {
     HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
     logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-    return new OkHttpClient.Builder()
+    OkHttpClient.Builder client = new OkHttpClient.Builder()
         .addInterceptor(chain -> {
           Request.Builder builder = chain.request().newBuilder()
               .addHeader("apikey", Constants.SUPABASE_ANON_KEY)
@@ -201,8 +211,26 @@ public final class ApiClient {
               .header("Authorization", "Bearer " + newToken)
               .build();
         })
-        .addInterceptor(logging)
-        .build();
+        .addInterceptor(logging);
+
+    addPreviewBlocker(client);
+    return client.build();
+  }
+
+  /** Returns a local synthetic response before DNS/socket work in preview mode. */
+  private static void addPreviewBlocker(OkHttpClient.Builder client) {
+    if (!PreviewMode.isEnabled()) {
+      return;
+    }
+    client.addInterceptor(chain -> new okhttp3.Response.Builder()
+        .request(chain.request())
+        .protocol(Protocol.HTTP_1_1)
+        .code(503)
+        .message("Offline preview")
+        .body(ResponseBody.create(
+            "{\"message\":\"Offline preview\"}",
+            MediaType.get("application/json")))
+        .build());
   }
 
   // Retrofit instance for table CRUD (recipes, profiles, follows, etc.)

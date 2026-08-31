@@ -7,7 +7,7 @@ import java.util.List;
 
 /**
  * Contract for recipe chat functionality.
- * Implementations: GeminiChatService (real), MockChatService (testing).
+ * Implementations: SupabaseChatService (real), MockChatService (testing).
  *
  * OOP: Interface for loose coupling — UI code depends on this contract,
  * not a specific implementation. Enables swapping via ChatServiceProvider.

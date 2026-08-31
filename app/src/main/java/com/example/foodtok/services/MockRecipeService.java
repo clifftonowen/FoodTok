@@ -54,7 +54,8 @@ public class MockRecipeService implements IRecipeService {
     List<Ingredient> domainIngredients = new ArrayList<>();
     if (ingredients != null) {
       for (IngredientInput input : ingredients) {
-        domainIngredients.add(new Ingredient(input.getName(), 0));
+        domainIngredients.add(new Ingredient(
+            input.getName(), 0, input.getQuantity(), false));
       }
     }
     Recipe recipe = new Recipe(UUID.randomUUID().toString(),
@@ -89,48 +90,84 @@ public class MockRecipeService implements IRecipeService {
     List<Recipe> recipes = new ArrayList<>();
 
     Recipe ramen = new Recipe("1", "Spicy Ramen Bowl",
-        "https://example.com/ramen.mp4",
-        Arrays.asList("#ramen", "#spicy", "#japanese"),
+        "",
+        Arrays.asList("ramen", "spicy", "japanese"),
         Arrays.asList(
-            new Ingredient("noodles", 138),
-            new Ingredient("broth", 15),
-            new Ingredient("chili oil", 40),
-            new Ingredient("egg", 78)));
+            new Ingredient("noodles", 138, "200g", false),
+            new Ingredient("broth", 15, "500ml", false),
+            new Ingredient("chili oil", 40, "1 tbsp", false),
+            new Ingredient("egg", 78, "1 large", false)));
     ramen.setAuthorName("Chef Kenji");
+    ramen.setAuthorId("creator-kenji");
+    ramen.setDescription("Silky broth, jammy egg, and a hit of chilli oil in twenty minutes.");
     ramen.setPrepTimeMinutes(10);
     ramen.setCookTimeMinutes(20);
     ramen.setEstimatedCalories(450);
 
     Recipe toast = new Recipe("2", "Avocado Toast",
-        "https://example.com/avocado.mp4",
-        Arrays.asList("#breakfast", "#healthy", "#avocado"),
+        "",
+        Arrays.asList("breakfast", "quick", "avocado"),
         Arrays.asList(
-            new Ingredient("sourdough", 120),
-            new Ingredient("avocado", 160),
-            new Ingredient("lemon", 12),
-            new Ingredient("salt", 0)));
+            new Ingredient("sourdough", 120, "2 slices", false),
+            new Ingredient("avocado", 160, "1 whole", false),
+            new Ingredient("lemon", 12, "1/2", false),
+            new Ingredient("salt", 0, "to taste", false)));
     toast.setAuthorName("Brunch Queen");
+    toast.setAuthorId("creator-brunch");
+    toast.setDescription("Crisp sourdough with lemony avocado and a pinch of chilli flakes.");
     toast.setPrepTimeMinutes(5);
     toast.setCookTimeMinutes(3);
     toast.setEstimatedCalories(292);
 
     Recipe cake = new Recipe("3", "Chocolate Lava Cake",
-        "https://example.com/lavacake.mp4",
-        Arrays.asList("#dessert", "#chocolate", "#baking"),
+        "",
+        Arrays.asList("dessert", "chocolate", "baking"),
         Arrays.asList(
-            new Ingredient("dark chocolate", 170),
-            new Ingredient("butter", 102),
-            new Ingredient("eggs", 78),
-            new Ingredient("flour", 110),
-            new Ingredient("sugar", 50)));
+            new Ingredient("dark chocolate", 170, "100g", false),
+            new Ingredient("butter", 102, "80g", false),
+            new Ingredient("eggs", 78, "2 large", false),
+            new Ingredient("flour", 110, "40g", false),
+            new Ingredient("sugar", 50, "50g", false)));
     cake.setAuthorName("Pastry Pro");
+    cake.setAuthorId("creator-pastry");
+    cake.setDescription("A restaurant-style molten centre with only seven pantry ingredients.");
     cake.setPrepTimeMinutes(15);
     cake.setCookTimeMinutes(12);
     cake.setEstimatedCalories(510);
 
+    Recipe tacos = new Recipe("4", "Crispy Gochujang Tacos", "",
+        Arrays.asList("korean", "fusion", "weeknight"),
+        Arrays.asList(
+            new Ingredient("chicken", 165, "300g", false),
+            new Ingredient("gochujang", 45, "2 tbsp", false),
+            new Ingredient("tortillas", 130, "6 small", false),
+            new Ingredient("cabbage", 25, "1 cup", false)));
+    tacos.setAuthorName("Mina Makes");
+    tacos.setAuthorId("creator-mina");
+    tacos.setDescription("Crunchy, spicy-sweet tacos finished with a bright sesame slaw.");
+    tacos.setPrepTimeMinutes(15);
+    tacos.setCookTimeMinutes(18);
+    tacos.setEstimatedCalories(390);
+
+    Recipe pasta = new Recipe("5", "One-Pan Lemon Pasta", "",
+        Arrays.asList("pasta", "quick", "vegetarian"),
+        Arrays.asList(
+            new Ingredient("spaghetti", 210, "200g", false),
+            new Ingredient("lemon", 12, "1 whole", false),
+            new Ingredient("parmesan", 110, "50g grated", false),
+            new Ingredient("spinach", 20, "2 cups", false)));
+    pasta.setAuthorName("Weeknight Table");
+    pasta.setAuthorId("creator-table");
+    pasta.setDescription("Bright, creamy pasta with almost no washing up.");
+    pasta.setPrepTimeMinutes(5);
+    pasta.setCookTimeMinutes(15);
+    pasta.setEstimatedCalories(430);
+
     recipes.add(ramen);
     recipes.add(toast);
     recipes.add(cake);
+    recipes.add(tacos);
+    recipes.add(pasta);
     return recipes;
   }
 }

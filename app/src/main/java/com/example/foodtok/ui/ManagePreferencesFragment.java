@@ -21,8 +21,10 @@ import com.example.foodtok.models.dto.UpdateProfileRequest;
 import com.example.foodtok.models.dto.UserDto;
 import com.example.foodtok.services.SupabaseApi;
 import com.example.foodtok.util.ApiClient;
+import com.example.foodtok.util.ThemePreferences;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;
+import com.google.android.material.switchmaterial.SwitchMaterial;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -56,6 +58,7 @@ public class ManagePreferencesFragment extends Fragment {
     private ChipGroup chipGroupAllergens;
     private EditText etCustomPreference;
     private EditText etCustomAllergen;
+    private SwitchMaterial switchDarkMode;
 
     private final Set<String> selectedPreferences = new HashSet<>();
     private final Set<String> selectedAllergens = new HashSet<>();
@@ -73,6 +76,11 @@ public class ManagePreferencesFragment extends Fragment {
         chipGroupAllergens = view.findViewById(R.id.chipGroupAllergens);
         etCustomPreference = view.findViewById(R.id.etCustomPreference);
         etCustomAllergen = view.findViewById(R.id.etCustomAllergen);
+        switchDarkMode = view.findViewById(R.id.switchDarkMode);
+
+        switchDarkMode.setChecked(ThemePreferences.isDarkMode(requireContext()));
+        switchDarkMode.setOnCheckedChangeListener((button, checked) ->
+                ThemePreferences.setDarkMode(requireContext(), checked));
 
         setupChipGroup(chipGroupPreferences, PREFERENCE_TAGS, selectedPreferences);
         setupChipGroup(chipGroupAllergens, COMMON_ALLERGENS, selectedAllergens);
