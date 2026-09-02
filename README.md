@@ -57,6 +57,7 @@
 - [Feature Set](#feature-set)
 - [Architecture](#architecture)
 - [Tech Stack](#tech-stack)
+- [CI/CD & Releases](#cicd--releases)
 - [Data Structures & Algorithms](#data-structures--algorithms)
 - [OOP Design](#oop-design)
 - [Project Structure](#project-structure)
@@ -111,7 +112,11 @@ The project was scoped to demonstrate strong object-oriented design, custom data
 - Pagination-ready ordering via PostgREST.
 
 ### AI Features (Gemini 2.5 Flash)
-- **Per-recipe chatbot** with conversation memory (20-message cap per recipe) and a context-aware system prompt that injects title, ingredients (with allergen flags), times, and tags.
+- **Per-recipe chatbot** with conversation memory. The full transcript stays on the device
+  for display; the most recent **6 messages** are sent as model context. The Edge Function
+  independently caps input at 20 turns, 2000 characters per message and a 64 KB body.
+- **Prompts are built server-side** (`supabase/functions/_shared/prompts.ts`), so the client
+  sends a typed recipe object rather than free-form model input.
 - **On-demand recipe enrichment** ("Generate AI Insights" button) that returns allergens, generated instructions, calorie estimates, and suggested tags in a single JSON response.
 - **Client-side enrichment cache** keyed by `recipeId` to avoid repeat quota spend.
 - **Graceful 429 handling** with user-facing messaging and mock fallback if no API key is configured.
@@ -122,6 +127,9 @@ The project was scoped to demonstrate strong object-oriented design, custom data
 - View other users' profiles and their recipe grids.
 
 ### UX Polish
+- **Dark theme** with a dedicated `values-night` colour set.
+- **Offline UI preview mode** that swaps in mock services and short-circuits the HTTP
+  client, so the interface runs with no backend at all.
 - Haptic feedback on primary interactions.
 - Dark scrim gradient and safe-area handling for feed overlays.
 - Keyboard-aware layout so the bottom nav isn't pushed off-screen.
@@ -197,6 +205,32 @@ Providers auto-select the real implementation when credentials are present and f
 | AI | Google Gemini 2.5 Flash (REST)                               |
 | Build | Gradle Kotlin DSL, Java 11, Min SDK 24 / Compile SDK 36      |
 | Testing | JUnit 4, Espresso                                            |
+
+---
+
+## CI/CD & Releases
+
+Two GitHub Actions workflows.
+
+**[`ci.yml`](.github/workflows/ci.yml)** runs `assembleDebug testDebugUnitTest lint` on every
+push and pull request (JDK 21, `ubuntu-latest`), uploading the APK and build reports as
+artifacts. Reports upload even on failure, so a red build is diagnosable without re-running it.
+
+Pre-existing lint issues are recorded in `lint-baseline.xml`, so lint fails only on **new**
+problems. That ratchet has already caught real regressions rather than merely accumulating
+warnings.
+
+**[`release.yml`](.github/workflows/release.yml)** fires on `v*` tags. It builds the demo APK
+from repository secrets, then **greps the compiled DEX for `AIza`-pattern keys and for
+`generativelanguage.googleapis.com`, failing the release if either is found**, and publishes a
+GitHub Release with sideload instructions. Publishing is gated on `refs/tags/`, so a manual
+dispatch still builds and runs the security scan without creating a release.
+
+This is what makes the "the API key is not in the APK" claim enforceable rather than
+aspirational: a regression blocks the release instead of shipping quietly.
+
+**[Download the latest APK](https://github.com/clifftonowen/FoodTok/releases/latest)** &middot;
+Android 7.0+ (API 24) &middot; debug-signed &middot; browse as a guest or sign up with any email.
 
 ---
 
@@ -316,24 +350,24 @@ falls back to the mock services rather than failing.
 
 ### Offline UI preview
 
-The debug build uses deterministic local data by default. It does not require
-Supabase or Gemini credentials, and its HTTP client blocks outbound requests.
+Builds use the configured live services by default, so local builds, CI and published
+releases all behave the same way.
+
+To build the connection-free preview instead, which swaps in mock services and blocks
+outbound requests at the OkHttp layer, opt in explicitly:
 
 ```bash
-./gradlew assembleDebug
+./gradlew assembleDebug -Pfoodtok.stub=true
 ```
 
-To intentionally build against configured live services instead:
-
-```bash
-./gradlew assembleDebug -Pfoodtok.stub=false
-```
+It needs no Supabase credentials, which makes it useful for UI work and for demoing
+without a backend.
 
 ```bash
 ./gradlew assembleDebug         # Build debug APK
 ./gradlew assembleRelease       # Build release APK
 ./gradlew lint                  # Lint checks
-./gradlew test                  # Local JVM unit tests (Trie, PriorityQueue, Recommendation)
+./gradlew test                  # 58 local JVM unit tests (Trie, PriorityQueue, Recommendation, chat window)
 ./gradlew connectedAndroidTest  # Instrumented tests (device/emulator required)
 ```
 
@@ -355,8 +389,14 @@ The free tier's 15 RPM / 1,500 RPD ceiling is shared across the whole Google acc
 ### 3. Haptic + zoom preview animation
 Add a press-and-hold gesture on feed cards that triggers a scale-up preview of the video with synchronized haptic feedback (a short tick on press, a heavier tick on release). This matches the tactile feel of modern short-video apps and gives users a low-commitment way to peek at a recipe without committing a full swipe. Implementation will use `Vibrator.vibrate(VibrationEffect)` with predefined effects and a `ScaleAnimation` or `View.animate().scaleX/Y()` pipeline tied to `MotionEvent` state.
 
-### 4. Deploy the Edge Function and marketing site via Vercel
-Stand up a Vercel project for (a) the public marketing / landing page with APK download links and (b) any companion web endpoints that don't fit Supabase Edge Functions (OAuth callbacks, webhook receivers, admin dashboards). Vercel's zero-config deploy from `main` and preview deploys per pull request give the team a fast iteration loop for the consumer-facing web surface while Supabase continues to own the application backend.
+### 4. Marketing site and browser-playable demo
+Host the APK on a browser-based Android emulator so the app can be tried without installing
+anything, and stand up a Vercel landing page pointing at it and at the GitHub Release.
+
+Containerising the app itself was evaluated and rejected: an APK is not a server process,
+and the only containerisable target is an emulator needing nested virtualization, which is
+not durable on free infrastructure. A hosted emulator plus a committed demo recording keeps
+working indefinitely, which matters more than the demo being self-hosted.
 
 ### Additional polish before public launch
 - Feed pagination via PostgREST `Range` headers instead of whole-table fetch
